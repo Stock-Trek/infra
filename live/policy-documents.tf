@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "github_assume_web_identity" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${local.github_account_name}/*:ref:refs/heads/master"]
+      values   = ["repo:${local.github_account_name}/*:*"]
     }
   }
 }
@@ -22,7 +22,7 @@ data "aws_iam_policy_document" "github_assume_web_identity" {
 data "aws_iam_policy_document" "push_image" {
   statement {
     effect    = "Allow"
-    actions  = ["ecr:GetAuthorizationToken"]
+    actions   = ["ecr:GetAuthorizationToken"]
     resources = ["*"]
   }
   statement {
@@ -35,8 +35,6 @@ data "aws_iam_policy_document" "push_image" {
       "ecr:PutImage",
       "ecr:UploadLayerPart"
     ]
-    resources = [
-      aws_ecr_repository.stock_trek.arn
-    ]
+    resources = [for repo in aws_ecr_repository.stock_trek : repo.arn]
   }
 }
