@@ -5,7 +5,7 @@ resource "aws_ecr_repository" "stock_trek" {
   image_tag_mutability = "IMMUTABLE_WITH_EXCLUSION"
   image_tag_mutability_exclusion_filter {
     filter_type = "WILDCARD"
-    filter      = "latest"
+    filter      = "master"
   }
   encryption_configuration {
     encryption_type = "AES256"

@@ -2,6 +2,9 @@ resource "aws_lambda_function" "lambda" {
   function_name = "stock-trek-check-compile-rust"
   package_type  = "Image"
   image_uri     = "${aws_ecr_repository.stock_trek["algorithm-runner"].repository_url}:${var.algorithm_runner_image_tag}"
+  image_config {
+    command = ["checker.check_handler"]
+  }
   role          = aws_iam_role.run_lambda.arn
   publish       = true
   memory_size   = 2048

@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "github_assume_web_identity" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${local.github_account_name}/*:ref:refs/tags/v*"]
+      values   = ["repo:${local.github_account_name}/*:*"]
     }
   }
 }
