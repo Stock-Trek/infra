@@ -83,8 +83,7 @@ data "aws_iam_policy_document" "update_lambda" {
     actions = [
       "lambda:GetFunction",
       "lambda:PublishVersion",
-      "lambda:UpdateFunctionCode",
-      "lambda:Wait"
+      "lambda:UpdateFunctionCode"
     ]
     resources = ["${aws_lambda_function.lambda.arn}:$LATEST"]
   }
