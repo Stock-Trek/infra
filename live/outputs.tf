@@ -1,6 +1,6 @@
-# output "lambda_url" {
-#   value = aws_lambda_function_url.lambda.function_url
-# }
+output "check_compile_rust_lambda_url" {
+  value = aws_lambda_function_url.stock-trek-check-compile-rust.function_url
+}
 
 output "website_url" {
   value = module.stock-trek.url
