@@ -6,4 +6,5 @@ locals {
     "algorithm-runner"
   ]
   role_push_image                 = "StockTrekPushImage"
+  role_run_lambda                 = "StockTrekRunLambda"
 }

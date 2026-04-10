@@ -1,16 +1,3 @@
-# resource "aws_lambda_function" "lambda" {
-#   function_name = "stock-trek-check-compile-rust"
-#   package_type  = "Image"
-#   image_uri     = "${aws_ecr_repository.stock_trek['algorithm-runner'].repository_url}:v0.3.0"
-#   role          = aws_iam_role.run_lambda.arn
-#   memory_size   = 512
-#   timeout       = 30
-#   depends_on    = [
-#     aws_iam_role_policy_attachment.logs,
-#     aws_iam_role_policy_attachment.pull_image
-#   ]
-# }
-# 
 # resource "aws_lambda_function_url" "lambda" {
 #   function_name      = aws_lambda_function.lambda.function_name
 #   authorization_type = "NONE"
