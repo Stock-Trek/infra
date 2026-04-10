@@ -2,7 +2,6 @@ output "compile_rust_lambda_urls" {
   value = {
     for name, lambda_url in aws_lambda_function_url.stock-trek-compile-rust : name => lambda_url.function_url
   }
-  # value = [for lambda_url in aws_lambda_function_url.stock-trek-compile-rust : lambda_url.function_url]
 }
 
 output "website_url" {
