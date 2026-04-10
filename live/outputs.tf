@@ -1,3 +1,19 @@
 # output "lambda_url" {
 #   value = aws_lambda_function_url.lambda.function_url
 # }
+
+output "website_url" {
+  value = module.stock-trek.url
+}
+
+output "website_bucket" {
+  value = module.stock-trek.bucket
+}
+
+output "website_bucket_update_role" {
+  value = module.stock-trek.role
+}
+
+output "website_cloudfront_distribution_id" {
+  value = module.stock-trek.cloudfront_distribution_id
+}

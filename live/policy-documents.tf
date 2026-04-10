@@ -31,6 +31,7 @@ data "aws_iam_policy_document" "push_image" {
       "ecr:BatchCheckLayerAvailability",
       "ecr:BatchGetImage",
       "ecr:CompleteLayerUpload",
+      "ecr:GetAuthorizationToken",
       "ecr:InitiateLayerUpload",
       "ecr:PutImage",
       "ecr:UploadLayerPart"
@@ -73,5 +74,18 @@ data "aws_iam_policy_document" "logs" {
       "logs:PutLogEvents"
     ]
     resources = ["*"]
+  }
+}
+
+data "aws_iam_policy_document" "update_lambda" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "lambda:GetFunction",
+      "lambda:PublishVersion",
+      "lambda:UpdateFunctionCode",
+      "lambda:Wait"
+    ]
+    resources = ["${aws_lambda_function.lambda.arn}:$LATEST"]
   }
 }

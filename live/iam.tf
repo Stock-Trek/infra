@@ -15,6 +15,16 @@ resource "aws_iam_role_policy_attachment" "push_image" {
   policy_arn = aws_iam_policy.push_image.arn
 }
 
+resource "aws_iam_policy" "update_lambda_code" {
+  name   = "stock-trek-update-lambda-code"
+  policy = data.aws_iam_policy_document.update_lambda.json
+}
+
+resource "aws_iam_role_policy_attachment" "update_lambda_code" {
+  role       = aws_iam_role.push_image.name
+  policy_arn = aws_iam_policy.update_lambda_code.arn
+}
+
 
 # Run lambda
 
