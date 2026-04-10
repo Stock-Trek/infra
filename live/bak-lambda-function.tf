@@ -1,7 +1,7 @@
 # resource "aws_lambda_function" "lambda" {
-#   function_name = "stock-trek"
+#   function_name = "stock-trek-check-compile-rust"
 #   package_type  = "Image"
-#   image_uri     = "${aws_ecr_repository.stock_trek.repository_url}:latest"
+#   image_uri     = "${aws_ecr_repository.stock_trek['algorithm-runner'].repository_url}:v0.3.0"
 #   role          = aws_iam_role.run_lambda.arn
 #   memory_size   = 512
 #   timeout       = 30
