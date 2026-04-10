@@ -1,5 +1,5 @@
-resource "aws_lambda_function" "stock-trek-check-compile-rust" {
-  function_name = "stock-trek-check-compile-rust"
+resource "aws_lambda_function" "stock-trek-compile-rust-check" {
+  function_name = "stock-trek-compile-rust-check"
   package_type  = "Image"
   image_uri     = "${aws_ecr_repository.stock_trek["algorithm-runner"].repository_url}:${var.algorithm_runner_image_tag}"
   image_config {
@@ -15,8 +15,8 @@ resource "aws_lambda_function" "stock-trek-check-compile-rust" {
   ]
 }
 
-resource "aws_lambda_function_url" "stock-trek-check-compile-rust" {
-  function_name      = aws_lambda_function.stock-trek-check-compile-rust.function_name
+resource "aws_lambda_function_url" "stock-trek-compile-rust-check" {
+  function_name      = aws_lambda_function.stock-trek-compile-rust-check.function_name
   authorization_type = "NONE"
 
   cors {
@@ -29,7 +29,8 @@ resource "aws_lambda_function_url" "stock-trek-check-compile-rust" {
       "POST"
     ]
     allow_headers     = [
-      "content-type"
+      "content-type",
+      "x-api-key"
     ]
     expose_headers    = []
     max_age           = 86400

@@ -7,4 +7,8 @@ locals {
   ]
   role_push_image                 = "StockTrekPushImage"
   role_run_lambda                 = "StockTrekRunLambda"
+  algorithm_runner_handlers       = [
+    "check_handler",
+    "save_handler"
+  ]
 }

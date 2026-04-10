@@ -85,6 +85,6 @@ data "aws_iam_policy_document" "update_lambda" {
       "lambda:PublishVersion",
       "lambda:UpdateFunctionCode"
     ]
-    resources = [aws_lambda_function.stock-trek-check-compile-rust.arn]
+    resources = [aws_lambda_function.stock-trek-compile-rust-check.arn]
   }
 }
