@@ -25,10 +25,13 @@ jobs:
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
-      
+
+      - name: Install pi-coding-agent
+        run: bun install -g @mariozechner/pi-coding-agent
+
       - name: Run DeepSeek Agent
         run: |
-          bunx pi \
+          bunx @mariozechner/pi-coding-agent \
             --provider openai-completions \
             --base-url https://api.deepseek.com/v1 \
             --model deepseek-chat \
