@@ -22,7 +22,6 @@ jobs:
         with:
           fetch-depth: 0
 
-
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
 
@@ -68,7 +67,7 @@ jobs:
         with:
           token: ${{ secrets.RAISE_PR_PAT }}
           commit-message: "Feature branch for ${{ github.event.issue.number }}"
-          title: "Closes #${{ github.event.issue.number }}. ${{ github.event.issue.title }}"
+          title: "Closes #${{ github.event.issue.number }} ${{ github.event.issue.title }}"
           body: "${{ github.event.issue.body }}"
           branch: ${{ steps.feature.outputs.FEATURE_BRANCH }}
           base: "master"
