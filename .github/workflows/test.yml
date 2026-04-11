@@ -19,8 +19,6 @@ jobs:
       # issues: write
       # id-token: write
       # actions: read
-    env:
-      AIDER_BRANCH: "aider/issue-${{ github.event.issue.number }}-$(date +'%Y%m%d-%H%M%S')"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -29,7 +27,8 @@ jobs:
 
       - name: Create feature branch
         run: |
-          git checkout master
+          TIMESTAMP=$(date +'%Y%m%d_%H%M%S')
+          AIDER_BRANCH="aider/issue-${{ github.event.issue.number }}/${TIMESTAMP}"
           git checkout -b "${AIDER_BRANCH}"
 
       - name: Run Aider on Issue
