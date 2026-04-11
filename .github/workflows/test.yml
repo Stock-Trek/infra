@@ -12,7 +12,9 @@ jobs:
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@aider')) ||
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@aider') || contains(github.event.issue.title, '@aider')))
     runs-on: ubuntu-latest
-    container: paulgauthier/aider:v0.86.2
+    container:
+      image: paulgauthier/aider:v0.86.2
+      options: --user root
     timeout-minutes: 10
     permissions:
       contents: write
