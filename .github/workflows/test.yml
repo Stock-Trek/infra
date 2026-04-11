@@ -36,6 +36,8 @@ jobs:
 
       - name: Run DeepSeek Agent
         run: pi --list-models
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
       - name: Run DeepSeek Agent
         run: |
