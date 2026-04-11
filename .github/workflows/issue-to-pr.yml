@@ -54,6 +54,7 @@ jobs:
             --tools read,write,edit,bash,grep,find,ls \
             --print "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}" \
             )
+          echo "${PI_OUTPUT}"
           echo "PI_OUTPUT<<EOF" >> $GITHUB_OUTPUT
           echo "$PI_OUTPUT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -68,8 +69,8 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Feature branch for ${{ github.event.issue.number }}"
+          token: ${{ secrets.RAISE_PR_PAT }}
+          commit-message: "Feature branch for ${{ github.event.issue.number }} ${{ github.event.issue.title }}"
           title: "Closes #${{ github.event.issue.number }} ${{ github.event.issue.title }}"
           body: ${{ steps.pi.outputs.PI_OUTPUT }}
           branch: ${{ steps.feature.outputs.FEATURE_BRANCH }}
