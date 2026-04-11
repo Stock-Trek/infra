@@ -1,4 +1,4 @@
-name: Aider test
+name: Agent
 
 on:
   issue_comment:
@@ -9,8 +9,8 @@ on:
 jobs:
   test:
     if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@aider')) ||
-      (github.event_name == 'issues' && (contains(github.event.issue.body, '@aider') || contains(github.event.issue.title, '@aider')))
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@agent')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@agent') || contains(github.event.issue.title, '@agent')))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -59,25 +59,12 @@ jobs:
             --debug \
             --print "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
 
-#       - name: Run Aider on Issue
-#         uses: mirrajabi/aider-github-action@v1.1.0
-#         with:
-#           api_key_env_name: DEEPSEEK_API_KEY
-#           api_key_env_value: ${{ secrets.DEEPSEEK_API_KEY }}
-#           branch: master
-#           model: deepseek/deepseek-chat
-#           aider_args: >-
-#             --yes
-#             --auto-commits
-#             --auto-accept-architect
-#             --message "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
-
       - name: Create feature branch
         id: feature
         run: |
           TIMESTAMP=$(date +'%Y-%m-%dT%H-%M-%S')
-          AIDER_BRANCH="aider/issue-${{ github.event.issue.number }}/${TIMESTAMP}"
-          echo "AIDER_BRANCH=${AIDER_BRANCH}" >> $GITHUB_OUTPUT
+          FEATURE_BRANCH="agent/issue-${{ github.event.issue.number }}/${TIMESTAMP}"
+          echo "FEATURE_BRANCH=${FEATURE_BRANCH}" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
@@ -86,5 +73,5 @@ jobs:
           commit-message: "Feature branch for ${{ github.event.issue.number }}"
           title: "Closes #${{ github.event.issue.number }}. ${{ github.event.issue.title }}"
           body: "${{ github.event.issue.body }}"
-          branch: ${{ steps.feature.outputs.AIDER_BRANCH }}
+          branch: ${{ steps.feature.outputs.FEATURE_BRANCH }}
           base: "master"
