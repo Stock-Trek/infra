@@ -12,6 +12,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -44,13 +46,15 @@ jobs:
           EOF
 
       - name: Run DeepSeek Agent
+        id: pi
         run: |
-          pi \
+          PI_OUTPUT=$(pi \
             --provider deepseek \
             --model deepseek-chat \
             --tools read,write,edit,bash,grep,find,ls \
-            --mode json
-            --print "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
+            --print "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}" \
+            )
+          echo "PI_OUTPUT=${PI_OUTPUT}" >> $GITHUB_OUTPUT
 
       - name: Create feature branch
         id: feature
@@ -62,9 +66,9 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.RAISE_PR_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Feature branch for ${{ github.event.issue.number }}"
           title: "Closes #${{ github.event.issue.number }} ${{ github.event.issue.title }}"
-          body: "${{ github.event.issue.body }}"
+          body: ${{ steps.pi.outputs.PI_OUTPUT }}
           branch: ${{ steps.feature.outputs.FEATURE_BRANCH }}
           base: "master"
