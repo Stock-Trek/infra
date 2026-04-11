@@ -35,6 +35,9 @@ jobs:
           echo '{"deepseek": {"type": "api_key", "key": "${{ secrets.DEEPSEEK_API_KEY }}"}}' > ~/.pi/agent/auth.json
 
       - name: Run DeepSeek Agent
+        run: pi --list-models
+
+      - name: Run DeepSeek Agent
         run: |
           pi \
             --provider deepseek \
