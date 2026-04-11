@@ -1,16 +1,12 @@
-name: Agent
+name: Issue to PR
 
 on:
-  issue_comment:
-    types: [created]
   issues:
     types: [opened]
 
 jobs:
   test:
-    if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@agent')) ||
-      (github.event_name == 'issues' && (contains(github.event.issue.body, '@agent') || contains(github.event.issue.title, '@agent')))
+    if: (github.event_name == 'issues' && (contains(github.event.issue.title, '@agent') || contains(github.event.issue.body, '@agent')))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
