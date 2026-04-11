@@ -31,6 +31,7 @@ jobs:
           model: deepseek/deepseek-chat
           aider_args: >-
             --yes
+            --no-interactive
             --message "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
 
       - name: Create feature branch
