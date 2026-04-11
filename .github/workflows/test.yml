@@ -22,30 +22,29 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Run Aider on Issue
+        uses: mirrajabi/aider-github-action@v1.1.0
+        with:
+          api_key_env_name: DEEPSEEK_API_KEY
+          api_key_env_value: ${{ secrets.DEEPSEEK_API_KEY }}
+          branch: master
+          model: deepseek/deepseek-chat
+          aider_args: >-
+            --yes
+            --message "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
+
       - name: Create feature branch
         id: feature
         run: |
           TIMESTAMP=$(date +'%Y-%m-%dT%H-%M-%S')
           AIDER_BRANCH="aider/issue-${{ github.event.issue.number }}/${TIMESTAMP}"
           echo "AIDER_BRANCH=${AIDER_BRANCH}" >> $GITHUB_OUTPUT
-          git checkout -b "${AIDER_BRANCH}"
-
-      - name: Run Aider on Issue
-        uses: mirrajabi/aider-github-action@v1.1.0
-        with:
-          api_key_env_name: DEEPSEEK_API_KEY
-          api_key_env_value: ${{ secrets.DEEPSEEK_API_KEY }}
-          branch: ${{ steps.feature.outputs.AIDER_BRANCH }}
-          model: deepseek/deepseek-chat
-          aider_args: >-
-            --yes
-            --message "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: ""
+          commit-message: "Feature branch for ${{ github.event.issue.number }}"
           title: "Closes #${{ github.event.issue.number }}. ${{ github.event.issue.title }}"
           body: "${{ github.event.issue.body }}"
           branch: ${{ steps.feature.outputs.AIDER_BRANCH }}
