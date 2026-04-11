@@ -22,18 +22,35 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run Aider on Issue
-        uses: mirrajabi/aider-github-action@v1.1.0
-        with:
-          api_key_env_name: DEEPSEEK_API_KEY
-          api_key_env_value: ${{ secrets.DEEPSEEK_API_KEY }}
-          branch: master
-          model: deepseek/deepseek-chat
-          aider_args: >-
-            --yes
-            --auto-commits
-            --auto-accept-architect
-            --message "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      
+      - name: Run DeepSeek Agent
+        run: |
+          bunx pi \
+            --provider openai-completions \
+            --base-url https://api.deepseek.com/v1 \
+            --model deepseek-chat \
+            --api-key ${{ secrets.DEEPSEEK_API_KEY }} \
+            --tools read,write,edit,bash,grep,find,ls \
+            --session-key issue-${{ github.event.issue.number }} \
+            --system-prompt "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#       - name: Run Aider on Issue
+#         uses: mirrajabi/aider-github-action@v1.1.0
+#         with:
+#           api_key_env_name: DEEPSEEK_API_KEY
+#           api_key_env_value: ${{ secrets.DEEPSEEK_API_KEY }}
+#           branch: master
+#           model: deepseek/deepseek-chat
+#           aider_args: >-
+#             --yes
+#             --auto-commits
+#             --auto-accept-architect
+#             --message "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
 
       - name: Create feature branch
         id: feature
