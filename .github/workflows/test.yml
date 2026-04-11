@@ -29,10 +29,10 @@ jobs:
       - name: Install pi-coding-agent
         run: bun install -g @mariozechner/pi-coding-agent
 
-      - name: Configure DeepSeek API Key
-        run: |
-          mkdir -p ~/.pi/agent
-          echo '{"deepseek": {"type": "api_key", "key": "${{ secrets.DEEPSEEK_API_KEY }}"}}' > ~/.pi/agent/auth.json
+#       - name: Configure DeepSeek API Key
+#         run: |
+#           mkdir -p ~/.pi/agent
+#           echo '{"deepseek": {"type": "api_key", "key": "${{ secrets.DEEPSEEK_API_KEY }}"}}' > ~/.pi/agent/auth.json
 
       - name: Run DeepSeek Agent
         run: pi --list-models
@@ -44,8 +44,9 @@ jobs:
             --model deepseek-chat \
             --tools read,write,edit,bash,grep,find,ls \
             --print "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
 #       - name: Run Aider on Issue
 #         uses: mirrajabi/aider-github-action@v1.1.0
