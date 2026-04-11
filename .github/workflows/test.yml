@@ -28,7 +28,7 @@ jobs:
       - name: Create feature branch
         id: feature
         run: |
-          TIMESTAMP=$(date +'%Y%m%d_%H%M%S')
+          TIMESTAMP=$(date +'%Y-%m-%dT%H-%M-%S')
           AIDER_BRANCH="aider/issue-${{ github.event.issue.number }}/${TIMESTAMP}"
           echo "AIDER_BRANCH=${AIDER_BRANCH}" >> $GITHUB_OUTPUT
           git checkout -b "${AIDER_BRANCH}"
