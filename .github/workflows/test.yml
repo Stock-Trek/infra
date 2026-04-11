@@ -12,9 +12,6 @@ jobs:
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@aider')) ||
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@aider') || contains(github.event.issue.title, '@aider')))
     runs-on: ubuntu-latest
-    container:
-      image: paulgauthier/aider:v0.86.2
-      options: --user root
     timeout-minutes: 10
     permissions:
       contents: write
@@ -34,7 +31,6 @@ jobs:
           api_key_env_name: DEEPSEEK_API_KEY
           api_key_env_value: ${{ secrets.DEEPSEEK_API_KEY }}
           model: deepseek/deepseek-chat
-          branch: "aider/issue-${{ github.event.issue.number }}-${{ github.event.comment.id }}"
           aider_args: >-
             --yes
             --message "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
