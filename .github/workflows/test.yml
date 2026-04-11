@@ -19,11 +19,18 @@ jobs:
       # issues: write
       # id-token: write
       # actions: read
+    env:
+      AIDER_BRANCH: "aider/issue-${{ github.event.issue.number }}-$(date +'%Y%m%d-%H%M%S')"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
+      - name: Create feature branch
+        run: |
+          git checkout master
+          git checkout -b "${AIDER_BRANCH}"
 
       - name: Run Aider on Issue
         uses: mirrajabi/aider-github-action@v1.1.0
