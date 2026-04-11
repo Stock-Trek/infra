@@ -1,0 +1,37 @@
+name: Aider test
+
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+
+jobs:
+  test:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@aider')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@aider') || contains(github.event.issue.title, '@aider')))
+    runs-on: paulgauthier/aider:v0.86.2
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      # issues: write
+      # id-token: write
+      # actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Run Aider on Issue
+        uses: mirrajabi/aider-github-action@v1.1.0
+        with:
+          api_key_env_name: DEEPSEEK_API_KEY
+          api_key_env_value: ${{ secrets.DEEPSEEK_API_KEY }}
+          model: deepseek/deepseek-chat
+          branch: "aider/issue-${{ github.event.issue.number }}-${{ github.event.comment.id }}"
+          aider_args: >-
+            --yes
+            --message "Implement the changes described in issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}. Details: ${{ github.event.issue.body }}"
