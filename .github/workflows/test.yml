@@ -26,9 +26,11 @@ jobs:
           fetch-depth: 0
 
       - name: Create feature branch
+        id: feature
         run: |
           TIMESTAMP=$(date +'%Y%m%d_%H%M%S')
           AIDER_BRANCH="aider/issue-${{ github.event.issue.number }}/${TIMESTAMP}"
+          echo "AIDER_BRANCH=${AIDER_BRANCH}" >> $GITHUB_OUTPUT
           git checkout -b "${AIDER_BRANCH}"
 
       - name: Run Aider on Issue
@@ -36,6 +38,7 @@ jobs:
         with:
           api_key_env_name: DEEPSEEK_API_KEY
           api_key_env_value: ${{ secrets.DEEPSEEK_API_KEY }}
+          branch: ${{ steps.feature.outputs.AIDER_BRANCH }}
           model: deepseek/deepseek-chat
           aider_args: >-
             --yes
