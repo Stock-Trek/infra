@@ -42,7 +42,8 @@ jobs:
                 "models": [
                   { "id": "deepseek-chat" },
                   { "id": "deepseek-reasoner" }
-                ]
+                ],
+                "hideThinkingBlock": false
               }
             }
           }
