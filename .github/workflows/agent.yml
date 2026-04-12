@@ -16,8 +16,8 @@ jobs:
     permissions:
       contents: write
     outputs:
-      issue-branch-base: ${{ steps.gather-branches.outputs.ISSUE_BRANCH_BASE }}
-      issue-branch: ${{ steps.gather-branches.outputs.ISSUE_BRANCH }}
+      issue-branch-base: ${{ steps.gather-branches.outputs.issue-branch-base }}
+      issue-branch: ${{ steps.gather-branches.outputs.issue-branch }}
       issue-context-base64: ${{ steps.pi-inputs-request.outputs.CONTEXT_BASE64 }}
       request-type: ${{ steps.save-request-type.outputs.REQUEST_TYPE }}
     env:
@@ -213,6 +213,7 @@ jobs:
         uses: ./.github/actions/ensure-branch
         with:
           branch: ${{ needs.triage.outputs.issue-branch }}
+          base: ${{ needs.triage.outputs.issue-branch-base }}
       - name: Create pi inputs for addressing issue
         id: pi-inputs-address
         run: |
@@ -246,3 +247,5 @@ jobs:
           body: "${{ steps.save-pi-response-address.outputs.SUMMARY }}"
           branch: ${{ needs.triage.outputs.issue-branch }}
           base: ${{ needs.triage.outputs.issue-branch-base }}
+          delete-branch: true
+          draft: false
