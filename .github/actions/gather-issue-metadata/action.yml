@@ -49,5 +49,5 @@ runs:
         echo "ISSUE_BRANCH=${ISSUE_BRANCH}" >> $GITHUB_OUTPUT
         echo "ISSUE_BRANCH_BASE=${ISSUE_BRANCH_BASE}" >> $GITHUB_OUTPUT
         echo "ISSUE_METADATA<<EOF" >> $GITHUB_OUTPUT
-        echo "${ISSUE_METADATA}" | jq -c >> $GITHUB_OUTPUT
+        echo "${ISSUE_METADATA}" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT

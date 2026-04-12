@@ -43,6 +43,40 @@ jobs:
           issue-comment: ${{ github.event.comment.body }}
           issue-branch-base: master
 
+      - name: bash
+        id: test
+        run: |
+          # Test 1: Simple string
+          SIMPLE="hello world"
+          echo "simple<<EOF" >> $GITHUB_OUTPUT
+          echo "$SIMPLE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          # Test 2: Simple JSON
+          JSON='{"test":"value"}'
+          echo "json1<<EOF" >> $GITHUB_OUTPUT
+          echo "$JSON" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          # Test 3: Check if variable is empty
+          echo "raw_json=[$JSON]" >> $GITHUB_OUTPUT
+          
+          # Test 4: Check file approach
+          echo "$JSON" > test.json
+          echo "file_content<<EOF" >> $GITHUB_OUTPUT
+          cat test.json >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+  
+      - name: echo
+        run: |
+          echo "Simple: '${{ steps.test.outputs.simple }}'"
+          echo "JSON1: '${{ steps.test.outputs.json1 }}'"
+          echo "Raw: '${{ steps.test.outputs.raw_json }}'"
+          echo "File: '${{ steps.test.outputs.file_content }}'"
+
+
+
+
       - name: Set up DeepSeek via pi
         uses: ./.github/actions/set-up-deepseek-via-pi
         with:
