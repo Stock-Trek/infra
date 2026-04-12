@@ -162,10 +162,13 @@ jobs:
         run: |
           PI_RESPONSE=$(echo ${{ steps.classify-response.outputs.response-base64 }} | base64 -d | jq .)
           RESPONSE_TYPE=$(jq -r '.responseType' <<< "${PI_RESPONSE}")
+          CODE_CHANGES_REQUIRED=$(jq -r '.codeChangesRequired' <<< "${PI_RESPONSE}")
           EXTRA_INFORMATION_REQUIRED=$(jq -r '.extraInformationRequired' <<< "${PI_RESPONSE}")
           echo "RESPONSE_TYPE: ${RESPONSE_TYPE}"
+          echo "CODE_CHANGES_REQUIRED: ${CODE_CHANGES_REQUIRED}"
           echo "EXTRA_INFORMATION_REQUIRED: ${EXTRA_INFORMATION_REQUIRED}"
           echo "RESPONSE_TYPE=${RESPONSE_TYPE}" >> $GITHUB_OUTPUT
+          echo "CODE_CHANGES_REQUIRED=${CODE_CHANGES_REQUIRED}" >> $GITHUB_OUTPUT
           echo "EXTRA_INFORMATION_REQUIRED<<EOF" >> $GITHUB_OUTPUT
           echo "${EXTRA_INFORMATION_REQUIRED}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -209,7 +212,7 @@ jobs:
           reaction: '+1'
           token: ${{ secrets.ISSUE_READ_WRITE }}
       - name: Ensure issue branch
-        if: steps.save-pi-response-classify.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
+        if: (steps.save-pi-response-classify.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY') && (steps.save-pi-response-classify.outputs.CODE_CHANGES_REQUIRED == 'true')
         uses: ./.github/actions/ensure-branch
         with:
           branch: ${{ needs.triage.outputs.issue-branch }}
@@ -237,8 +240,16 @@ jobs:
           echo "SUMMARY<<EOF" >> $GITHUB_OUTPUT
           echo "${SUMMARY}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-      - name: Ensure PR is raised
-        if: steps.save-pi-response-classify.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
+      - name: Reply if no code changes required
+        if: (steps.save-pi-response-classify.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY') && (steps.save-pi-response-classify.outputs.CODE_CHANGES_REQUIRED == 'false')
+        uses: ./.github/actions/add-comment
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.repository }}
+          issue-number: ${{ github.event.issue.number }}
+          comment: ${{ steps.save-pi-response-address.outputs.SUMMARY }}
+      - name: Raise PR if code changes required
+        if: (steps.save-pi-response-classify.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY') && (steps.save-pi-response-classify.outputs.CODE_CHANGES_REQUIRED == 'true')
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.RAISE_PR_PAT }}

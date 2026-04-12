@@ -9,6 +9,9 @@
         "CAN_ADDRESS_FULLY"
       ]
     },
+    "codeChangesRequired": {
+      "type": "boolean"
+    },
     "extraInformationRequired": {
       "type": "array",
       "items": {
@@ -22,6 +25,7 @@
   "additionalProperties": false,
   "required": [
     "responseType",
+    "codeChangesRequired",
     "extraInformationRequired"
   ]
 }
