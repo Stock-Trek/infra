@@ -39,7 +39,7 @@ runs:
         {
           "ISSUE_TITLE": "${{ inputs.issue-title }}",
           "ISSUE_BODY": "${{ inputs.issue-body }}",
-          "ISSUE_COMMENT": "${{ inputs.issue-comment }}",
+          "ISSUE_COMMENT": "${{ inputs.issue-comment }}"
         }
         EOF
         )
