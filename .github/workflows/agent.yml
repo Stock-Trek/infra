@@ -51,7 +51,7 @@ jobs:
       - name: Create pi inputs for classifying request
         id: pi-inputs-request
         run: |
-          CONTEXT=${{ steps.gather-metadata.outputs.ISSUE_METADATA}}
+          CONTEXT=${{ steps.gather-metadata.outputs.ISSUE_METADATA }}
           PROMPT=$(cat .github/dialogues/prompts/classify-request.txt)
           SCHEMA=$(cat .github/dialogues/responses/request-schema.json | jq)
           echo "CONTEXT<<EOF" >> $GITHUB_OUTPUT
