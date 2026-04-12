@@ -242,12 +242,15 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
       - name: Reply if no code changes required
         if: (steps.save-pi-response-classify.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY') && (steps.save-pi-response-classify.outputs.CODE_CHANGES_REQUIRED == 'false')
-        uses: ./.github/actions/add-comment
+        uses: actions/github-script@v7
         with:
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.repository }}
-          issue-number: ${{ github.event.issue.number }}
-          comment: ${{ steps.save-pi-response-address.outputs.SUMMARY }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: ${{ steps.save-pi-response-address.outputs.SUMMARY }}
+            })
       - name: Raise PR if code changes required
         if: (steps.save-pi-response-classify.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY') && (steps.save-pi-response-classify.outputs.CODE_CHANGES_REQUIRED == 'true')
         uses: peter-evans/create-pull-request@v6
