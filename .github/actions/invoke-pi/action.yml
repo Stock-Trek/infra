@@ -4,8 +4,8 @@ inputs:
   context:
     description: "Context to send to pi"
     required: true
-  request:
-    description: "Request to send to pi"
+  prompt:
+    description: "Prompt to send to pi"
     required: true
   schema:
     description: "Response schema"
