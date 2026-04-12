@@ -1,3 +1,3 @@
-Read the GitHub issue, comment history and request type and classify our response.
+Read the GitHub issue, comment and request type and classify our response.
 1. Is a human needed to address this request, or can I address this issue partially or completely?
 2. If I can address this issue but require more information to complete it, list all the extra information needed before this request can be fully addressed.
