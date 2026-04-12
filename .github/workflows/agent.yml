@@ -129,6 +129,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
       pull-requests: write
     env:
       GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
