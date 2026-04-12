@@ -10,8 +10,8 @@ inputs:
   issue-body:
     description: "Issue body"
     required: true
-  issue-comments:
-    description: "Issue comments"
+  issue-comment:
+    description: "Issue comment"
     required: true
   issue-branch-base:
     description: "Issue branch base"
@@ -33,16 +33,13 @@ runs:
     - shell: bash
       id: gather-metadata
       run: |
-        ISSUE_TITLE="${{ github.event.issue.title }}"
-        ISSUE_BODY="${{ github.event.issue.body }}"
-        ISSUE_COMMENTS="${{ github.event.issue.comments }}"
-        ISSUE_BRANCH="agent/issue-${{ github.event.issue.number }}"
+        ISSUE_BRANCH="agent/issue-${{ inputs.issue-number }}"
         ISSUE_BRANCH_BASE="${{ inputs.issue-branch-base }}"
         ISSUE_METADATA=$(jq -c -n \
           --arg ISSUE_TITLE "${{ inputs.issue-title }}" \
           --arg ISSUE_BODY "${{ inputs.issue-body }}" \
-          --arg ISSUE_COMMENTS "${{ inputs.issue-comments }}" \
-          '{ISSUE_TITLE: $ISSUE_TITLE, ISSUE_BODY: $ISSUE_BODY, ISSUE_COMMENTS: $ISSUE_COMMENTS}')
+          --arg ISSUE_COMMENT "${{ inputs.issue-comment }}" \
+          '{ISSUE_TITLE: $ISSUE_TITLE, ISSUE_BODY: $ISSUE_BODY, ISSUE_COMMENT: $ISSUE_COMMENT}')
 
         echo "Issue branch: ${ISSUE_BRANCH}"
         echo "Issue branch base: ${ISSUE_BRANCH_BASE}"

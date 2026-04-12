@@ -20,7 +20,7 @@ runs:
     - shell: bash
       id: pi-response
       run: |
-        PROMPT="${{ inputs.context }} ${{ inputs.request }} Use the following schema. ${{ inputs.schema }}"
+        PROMPT="${{ inputs.context }} ${{ inputs.prompt }} Use the following schema. ${{ inputs.schema }}"
         PI_RESPONSE=$(pi \
           --provider deepseek \
           --model deepseek-chat \

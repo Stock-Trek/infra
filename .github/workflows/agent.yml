@@ -40,7 +40,7 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           issue-title: ${{ github.event.issue.title }}
           issue-body: ${{ github.event.issue.body }}
-          issue-comments: ${{ github.event.issue.comments }}
+          issue-comment: ${{ github.event.comment.body }}
           issue-branch-base: master
 
       - name: Set up DeepSeek via pi
