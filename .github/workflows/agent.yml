@@ -48,13 +48,25 @@ jobs:
         with:
           api-key: ${{ secrets.DEEPSEEK_API_KEY }}
 
+      - name: Create pi inputs for classifying request
+        id: pi-inputs-request
+        run: |
+          PROMPT=$(cat .github/dialogues/prompts/classify-request.txt)
+          SCHEMA=$(cat .github/dialogues/responses/request-schema.json | jq)
+          echo "PROMPT<<EOF" >> $GITHUB_OUTPUT
+          echo "${PROMPT}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "SCHEMA<<EOF" >> $GITHUB_OUTPUT
+          echo "${SCHEMA}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Classify request
         id: classify-request
         uses: ./.github/actions/invoke-pi
         with:
           context: ${{ steps.gather-metadata.outputs.ISSUE_METADATA }}
-          prompt: $(cat .github/dialogues/prompts/classify-request.txt)
-          schema: $(cat .github/dialogues/responses/request-schema.json | jq)
+          prompt: ${{ steps.pi-inputs-request.outputs.PROMPT }}
+          schema: ${{ steps.pi-inputs-request.outputs.SCHEMA }}
 
       - name: Save request type
         id: save-request-type
@@ -125,13 +137,25 @@ jobs:
         with:
           api-key: ${{ secrets.DEEPSEEK_API_KEY }}
 
+      - name: Create pi inputs for classifying response
+        id: pi-inputs-response
+        run: |
+          PROMPT=$(cat .github/dialogues/prompts/classify-response.txt)
+          SCHEMA=$(cat .github/dialogues/responses/response-schema.json | jq)
+          echo "PROMPT<<EOF" >> $GITHUB_OUTPUT
+          echo "${PROMPT}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "SCHEMA<<EOF" >> $GITHUB_OUTPUT
+          echo "${SCHEMA}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Classify response
         id: classify-response
         uses: ./.github/actions/invoke-pi
         with:
           context: ${{ needs.triage.outputs.issue-metadata }}
-          prompt: $(cat .github/dialogues/prompts/classify-response.txt)
-          schema: $(cat .github/dialogues/responses/response-schema.json | jq)
+          prompt: ${{ steps.pi-inputs-response.outputs.PROMPT }}
+          schema: ${{ steps.pi-inputs-response.outputs.SCHEMA }}
 
       - name: Save response
         id: save-response
@@ -188,14 +212,25 @@ jobs:
         uses: ./.github/actions/ensure-branch
         with:
           branch: ${{ needs.triage.outputs.issue-branch }}
+      - name: Create pi inputs for addressing issue
+        id: pi-inputs-address
+        run: |
+          PROMPT=$(cat .github/dialogues/prompts/address-issue.txt)
+          SCHEMA=$(cat .github/dialogues/responses/completed-issue-schema.json | jq)
+          echo "PROMPT<<EOF" >> $GITHUB_OUTPUT
+          echo "${PROMPT}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "SCHEMA<<EOF" >> $GITHUB_OUTPUT
+          echo "${SCHEMA}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - name: Address issue
         id: address-issue
         if: steps.save-response.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
         uses: ./.github/actions/invoke-pi
         with:
           context: ${{ needs.triage.outputs.issue-metadata }}
-          prompt: $(cat .github/dialogues/prompts/address-issue.txt)
-          schema: $(cat .github/dialogues/responses/completed-issue-schema.json | jq)
+          prompt: ${{ steps.pi-inputs-address.outputs.PROMPT }}
+          schema: ${{ steps.pi-inputs-address.outputs.SCHEMA }}
       - name: Ensure PR is raised
         if: steps.save-response.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
         uses: peter-evans/create-pull-request@v6
