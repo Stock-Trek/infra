@@ -74,8 +74,12 @@ jobs:
       - name: Save request type
         id: save-request-type
         run: |
-          PI_RESPONSE=$(echo "${{ steps.classify-request.outputs.response-base64 }}" | base64 -d | jq .)
-          echo "PI_RESPONSE: ${PI_RESPONSE}"
+          PI_RESPONSE_BASE64=${{ steps.classify-request.outputs.response-base64 }}
+          echo "${PI_RESPONSE_BASE64}"
+          PI_RESPONSE_STRING=$(echo "${PI_RESPONSE_BASE64}" | base64 -d)
+          echo "${PI_RESPONSE_STRING}"
+          PI_RESPONSE=$(echo "${PI_RESPONSE_STRING}" | jq .)
+          echo "${PI_RESPONSE}"
           REQUEST_TYPE=$(jq -r '.request-type' <<< "${PI_RESPONSE}")
           echo "REQUEST_TYPE: ${REQUEST_TYPE}"
           echo "REQUEST_TYPE=${REQUEST_TYPE}" >> $GITHUB_OUTPUT
