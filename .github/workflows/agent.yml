@@ -249,7 +249,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ${{ steps.save-pi-response-address.outputs.SUMMARY }}
+              body: "${{ steps.save-pi-response-address.outputs.SUMMARY }}"
             })
       - name: Raise PR if code changes required
         if: (steps.save-pi-response-classify.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY') && (steps.save-pi-response-classify.outputs.CODE_CHANGES_REQUIRED == 'true')
