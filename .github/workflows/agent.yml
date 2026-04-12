@@ -31,7 +31,7 @@ jobs:
         with:
           comment-id: ${{ github.event.comment.id }}
           reaction: 'eyes'
-          token: ${{ env.GITHUB_TOKEN }}
+          token: ${{ secrets.ISSUE_READ_WRITE }}
 
       - name: Gather issue metadata
         id: gather-metadata
@@ -69,8 +69,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -80,7 +78,7 @@ jobs:
         with:
           comment-id: ${{ github.event.comment.id }}
           reaction: '-1'
-          token: ${{ env.GITHUB_TOKEN }}
+          token: ${{ secrets.ISSUE_READ_WRITE }}
 
   other-request:
     needs: [triage]
@@ -88,8 +86,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -99,7 +95,7 @@ jobs:
         with:
           comment-id: ${{ github.event.comment.id }}
           reaction: 'confused'
-          token: ${{ env.GITHUB_TOKEN }}
+          token: ${{ secrets.ISSUE_READ_WRITE }}
       - name: Add comment
         uses: actions/github-script@v7
         with:
@@ -167,7 +163,7 @@ jobs:
         with:
           comment-id: ${{ github.event.comment.id }}
           reaction: 'confused'
-          token: ${{ env.GITHUB_TOKEN }}
+          token: ${{ secrets.ISSUE_READ_WRITE }}
       - name: Ask for required information
         if: steps.save-response.outputs.RESPONSE_TYPE == 'REQUIRES_MORE_INFORMATION'
         uses: actions/github-script@v7
@@ -186,7 +182,7 @@ jobs:
         with:
           comment-id: ${{ github.event.comment.id }}
           reaction: '+1'
-          token: ${{ env.GITHUB_TOKEN }}
+          token: ${{ secrets.ISSUE_READ_WRITE }}
       - name: Ensure issue branch
         if: steps.save-response.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
         uses: ./.github/actions/ensure-branch
