@@ -2,14 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
-    "response-type": {
+    "responseType": {
       "enum": [
         "REQUIRES_HUMAN",
         "REQUIRES_MORE_INFORMATION",
         "CAN_ADDRESS_FULLY"
       ]
     },
-    "extra-information-required": {
+    "extraInformationRequired": {
       "type": "array",
       "items": {
         "type": "string"
@@ -21,7 +21,7 @@
   },
   "additionalProperties": false,
   "required": [
-    "response-type",
-    "extra-information-required"
+    "responseType",
+    "extraInformationRequired"
   ]
 }
