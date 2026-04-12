@@ -16,9 +16,9 @@ jobs:
     permissions:
       contents: write
     outputs:
-      issue-branch-base: ${{ steps.gather-metadata.outputs.ISSUE_BRANCH_BASE }}
-      issue-branch: ${{ steps.gather-metadata.outputs.ISSUE_BRANCH }}
-      issue-metadata: ${{ steps.gather-metadata.outputs.ISSUE_METADATA }}
+      issue-branch-base: ${{ steps.gather-branches.outputs.ISSUE_BRANCH_BASE }}
+      issue-branch: ${{ steps.gather-branches.outputs.ISSUE_BRANCH }}
+      issue-context: ${{ steps.create-issue-context.outputs.CONTEXT }}
       request-type: ${{ steps.save-request-type.outputs.REQUEST_TYPE }}
     env:
       GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
@@ -33,49 +33,27 @@ jobs:
           reaction: 'eyes'
           token: ${{ secrets.ISSUE_READ_WRITE }}
 
-      - name: Gather issue metadata
-        id: gather-metadata
-        uses: ./.github/actions/gather-issue-metadata
+      - name: Gather issue branches
+        id: gather-branches
+        uses: ./.github/actions/gather-issue-branches
         with:
           issue-number: ${{ github.event.issue.number }}
-          issue-title: ${{ github.event.issue.title }}
-          issue-body: ${{ github.event.issue.body }}
-          issue-comment: ${{ github.event.comment.body }}
           issue-branch-base: master
 
-      - name: bash
-        id: test
+      - name: Create issue context
+        id: create-issue-context
         run: |
-          # Test 1: Simple string
-          SIMPLE="hello world"
-          echo "simple<<EOF" >> $GITHUB_OUTPUT
-          echo "$SIMPLE" >> $GITHUB_OUTPUT
+          CONTEXT=$(cat <<EOF
+          {
+            "ISSUE_TITLE": "${{ github.event.issue.title }}",
+            "ISSUE_BODY": "${{ github.event.issue.body }}",
+            "ISSUE_COMMENT": "${{ github.event.comment.body }}"
+          }
+          EOF
+          )
+          echo "CONTEXT<<EOF" >> $GITHUB_OUTPUT
+          echo "${CONTEXT}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-          
-          # Test 2: Simple JSON
-          JSON='{"test":"value"}'
-          echo "json1<<EOF" >> $GITHUB_OUTPUT
-          echo "$JSON" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          
-          # Test 3: Check if variable is empty
-          echo "raw_json=[$JSON]" >> $GITHUB_OUTPUT
-          
-          # Test 4: Check file approach
-          echo "$JSON" > test.json
-          echo "file_content<<EOF" >> $GITHUB_OUTPUT
-          cat test.json >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-  
-      - name: echo
-        run: |
-          echo "Simple: '${{ steps.test.outputs.simple }}'"
-          echo "JSON1: '${{ steps.test.outputs.json1 }}'"
-          echo "Raw: '${{ steps.test.outputs.raw_json }}'"
-          echo "File: '${{ steps.test.outputs.file_content }}'"
-
-
-
 
       - name: Set up DeepSeek via pi
         uses: ./.github/actions/set-up-deepseek-via-pi
@@ -85,12 +63,8 @@ jobs:
       - name: Create pi inputs for classifying request
         id: pi-inputs-request
         run: |
-          CONTEXT=${{ steps.gather-metadata.outputs.ISSUE_METADATA }}
           PROMPT=$(cat .github/dialogues/prompts/classify-request.txt)
           SCHEMA=$(cat .github/dialogues/responses/request-schema.json | jq)
-          echo "CONTEXT<<EOF" >> $GITHUB_OUTPUT
-          echo "${CONTEXT}" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
           echo "SCHEMA<<EOF" >> $GITHUB_OUTPUT
           echo "${SCHEMA}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -102,7 +76,7 @@ jobs:
         id: classify-request
         uses: ./.github/actions/invoke-pi
         with:
-          context: ${{ steps.pi-inputs-request.outputs.CONTEXT }}
+          context: ${{ steps.create-issue-context.outputs.CONTEXT }}
           prompt: ${{ steps.pi-inputs-request.outputs.PROMPT }}
           schema: ${{ steps.pi-inputs-request.outputs.SCHEMA }}
 
@@ -191,7 +165,7 @@ jobs:
         id: classify-response
         uses: ./.github/actions/invoke-pi
         with:
-          context: ${{ needs.triage.outputs.issue-metadata }}
+          context: ${{ needs.triage.outputs.issue-context }}
           prompt: ${{ steps.pi-inputs-response.outputs.PROMPT }}
           schema: ${{ steps.pi-inputs-response.outputs.SCHEMA }}
 
@@ -266,7 +240,7 @@ jobs:
         if: steps.save-response.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
         uses: ./.github/actions/invoke-pi
         with:
-          context: ${{ needs.triage.outputs.issue-metadata }}
+          context: ${{ needs.triage.outputs.issue-context }}
           prompt: ${{ steps.pi-inputs-address.outputs.PROMPT }}
           schema: ${{ steps.pi-inputs-address.outputs.SCHEMA }}
       - name: Ensure PR is raised
