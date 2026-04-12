@@ -1,0 +1,203 @@
+name: Agent
+
+on:
+  issues:
+    types: [edited, opened, reopened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  triage:
+    if: |
+      (github.event_name == 'issues' && (contains(github.event.issue.title, '@agent') || contains(github.event.issue.body, '@agent'))) ||
+      (github.event_name == 'issue_comment' && (contains(github.event.comment.body, '@agent')))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    outputs:
+      issue-branch-base: ${{ steps.gather-metadata.outputs.ISSUE_BRANCH_BASE }}
+      issue-branch: ${{ steps.gather-metadata.outputs.ISSUE_BRANCH }}
+      issue-metadata: ${{ steps.gather-metadata.outputs.ISSUE_METADATA }}
+      request-type: ${{ steps.save-request-type.outputs.REQUEST_TYPE }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
+    steps:
+      - name: Acknowledge
+        uses: ./.github/actions/emoji-react
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reaction: 'eyes'
+          token: ${{ env.GITHUB_TOKEN }}
+
+      - name: Gather issue metadata
+        id: gather-metadata
+        uses: ./.github/actions/gather-issue-metadata
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          issue-title: ${{ github.event.issue.title }}
+          issue-body: ${{ github.event.issue.body }}
+          issue-comments: ${{ github.event.issue.comments }}
+          issue-branch-base: master
+
+      - name: Set up DeepSeek via pi
+        uses: ./.github/actions/set-up-deepseek-via-pi
+        with:
+          api-key: ${{ secrets.DEEPSEEK_API_KEY }}
+
+      - name: Classify request
+        id: classify-request
+        uses: ./.github/actions/invoke-pi
+        with:
+          context: ${{ steps.gather-metadata.outputs.ISSUE_METADATA }}
+          prompt: $(cat ../dialogues/prompts/classify-request.txt)
+          schema: $(cat ../dialogues/responses/request-schema.json)
+
+      - name: Save request type
+        id: save-request-type
+        run: |
+          REQUEST_TYPE=$(jq -r '.request-type' <<< "${{ steps.classify-request.outputs.PI_RESPONSE }}")
+          echo "REQUEST_TYPE: ${REQUEST_TYPE}"
+          echo "REQUEST_TYPE=${REQUEST_TYPE}" >> $GITHUB_OUTPUT
+
+  thumbs-down-spam:
+    needs: [triage]
+    if: needs.triage.outputs.request-type == 'SPAM'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
+    steps:
+      - name: Thumbs down
+        uses: ./.github/actions/emoji-react
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reaction: '-1'
+          token: ${{ env.GITHUB_TOKEN }}
+
+  other-request:
+    needs: [triage]
+    if: needs.triage.outputs.request-type == 'OTHER'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
+    steps:
+      - name: Thumbs down
+        uses: ./.github/actions/emoji-react
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reaction: 'confused'
+          token: ${{ env.GITHUB_TOKEN }}
+      - name: Add comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `I'm sorry I wasn't able to understand the issue type. If it's one of [BUG, FEATURE, QUESTION] please mention it specifically.`
+            })
+
+  respond:
+    needs: [triage]
+    if: (needs.triage.outputs.request-type == 'BUG') || (needs.triage.outputs.request-type == 'FEATURE') || (needs.triage.outputs.request-type == 'QUESTION')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up DeepSeek via pi
+        uses: ./.github/actions/set-up-deepseek-via-pi
+        with:
+          api-key: ${{ secrets.DEEPSEEK_API_KEY }}
+
+      - name: Classify response
+        id: classify-response
+        uses: ./.github/actions/invoke-pi
+        with:
+          context: ${{ needs.triage.outputs.issue-metadata }}
+          prompt: $(cat ../dialogues/prompts/classify-response.txt)
+          schema: $(cat ../dialogues/responses/response-schema.json)
+
+      - name: Save response
+        id: save-response
+        run: |
+          RESPONSE_TYPE=$(jq -r '.response-type' <<< "${{ steps.classify-response.outputs.PI_RESPONSE }}")
+          EXTRA_INFORMATION_REQUIRED=$(jq -r '.extra-information-required' <<< "${{ steps.classify-response.outputs.PI_RESPONSE }}")
+          echo "RESPONSE_TYPE: ${RESPONSE_TYPE}"
+          echo "EXTRA_INFORMATION_REQUIRED: ${EXTRA_INFORMATION_REQUIRED}"
+          echo "RESPONSE_TYPE=${RESPONSE_TYPE}" >> $GITHUB_OUTPUT
+          echo "EXTRA_INFORMATION_REQUIRED<<EOF" >> $GITHUB_OUTPUT
+          echo "${EXTRA_INFORMATION_REQUIRED}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Require human
+        if: steps.save-response.outputs.RESPONSE_TYPE == 'REQUIRES_HUMAN'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Unfortunately I cannot address this issue. I'm adding a "Requires human" label.'
+            })
+
+      - name: Add confused reaction
+        if: steps.save-response.outputs.RESPONSE_TYPE == 'REQUIRES_MORE_INFORMATION'
+        uses: ./.github/actions/emoji-react
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reaction: 'confused'
+          token: ${{ env.GITHUB_TOKEN }}
+      - name: Ask for required information
+        if: steps.save-response.outputs.RESPONSE_TYPE == 'REQUIRES_MORE_INFORMATION'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'The following additional information is required: ${{ steps.save-response.outputs.EXTRA_INFORMATION_REQUIRED }}'
+            })
+
+      - name: Add thumbs up reaction
+        if: steps.save-response.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
+        uses: ./.github/actions/emoji-react
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reaction: '+1'
+          token: ${{ env.GITHUB_TOKEN }}
+      - name: Ensure issue branch
+        if: steps.save-response.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
+        uses: ./.github/actions/ensure-branch
+        with:
+          branch: ${{ needs.triage.outputs.issue-branch }}
+      - name: Address issue
+        id: address-issue
+        if: steps.save-response.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
+        uses: ./.github/actions/invoke-pi
+        with:
+          context: ${{ needs.triage.outputs.issue-metadata }}
+          prompt: $(cat ../dialogues/prompts/classify-request.txt)
+          schema: $(cat ../dialogues/responses/request-schema.json)
+      - name: Ensure PR is raised
+        if: steps.save-response.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.RAISE_PR_PAT }}
+          commit-message: "Feature branch for ${{ github.event.issue.number }} ${{ github.event.issue.title }}"
+          title: "Closes #${{ github.event.issue.number }} ${{ github.event.issue.title }}"
+          body: ${{ steps.address-issue.outputs.PI_OUTPUT }}
+          branch: ${{ needs.triage.outputs.issue-branch }}
+          base: ${{ needs.triage.outputs.issue-branch-base }}

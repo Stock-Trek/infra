@@ -1,0 +1,1 @@
+Read the GitHub issue and comment history and classify what type of request it is.

@@ -1,0 +1,54 @@
+name: "Gather issue metadata"
+description: "Gather issue metadata as outputs"
+inputs:
+  issue-number:
+    description: "Issue number"
+    required: true
+  issue-title:
+    description: "Issue title"
+    required: true
+  issue-body:
+    description: "Issue body"
+    required: true
+  issue-comments:
+    description: "Issue comments"
+    required: true
+  issue-branch-base:
+    description: "Issue branch base"
+    required: false
+    default: master
+outputs:
+  issue-branch:
+    description: "Issue branch"
+    value: ${{ steps.gather-metadata.outputs.ISSUE_BRANCH }}
+  issue-branch-base:
+    description: "Issue branch base"
+    value: ${{ inputs.issue-branch-base }}
+  issue-metadata:
+    description: "Issue metadata"
+    value: ${{ steps.gather-metadata.outputs.ISSUE_METADATA }}
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      id: gather-metadata
+      run: |
+        ISSUE_TITLE="${{ github.event.issue.title }}"
+        ISSUE_BODY="${{ github.event.issue.body }}"
+        ISSUE_COMMENTS="${{ github.event.issue.comments }}"
+        ISSUE_BRANCH="agent/issue-${{ github.event.issue.number }}"
+        ISSUE_BRANCH_BASE="${{ inputs.issue-branch-base }}"
+        ISSUE_METADATA=$(jq -c -n \
+          --arg ISSUE_TITLE "${{ inputs.issue-title }}" \
+          --arg ISSUE_BODY "${{ inputs.issue-body }}" \
+          --arg ISSUE_COMMENTS "${{ inputs.issue-comments }}" \
+          '{ISSUE_TITLE: $ISSUE_TITLE, ISSUE_BODY: $ISSUE_BODY, ISSUE_COMMENTS: $ISSUE_COMMENTS}')
+
+        echo "Issue branch: ${ISSUE_BRANCH}"
+        echo "Issue branch base: ${ISSUE_BRANCH_BASE}"
+        echo "Issue metadata: ${ISSUE_METADATA}"
+        echo "ISSUE_BRANCH=${ISSUE_BRANCH}" >> $GITHUB_OUTPUT
+        echo "ISSUE_BRANCH_BASE=${ISSUE_BRANCH_BASE}" >> $GITHUB_OUTPUT
+        echo "ISSUE_METADATA<<EOF" >> $GITHUB_OUTPUT
+        echo "$ISSUE_METADATA" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT

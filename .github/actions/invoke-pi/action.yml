@@ -1,0 +1,32 @@
+name: "Invoke pi"
+description: "Invoke pi and return structured response"
+inputs:
+  context:
+    description: "Context to send to pi"
+    required: true
+  request:
+    description: "Request to send to pi"
+    required: true
+  schema:
+    description: "Response schema"
+    required: true
+outputs:
+  response:
+    description: "Response json formatted in schema"
+    value: ${{ steps.pi-response.outputs.PI_RESPONSE }}
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      id: pi-response
+      run: |
+        PROMPT="${{ inputs.context }} ${{ inputs.request }} Use the following schema. ${{ inputs.schema }}"
+        PI_RESPONSE=$(pi \
+          --provider deepseek \
+          --model deepseek-chat \
+          --tools read,write,edit,bash,grep,find,ls \
+          --print "${PROMPT}" \
+          )
+        echo "PI_RESPONSE<<EOF" >> $GITHUB_OUTPUT
+        echo "${PI_RESPONSE}" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT

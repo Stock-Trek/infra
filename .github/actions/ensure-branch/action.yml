@@ -1,0 +1,22 @@
+name: "Ensure branch"
+description: "Checkout the existing branch or create it"
+inputs:
+  branch:
+    description: "Branch to checkout or create"
+    required: true
+  base:
+    description: "Branch off when creating new"
+    required: false
+    default: master
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        if ! git branch -r | grep -q "origin/${{ inputs.branch }}"; then
+          git checkout ${{ inputs.base }}
+          git checkout -b ${{ inputs.branch }}
+          git push -u origin HEAD
+        else
+          git checkout ${{ inputs.branch }}
+        fi
