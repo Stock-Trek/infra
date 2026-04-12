@@ -42,7 +42,7 @@ runs:
           "ISSUE_COMMENT": "${{ inputs.issue-comment }}",
         }
         EOF
-        )
+        | jq -c)
         echo "Issue branch: ${ISSUE_BRANCH}"
         echo "Issue branch base: ${ISSUE_BRANCH_BASE}"
         echo "Issue metadata: ${ISSUE_METADATA}"

@@ -20,7 +20,7 @@ runs:
     - shell: bash
       id: pi-response
       run: |
-        PROMPT="Context: ${{ inputs.context }} \n\n End of context. \n\n ${{ inputs.prompt }} \n\n Use the following schema. ${{ inputs.schema }}"
+        PROMPT="Context: ${{ inputs.context }} \n\n End of context. \n\n ${{ inputs.prompt }} \n\n Use the following schema to format your response. ${{ inputs.schema }}"
         PI_RESPONSE=$(pi \
           --provider deepseek \
           --model deepseek-chat \
