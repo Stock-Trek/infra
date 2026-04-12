@@ -27,6 +27,7 @@ runs:
           --tools read,write,edit,bash,grep,find,ls \
           --print "${PROMPT}" \
           )
+        echo "${PI_RESPONSE}"
         echo "PI_RESPONSE<<EOF" >> $GITHUB_OUTPUT
         echo "${PI_RESPONSE}" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
