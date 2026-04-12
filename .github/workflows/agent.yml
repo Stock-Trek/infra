@@ -53,8 +53,8 @@ jobs:
         uses: ./.github/actions/invoke-pi
         with:
           context: ${{ steps.gather-metadata.outputs.ISSUE_METADATA }}
-          prompt: $(cat ../../dialogues/prompts/classify-request.txt)
-          schema: $(cat ../../dialogues/responses/request-schema.json)
+          prompt: $(cat .github/dialogues/prompts/classify-request.txt)
+          schema: $(cat .github/dialogues/responses/request-schema.json | jq)
 
       - name: Save request type
         id: save-request-type
@@ -130,8 +130,8 @@ jobs:
         uses: ./.github/actions/invoke-pi
         with:
           context: ${{ needs.triage.outputs.issue-metadata }}
-          prompt: $(cat ../../dialogues/prompts/classify-response.txt)
-          schema: $(cat ../../dialogues/responses/response-schema.json)
+          prompt: $(cat .github/dialogues/prompts/classify-response.txt)
+          schema: $(cat .github/dialogues/responses/response-schema.json | jq)
 
       - name: Save response
         id: save-response
@@ -194,8 +194,8 @@ jobs:
         uses: ./.github/actions/invoke-pi
         with:
           context: ${{ needs.triage.outputs.issue-metadata }}
-          prompt: $(cat ../../dialogues/prompts/classify-request.txt)
-          schema: $(cat ../../dialogues/responses/request-schema.json)
+          prompt: $(cat .github/dialogues/prompts/address-issue.txt)
+          schema: $(cat .github/dialogues/responses/completed-issue-schema.json | jq)
       - name: Ensure PR is raised
         if: steps.save-response.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
         uses: peter-evans/create-pull-request@v6
@@ -203,6 +203,6 @@ jobs:
           token: ${{ secrets.RAISE_PR_PAT }}
           commit-message: "Feature branch for ${{ github.event.issue.number }} ${{ github.event.issue.title }}"
           title: "Closes #${{ github.event.issue.number }} ${{ github.event.issue.title }}"
-          body: ${{ steps.address-issue.outputs.PI_OUTPUT }}
+          body: $(echo "${{ steps.address-issue.outputs.PI_OUTPUT }}" | jq -r '.summary')
           branch: ${{ needs.triage.outputs.issue-branch }}
           base: ${{ needs.triage.outputs.issue-branch-base }}
