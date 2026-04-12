@@ -74,7 +74,7 @@ jobs:
       - name: Save request type
         id: save-request-type
         run: |
-          PI_RESPONSE=$(echo ${{ steps.pi-inputs-request }} | base64 -d)
+          PI_RESPONSE=$(echo ${{ steps.pi-inputs-request.outputs.response-base64 }} | base64 -d)
           REQUEST_TYPE=$(jq -r '.request-type' <<< "${PI_RESPONSE}")
           echo "REQUEST_TYPE: ${REQUEST_TYPE}"
           echo "REQUEST_TYPE=${REQUEST_TYPE}" >> $GITHUB_OUTPUT

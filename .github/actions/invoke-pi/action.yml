@@ -23,7 +23,7 @@ runs:
         CONTEXT=$(echo ${{ inputs.context-base64 }} | base64 -d)
         PROMPT=$(echo ${{ inputs.prompt-base64 }} | base64 -d)
         SCHEMA=$(echo ${{ inputs.schema-base64 }} | base64 -d)
-        PI_PROMPT="Context: ${CONTEXT} \n\n End of context. \n\n ${PROMPT} \n\n Use the following schema to format your response. ${SCHEMA}"
+        PI_PROMPT="Context: ${CONTEXT} \n\n End of context. \n\n ${PROMPT} \n\n Your response must be formatted in the following schema. Do not print anything else apart from the json blob. ${SCHEMA}"
         PI_RESPONSE=$(pi \
           --provider deepseek \
           --model deepseek-chat \
