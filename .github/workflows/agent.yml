@@ -23,6 +23,9 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
       - name: Acknowledge
         uses: ./.github/actions/emoji-react
         with:
@@ -69,6 +72,9 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
       - name: Thumbs down
         uses: ./.github/actions/emoji-react
         with:
@@ -85,6 +91,9 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
       - name: Thumbs down
         uses: ./.github/actions/emoji-react
         with:
