@@ -1,33 +1,37 @@
 name: "Invoke pi"
 description: "Invoke pi and return structured response"
 inputs:
-  context:
-    description: "Context to send to pi"
+  context-base64:
+    description: "Context to send to pi in base64"
     required: true
-  prompt:
-    description: "Prompt to send to pi"
+  prompt-base64:
+    description: "Prompt to send to pi in base64"
     required: true
-  schema:
-    description: "Response schema"
+  schema-base64:
+    description: "Response schema in base64"
     required: true
 outputs:
-  response:
-    description: "Response json formatted in schema"
-    value: ${{ steps.pi-response.outputs.PI_RESPONSE }}
+  response-base64:
+    description: "Response json formatted in schema in base64"
+    value: ${{ steps.pi-response.outputs.PI_RESPONSE_BASE64 }}
 runs:
   using: "composite"
   steps:
     - shell: bash
       id: pi-response
       run: |
-        PROMPT="Context: ${{ inputs.context }} \n\n End of context. \n\n ${{ inputs.prompt }} \n\n Use the following schema to format your response. ${{ inputs.schema }}"
+        CONTEXT=$(echo ${{ inputs.context-base64 }} | base64 -d)
+        PROMPT=$(echo ${{ inputs.prompt-base64 }} | base64 -d)
+        SCHEMA=$(echo ${{ inputs.schema-base64 }} | base64 -d)
+        PI_PROMPT="Context: ${CONTEXT} \n\n End of context. \n\n ${PROMPT} \n\n Use the following schema to format your response. ${SCHEMA}"
         PI_RESPONSE=$(pi \
           --provider deepseek \
           --model deepseek-chat \
           --tools read,write,edit,bash,grep,find,ls \
-          --print "${PROMPT}" \
+          --print "${PI_PROMPT}" \
           )
         echo "${PI_RESPONSE}"
-        echo "PI_RESPONSE<<EOF" >> $GITHUB_OUTPUT
-        echo "${PI_RESPONSE}" >> $GITHUB_OUTPUT
+        PI_RESPONSE_BASE64=$(echo "${PI_RESPONSE}" | base64 -w 0)
+        echo "PI_RESPONSE_BASE64<<EOF" >> $GITHUB_OUTPUT
+        echo "${PI_RESPONSE_BASE64}" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
