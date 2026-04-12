@@ -74,7 +74,8 @@ jobs:
       - name: Save request type
         id: save-request-type
         run: |
-          PI_RESPONSE=$(echo ${{ steps.pi-inputs-request.outputs.response-base64 }} | base64 -d)
+          PI_RESPONSE=$(echo "${{ steps.pi-inputs-request.outputs.response-base64 }}" | base64 -d | jq .)
+          echo "PI_RESPONSE: ${PI_RESPONSE}"
           REQUEST_TYPE=$(jq -r '.request-type' <<< "${PI_RESPONSE}")
           echo "REQUEST_TYPE: ${REQUEST_TYPE}"
           echo "REQUEST_TYPE=${REQUEST_TYPE}" >> $GITHUB_OUTPUT
@@ -231,7 +232,7 @@ jobs:
       - name: Save address response
         id: save-pi-response-address
         run: |
-          PI_RESPONSE=$(echo "${{ steps.address-issue.outputs.response-base64 }}" | base64 -d)
+          PI_RESPONSE=$(echo "${{ steps.address-issue.outputs.response-base64 }}" | base64 -d | jq .)
           SUMMARY=$(jq -r '.summary' <<< "${PI_RESPONSE}")
           echo "SUMMARY<<EOF" >> $GITHUB_OUTPUT
           echo "${SUMMARY}" >> $GITHUB_OUTPUT
