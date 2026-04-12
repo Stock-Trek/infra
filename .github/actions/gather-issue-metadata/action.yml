@@ -42,12 +42,12 @@ runs:
           "ISSUE_COMMENT": "${{ inputs.issue-comment }}",
         }
         EOF
-        | jq -c)
+        )
         echo "Issue branch: ${ISSUE_BRANCH}"
         echo "Issue branch base: ${ISSUE_BRANCH_BASE}"
         echo "Issue metadata: ${ISSUE_METADATA}"
         echo "ISSUE_BRANCH=${ISSUE_BRANCH}" >> $GITHUB_OUTPUT
         echo "ISSUE_BRANCH_BASE=${ISSUE_BRANCH_BASE}" >> $GITHUB_OUTPUT
         echo "ISSUE_METADATA<<EOF" >> $GITHUB_OUTPUT
-        echo "${ISSUE_METADATA}" >> $GITHUB_OUTPUT
+        echo "${ISSUE_METADATA}" | jq -c >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
