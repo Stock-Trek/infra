@@ -11,10 +11,10 @@ inputs:
 outputs:
   issue-branch:
     description: "Issue branch"
-    value: ${{ steps.gather-metadata.outputs.ISSUE_BRANCH }}
+    value: ${{ steps.gather-branches.outputs.issue-branch }}
   issue-branch-base:
     description: "Issue branch base"
-    value: ${{ inputs.issue-branch-base }}
+    value: ${{ steps.gather-branches.outputs.issue-branch-base }}
 runs:
   using: "composite"
   steps:
@@ -25,5 +25,5 @@ runs:
         ISSUE_BRANCH_BASE="${{ inputs.issue-branch-base }}"
         echo "Issue branch: ${ISSUE_BRANCH}"
         echo "Issue branch base: ${ISSUE_BRANCH_BASE}"
-        echo "ISSUE_BRANCH=${ISSUE_BRANCH}" >> $GITHUB_OUTPUT
-        echo "ISSUE_BRANCH_BASE=${ISSUE_BRANCH_BASE}" >> $GITHUB_OUTPUT
+        echo "issue-branch=${ISSUE_BRANCH}" >> $GITHUB_OUTPUT
+        echo "issue-branch-base=${ISSUE_BRANCH_BASE}" >> $GITHUB_OUTPUT
