@@ -69,6 +69,7 @@ jobs:
               body: issue.body,
               history
             };
+            console.log(issueContext);
             const stringified = JSON.stringify(issueContext);
             const context_base64 = Buffer.from(stringified).toString('base64');
             core.setOutput('context-base64', context_base64);
@@ -90,7 +91,7 @@ jobs:
         id: classify-request
         uses: ./.github/actions/invoke-pi
         with:
-          context-base64: ${{ steps.pi-inputs-request.outputs.context-base64 }}
+          context-base64: ${{ steps.gather-context.outputs.context-base64 }}
           prompt-base64: ${{ steps.pi-inputs-request.outputs.prompt-base64 }}
           schema-base64: ${{ steps.pi-inputs-request.outputs.schema-base64 }}
 
