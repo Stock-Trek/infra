@@ -46,42 +46,21 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            console.log('Event name:', context.eventName);
-            console.log('Issue number:', context.issue.number);
-            console.log('Repository:', context.repo.owner, context.repo.repo);
-            console.log('Full payload:', JSON.stringify(context.payload, null, 2));
-            const query = `
-              query($owner: String!, $repo: String!, $issueNumber: Int!) {
-                repository(owner: $owner, name: $repo) {
-                  issue(number: $issueNumber) {
-                    title
-                    body
-                    comments(last: 20) {
-                      totalCount
-                      nodes {
-                        id
-                        body
-                        createdAt
-                        updatedAt
-                        author {
-                          login
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            `;
-            const result = await github.graphql(query, {
+            const { data: issue } = await github.rest.issues.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issueNumber: context.issue.number
+              issue_number: context.issue.number
             });
-            const issue = result.repository.issue;
-            const comments = issue.comments;
-            const history = comments.nodes.map(comment => ({
-              author: comment.author?.login || 'Unknown',
-              date: comment.createdAt,
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 20
+            });
+            const last20Comments = comments.slice(-20);
+            const history = last20Comments.map(comment => ({
+              author: comment.user.login,
+              date: comment.created_at,
               body: comment.body,
             }));
             const issueContext = {
