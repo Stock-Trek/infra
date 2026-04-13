@@ -307,7 +307,7 @@ jobs:
           base: ${{ needs.triage.outputs.issue-branch-base }}
           delete-branch: true
           draft: false
-      - name: Reply with PR link
+      - name: Reply with diff and PR link
         if: (steps.save-pi-response-classify.outputs.response-type == 'CAN_ADDRESS_FULLY') && (steps.save-pi-response-classify.outputs.code-changes-required == 'true')
         uses: actions/github-script@v7
         with:
