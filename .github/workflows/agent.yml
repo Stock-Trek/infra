@@ -50,11 +50,11 @@ jobs:
       - name: Save base64 prompts
         id: prompts
         run: |
-          echo "address-issue-base64="$(cat .github/prompts/address-issue.txt | base64 -w 0)" >> $GITHUB_OUTPUT
-          echo "are-code-changes-required-base64="$(cat .github/prompts/are-code-changes-required.txt | base64 -w 0)" >> $GITHUB_OUTPUT
-          echo "classify-request-base64="$(cat .github/prompts/classify-request.txt | base64 -w 0)" >> $GITHUB_OUTPUT
-          echo "classify-response-base64="$(cat .github/prompts/classify-response.txt | base64 -w 0)" >> $GITHUB_OUTPUT
-          echo "extra-information-required-base64="$(cat .github/prompts/extra-information-required.txt | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "address-issue-base64=$(cat .github/prompts/address-issue.txt | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "are-code-changes-required-base64=$(cat .github/prompts/are-code-changes-required.txt | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "classify-request-base64=$(cat .github/prompts/classify-request.txt | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "classify-response-base64=$(cat .github/prompts/classify-response.txt | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "extra-information-required-base64=$(cat .github/prompts/extra-information-required.txt | base64 -w 0)" >> $GITHUB_OUTPUT
 
       - name: Get last 20 comments
         id: gather-context
