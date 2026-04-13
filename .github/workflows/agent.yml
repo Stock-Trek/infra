@@ -60,7 +60,7 @@ jobs:
                         createdAt
                         updatedAt
                         author {
-                          name
+                          login
                         }
                       }
                     }
@@ -76,7 +76,7 @@ jobs:
             const issue = result.repository.issue;
             const comments = issue.comments;
             const history = comments.nodes.map(comment => ({
-              author: comment.author?.name || 'Unknown',
+              author: comment.author?.login || 'Unknown',
               date: comment.createdAt,
               body: comment.body,
             }));
