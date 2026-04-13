@@ -200,6 +200,19 @@ jobs:
           echo "${EXTRA_INFORMATION_REQUIRED}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+# Already addressed
+      - name: Respond with already addressed
+        if: steps.save-pi-response-classify.outputs.response-type == 'ALREADY_ADDRESSED'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'I think I have already addressed this. If I haven't please add another comment. [Please find the changes to this branch here](https://github.com/${GITHUB_REPOSITORY}/compare/${{ needs.triage.outputs.issue-branch-base }}...${{ needs.triage.outputs.issue-branch }})'
+            })
+
 # Require human
       - name: Require human
         if: steps.save-pi-response-classify.outputs.response-type == 'REQUIRES_HUMAN'
