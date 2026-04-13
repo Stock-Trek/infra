@@ -41,3 +41,13 @@ resource "aws_lambda_function_url" "stock-trek-compile-rust" {
   }
 }
 
+resource "aws_lambda_permission" "function_url_invoke" {
+  for_each = aws_lambda_function_url.stock-trek-compile-rust
+
+  statement_id  = "FunctionURLAllowPublicAccess-${each.key}"
+  action        = "lambda:InvokeFunctionUrl"
+  function_name = aws_lambda_function.stock-trek-compile-rust[each.key].function_name
+  principal     = "*"
+  function_url_auth_type = "NONE"
+}
+
