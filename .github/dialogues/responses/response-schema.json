@@ -4,7 +4,6 @@
   "properties": {
     "responseType": {
       "enum": [
-        "ALREADY_ADDRESSED",
         "REQUIRES_HUMAN",
         "REQUIRES_MORE_INFORMATION",
         "CAN_ADDRESS_FULLY"
