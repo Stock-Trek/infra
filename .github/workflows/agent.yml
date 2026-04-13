@@ -80,12 +80,12 @@ jobs:
               date: comment.createdAt,
               body: comment.body,
             }));
-            const context = {
+            const issueContext = {
               title: issue.title,
               body: issue.body,
               history
             };
-            const stringified = JSON.stringify(context);
+            const stringified = JSON.stringify(issueContext);
             const context_base64 = Buffer.from(stringified).toString('base64');
             core.setOutput('context-base64', context_base64);
 
