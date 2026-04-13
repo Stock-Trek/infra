@@ -1,0 +1,3 @@
+Read the GitHub issue, comment and request type.
+Classify the type of response we can respond with.
+Output exactly one of [ALREADY_ADDRESSED, REQUIRES_HUMAN, REQUIRES_MORE_INFORMATION, CAN_ADDRESS_FULLY].

@@ -1,0 +1,3 @@
+Read the GitHub issue and comment.
+Classify what type of request it is.
+Output exactly one of [BUG, FEATURE, QUESTION, SPAM, CAN_IGNORE, OTHER].

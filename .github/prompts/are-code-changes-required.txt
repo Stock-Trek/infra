@@ -1,0 +1,3 @@
+Read the GitHub issue, comment and request type
+Are any code changes required to address this request?
+Output exactly one boolean word, exactly one of [true, false].
