@@ -215,9 +215,7 @@ jobs:
         with:
           script: |
             let body = `I think this has already been addressed. If it hasn't please add another comment.`;
-            console.log(${{ steps.checkout-issue-branch.outputs.issue-branch-exists }});
-            const branchExists = (${{ steps.checkout-issue-branch.outputs.issue-branch-exists }} == 'true');
-            if (branchExists) {
+            if (${{ steps.checkout-issue-branch.outputs.issue-branch-exists }}) {
               body += `[The changes I have made can be found here.](https://github.com/${context.repo.owner}/${context.repo.repo}/compare/${{ needs.triage.outputs.issue-branch-base }}...${{ needs.triage.outputs.issue-branch }})`;
             }
             github.rest.issues.createComment({
