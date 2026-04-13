@@ -30,7 +30,8 @@ resource "aws_lambda_function_url" "stock-trek-compile-rust" {
     ]
     allow_methods     = [
       "GET",
-      "POST"
+      "POST",
+      "OPTIONS"
     ]
     allow_headers     = [
       "content-type",
