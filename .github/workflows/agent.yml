@@ -325,7 +325,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "${{ steps.save-address-issue-summary.outputs.summary }}"
+              body: `${{ steps.save-address-issue-summary.outputs.summary }}`
             });
       - name: Raise PR if code changes required
         id: raise-pr
