@@ -131,11 +131,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Thumbs down
+      - name: React confused
         uses: ./.github/actions/emoji-react
         with:
           comment-id: ${{ github.event.comment.id }}
