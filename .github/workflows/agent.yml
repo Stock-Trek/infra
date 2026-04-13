@@ -45,6 +45,7 @@ jobs:
         id: gather-context
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.ISSUE_READ_WRITE }}
           script: |
             const { data: issue } = await github.rest.issues.get({
               owner: context.repo.owner,
