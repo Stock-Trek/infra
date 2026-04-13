@@ -316,5 +316,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "[I have opened a PR here](${{ steps.raise-pr.outputs.pull-request-url }}) which addresses this issue."
+              body: "I have now addressed this. [The PR is available here.](${{ steps.raise-pr.outputs.pull-request-url }})"
             })
