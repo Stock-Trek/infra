@@ -30,6 +30,7 @@ jobs:
         uses: ./.github/actions/emoji-react
         with:
           comment-id: ${{ github.event.comment.id }}
+          issue-number: ${{ github.event.issue.number }}
           reaction: 'eyes'
           token: ${{ secrets.ISSUE_READ_WRITE }}
 
@@ -93,6 +94,7 @@ jobs:
         uses: ./.github/actions/emoji-react
         with:
           comment-id: ${{ github.event.comment.id }}
+          issue-number: ${{ github.event.issue.number }}
           reaction: '-1'
           token: ${{ secrets.ISSUE_READ_WRITE }}
 
@@ -110,6 +112,7 @@ jobs:
         uses: ./.github/actions/emoji-react
         with:
           comment-id: ${{ github.event.comment.id }}
+          issue-number: ${{ github.event.issue.number }}
           reaction: 'confused'
           token: ${{ secrets.ISSUE_READ_WRITE }}
       - name: Add comment
@@ -191,6 +194,7 @@ jobs:
         uses: ./.github/actions/emoji-react
         with:
           comment-id: ${{ github.event.comment.id }}
+          issue-number: ${{ github.event.issue.number }}
           reaction: 'confused'
           token: ${{ secrets.ISSUE_READ_WRITE }}
       - name: Ask for required information
@@ -198,18 +202,28 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const extraInfo = ${{ steps.save-pi-response-classify.outputs.EXTRA_INFORMATION_REQUIRED }};
+            let body = 'The following additional information is required:\n';
+            if (Array.isArray(extraInfo)) {
+              extraInfo.forEach(item => {
+                body += `- ${item}\n`;
+              });
+            } else if (typeof extraInfo === 'string') {
+              body += extraInfo;
+            }
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'The following additional information is required: ${{ steps.save-pi-response-classify.outputs.EXTRA_INFORMATION_REQUIRED }}'
-            })
+              body: body
+            });
 
       - name: Add thumbs up reaction
         if: steps.save-pi-response-classify.outputs.RESPONSE_TYPE == 'CAN_ADDRESS_FULLY'
         uses: ./.github/actions/emoji-react
         with:
           comment-id: ${{ github.event.comment.id }}
+          issue-number: ${{ github.event.issue.number }}
           reaction: '+1'
           token: ${{ secrets.ISSUE_READ_WRITE }}
       - name: Ensure issue branch
