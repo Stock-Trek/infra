@@ -75,30 +75,3 @@ resource "aws_s3_bucket_public_access_block" "compiled_so" {
   restrict_public_buckets = true
 }
 
-# Lifecycle rules for uploaded code bucket (keep versions for 30 days)
-resource "aws_s3_bucket_lifecycle_configuration" "uploaded_code" {
-  bucket = aws_s3_bucket.uploaded_code.id
-  
-  rule {
-    id     = "cleanup-old-versions"
-    status = "Enabled"
-    
-    noncurrent_version_expiration {
-      noncurrent_days = 30
-    }
-  }
-}
-
-# Lifecycle rules for compiled .so bucket (keep versions for 90 days)
-resource "aws_s3_bucket_lifecycle_configuration" "compiled_so" {
-  bucket = aws_s3_bucket.compiled_so.id
-  
-  rule {
-    id     = "cleanup-old-versions"
-    status = "Enabled"
-    
-    noncurrent_version_expiration {
-      noncurrent_days = 90
-    }
-  }
-}
