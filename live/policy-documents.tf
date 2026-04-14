@@ -88,3 +88,46 @@ data "aws_iam_policy_document" "update_lambda" {
     resources = [for lambda in aws_lambda_function.stock-trek-compile-rust : lambda.arn]
   }
 }
+
+data "aws_iam_policy_document" "s3_access" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket"
+    ]
+    resources = [for bucket in aws_s3_bucket.buckets : bucket.arn]
+  }
+  
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject"
+    ]
+    resources = [for bucket in aws_s3_bucket.buckets : "${bucket.arn}/*"]
+  }
+}
+
+data "aws_iam_policy_document" "bucket_policies" {
+  for_each = local.s3_buckets
+  
+  statement {
+    sid    = "SecureTransport"
+    effect = "Deny"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions   = ["s3:*"]
+    resources = [
+      aws_s3_bucket.buckets[each.key].arn,
+      "${aws_s3_bucket.buckets[each.key].arn}/*"
+    ]
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
+}

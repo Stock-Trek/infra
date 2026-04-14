@@ -11,4 +11,9 @@ locals {
     "check",
     "save"
   ]
+  
+  s3_buckets = {
+    uploaded_code = "stock-trek-uploaded-code"
+    compiled_so   = "stock-trek-compiled-so"
+  }
 }
