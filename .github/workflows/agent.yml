@@ -323,7 +323,7 @@ jobs:
           git config --global user.email "agent@stock-trek.com"
           git config --global user.name "Stock-Trek Agent"
           git add .
-          git commit -m "Commit changes made by pi"
+          git commit --allow-empty -m "Commit changes made by pi"
           git push
       - name: Reply if no code changes required
         if: (steps.save-response-type.outputs.response-type == 'CAN_ADDRESS_FULLY') && (steps.save-are-code-changes-required.outputs.are-code-changes-required == 'false')
