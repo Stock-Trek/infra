@@ -14,3 +14,23 @@ resource "aws_ecr_repository" "stock_trek" {
     scan_on_push = true
   }
 }
+
+resource "aws_ecr_lifecycle_policy" "cleanup_untagged" {
+  for_each = aws_ecr_repository.stock_trek
+  
+  repository = each.value.name
+  policy = jsonencode({
+    rules = [{
+      rulePriority = 1
+      description  = "Delete untagged images"
+      selection = {
+        tagStatus   = "untagged"
+        countType   = "imageCountMoreThan"
+        countNumber = 0
+      }
+      action = {
+        type = "expire"
+      }
+    }]
+  })
+}
