@@ -114,3 +114,45 @@ data "aws_iam_policy_document" "s3_access" {
     ]
   }
 }
+
+data "aws_iam_policy_document" "uploaded_code_bucket_policy" {
+  statement {
+    sid    = "SecureTransport"
+    effect = "Deny"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions   = ["s3:*"]
+    resources = [
+      aws_s3_bucket.uploaded_code.arn,
+      "${aws_s3_bucket.uploaded_code.arn}/*"
+    ]
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "compiled_so_bucket_policy" {
+  statement {
+    sid    = "SecureTransport"
+    effect = "Deny"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions   = ["s3:*"]
+    resources = [
+      aws_s3_bucket.compiled_so.arn,
+      "${aws_s3_bucket.compiled_so.arn}/*"
+    ]
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
+}

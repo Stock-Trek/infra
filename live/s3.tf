@@ -7,6 +7,18 @@ resource "aws_s3_bucket" "uploaded_code" {
   }
 }
 
+resource "aws_s3_bucket_versioning" "uploaded_code" {
+  bucket = aws_s3_bucket.uploaded_code.id
+  versioning_configuration {
+    status = "Disabled"
+  }
+}
+
+resource "aws_s3_bucket_policy" "uploaded_code" {
+  bucket = aws_s3_bucket.uploaded_code.id
+  policy = data.aws_iam_policy_document.uploaded_code_bucket_policy.json
+}
+
 resource "aws_s3_bucket" "compiled_so" {
   bucket = "stock-trek-compiled-so"
   
@@ -14,6 +26,18 @@ resource "aws_s3_bucket" "compiled_so" {
     Environment = "Production"
     Name        = "Compiled .so Files Bucket"
   }
+}
+
+resource "aws_s3_bucket_versioning" "compiled_so" {
+  bucket = aws_s3_bucket.compiled_so.id
+  versioning_configuration {
+    status = "Disabled"
+  }
+}
+
+resource "aws_s3_bucket_policy" "compiled_so" {
+  bucket = aws_s3_bucket.compiled_so.id
+  policy = data.aws_iam_policy_document.compiled_so_bucket_policy.json
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "uploaded_code" {
