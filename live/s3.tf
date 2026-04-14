@@ -1,5 +1,3 @@
-# S3 buckets for algorithm runner
-
 resource "aws_s3_bucket" "uploaded_code" {
   bucket = "stock-trek-uploaded-code"
   
@@ -18,7 +16,6 @@ resource "aws_s3_bucket" "compiled_so" {
   }
 }
 
-# Enable versioning for both buckets
 resource "aws_s3_bucket_versioning" "uploaded_code" {
   bucket = aws_s3_bucket.uploaded_code.id
   
@@ -35,7 +32,6 @@ resource "aws_s3_bucket_versioning" "compiled_so" {
   }
 }
 
-# Enable server-side encryption for both buckets
 resource "aws_s3_bucket_server_side_encryption_configuration" "uploaded_code" {
   bucket = aws_s3_bucket.uploaded_code.id
   
@@ -56,7 +52,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "compiled_so" {
   }
 }
 
-# Block public access for both buckets
 resource "aws_s3_bucket_public_access_block" "uploaded_code" {
   bucket = aws_s3_bucket.uploaded_code.id
   
