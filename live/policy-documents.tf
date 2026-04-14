@@ -97,7 +97,6 @@ data "aws_iam_policy_document" "s3_access" {
     ]
     resources = [for bucket in aws_s3_bucket.buckets : bucket.arn]
   }
-  
   statement {
     effect = "Allow"
     actions = [

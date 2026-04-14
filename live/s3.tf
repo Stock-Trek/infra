@@ -5,7 +5,6 @@ resource "aws_s3_bucket" "buckets" {
   
   tags = {
     Environment = "Production"
-    Name        = each.key == "uploaded_code" ? "Uploaded Code Bucket" : "Compiled .so Files Bucket"
   }
 }
 
