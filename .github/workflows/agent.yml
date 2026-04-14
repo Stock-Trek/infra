@@ -26,8 +26,6 @@ jobs:
       extra-information-required-base64: ${{ steps.prompts.outputs.extra-information-required-base64 }}
       issue-context-base64: ${{ steps.gather-context.outputs.context-base64 }}
       request-type: ${{ steps.save-request-type.outputs.request-type }}
-    env:
-      GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -317,7 +315,7 @@ jobs:
           echo "summary<<EOF" >> $GITHUB_OUTPUT
           echo "${SUMMARY}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-      - name: Commit code changes
+      - name: Commit and push code changes
         if: (steps.save-response-type.outputs.response-type == 'CAN_ADDRESS_FULLY') && (steps.save-are-code-changes-required.outputs.are-code-changes-required == 'true')
         run: |
           git config --global user.email "agent@stock-trek.com"
@@ -339,8 +337,6 @@ jobs:
       - name: Raise PR if code changes required
         id: raise-pr
         if: (steps.save-response-type.outputs.response-type == 'CAN_ADDRESS_FULLY') && (steps.save-are-code-changes-required.outputs.are-code-changes-required == 'true')
-        env:
-          GITHUB_TOKEN: ${{ secrets.RAISE_PR_PAT }}
         run: |
           PR_URL=$(gh pr create \
             --base "${{ needs.triage.outputs.issue-branch-base }}"" \
