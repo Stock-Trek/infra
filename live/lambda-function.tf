@@ -35,13 +35,22 @@ resource "aws_lambda_function_url" "stock-trek-compile-rust" {
   }
 }
 
-resource "aws_lambda_permission" "function_url_invoke" {
-  for_each = aws_lambda_function_url.stock-trek-compile-rust
+resource "aws_lambda_permission" "stock-trek-invoke-function" {
+  for_each                  = aws_lambda_function_url.stock-trek-compile-rust
 
-  statement_id  = "FunctionURLAllowPublicAccess-${each.key}"
-  action        = "lambda:InvokeFunctionUrl"
-  function_name = aws_lambda_function.stock-trek-compile-rust[each.key].function_name
-  principal     = "*"
-  function_url_auth_type = "NONE"
+  statement_id              = "InvokeFunction"
+  action                    = "lambda:InvokeFunction"
+  function_name             = aws_lambda_function.stock-trek-compile-rust[each.key].function_name
+  principal                 = "*"
+  invoked_via_function_url  = true
 }
 
+resource "aws_lambda_permission" "stock-trek-invoke-function-url" {
+  for_each                  = aws_lambda_function_url.stock-trek-compile-rust
+
+  statement_id              = "AllowPublicAccess"
+  action                    = "lambda:InvokeFunctionUrl"
+  function_name             = aws_lambda_function.stock-trek-compile-rust[each.key].function_name
+  principal                 = "*"
+  function_url_auth_type    = "NONE"
+}
