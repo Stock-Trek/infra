@@ -85,6 +85,9 @@ data "aws_iam_policy_document" "update_lambda" {
       "lambda:PublishVersion",
       "lambda:UpdateFunctionCode"
     ]
-    resources = [for lambda in aws_lambda_function.stock-trek-compile-rust : lambda.arn]
+    resources = concat(
+      [for lambda in aws_lambda_function.stock-trek-compile-rust : lambda.arn],
+      ["arn:aws:lambda:*:*:function:stock-trek-*compile-rust*"]
+    )
   }
 }
