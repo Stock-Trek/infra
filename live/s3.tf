@@ -16,22 +16,6 @@ resource "aws_s3_bucket" "compiled_so" {
   }
 }
 
-resource "aws_s3_bucket_versioning" "uploaded_code" {
-  bucket = aws_s3_bucket.uploaded_code.id
-  
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_versioning" "compiled_so" {
-  bucket = aws_s3_bucket.compiled_so.id
-  
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
 resource "aws_s3_bucket_server_side_encryption_configuration" "uploaded_code" {
   bucket = aws_s3_bucket.uploaded_code.id
   
