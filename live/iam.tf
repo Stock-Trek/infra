@@ -52,3 +52,13 @@ resource "aws_iam_role_policy_attachment" "logs" {
   role       = aws_iam_role.run_lambda.name
   policy_arn = aws_iam_policy.logs.arn
 }
+
+resource "aws_iam_policy" "s3_access" {
+  name   = "stock-trek-s3-access"
+  policy = data.aws_iam_policy_document.s3_access.json
+}
+
+resource "aws_iam_role_policy_attachment" "s3_access" {
+  role       = aws_iam_role.run_lambda.name
+  policy_arn = aws_iam_policy.s3_access.arn
+}

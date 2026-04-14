@@ -19,3 +19,19 @@ output "website_bucket_update_role" {
 output "website_cloudfront_distribution_id" {
   value = module.stock-trek.cloudfront_distribution_id
 }
+
+output "uploaded_code_bucket" {
+  value = aws_s3_bucket.uploaded_code.bucket
+}
+
+output "compiled_so_bucket" {
+  value = aws_s3_bucket.compiled_so.bucket
+}
+
+output "uploaded_code_bucket_arn" {
+  value = aws_s3_bucket.uploaded_code.arn
+}
+
+output "compiled_so_bucket_arn" {
+  value = aws_s3_bucket.compiled_so.arn
+}
