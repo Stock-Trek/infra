@@ -29,6 +29,7 @@ resource "aws_lambda_function_url" "stock-trek-compile-rust" {
       "https://www.${local.bare_domain}"
     ]
     allow_headers     = ["*"]
+    allow_methods     = ["POST", "GET"]
     expose_headers    = []
     max_age           = 86400
   }
