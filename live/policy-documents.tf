@@ -95,10 +95,7 @@ data "aws_iam_policy_document" "s3_access" {
     actions = [
       "s3:ListBucket"
     ]
-    resources = [
-      aws_s3_bucket.uploaded_code.arn,
-      aws_s3_bucket.compiled_so.arn
-    ]
+    resources = [for bucket in aws_s3_bucket.buckets : bucket.arn]
   }
   
   statement {
@@ -108,14 +105,13 @@ data "aws_iam_policy_document" "s3_access" {
       "s3:PutObject",
       "s3:DeleteObject"
     ]
-    resources = [
-      "${aws_s3_bucket.uploaded_code.arn}/*",
-      "${aws_s3_bucket.compiled_so.arn}/*"
-    ]
+    resources = [for bucket in aws_s3_bucket.buckets : "${bucket.arn}/*"]
   }
 }
 
-data "aws_iam_policy_document" "uploaded_code_bucket_policy" {
+data "aws_iam_policy_document" "bucket_policies" {
+  for_each = local.s3_buckets
+  
   statement {
     sid    = "SecureTransport"
     effect = "Deny"
@@ -125,29 +121,8 @@ data "aws_iam_policy_document" "uploaded_code_bucket_policy" {
     }
     actions   = ["s3:*"]
     resources = [
-      aws_s3_bucket.uploaded_code.arn,
-      "${aws_s3_bucket.uploaded_code.arn}/*"
-    ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values   = ["false"]
-    }
-  }
-}
-
-data "aws_iam_policy_document" "compiled_so_bucket_policy" {
-  statement {
-    sid    = "SecureTransport"
-    effect = "Deny"
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
-    actions   = ["s3:*"]
-    resources = [
-      aws_s3_bucket.compiled_so.arn,
-      "${aws_s3_bucket.compiled_so.arn}/*"
+      aws_s3_bucket.buckets[each.key].arn,
+      "${aws_s3_bucket.buckets[each.key].arn}/*"
     ]
     condition {
       test     = "Bool"

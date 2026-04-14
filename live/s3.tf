@@ -1,47 +1,34 @@
-resource "aws_s3_bucket" "uploaded_code" {
-  bucket = "stock-trek-uploaded-code"
+resource "aws_s3_bucket" "buckets" {
+  for_each = local.s3_buckets
+  
+  bucket = each.value
   
   tags = {
     Environment = "Production"
-    Name        = "Uploaded Code Bucket"
+    Name        = each.key == "uploaded_code" ? "Uploaded Code Bucket" : "Compiled .so Files Bucket"
   }
 }
 
-resource "aws_s3_bucket_versioning" "uploaded_code" {
-  bucket = aws_s3_bucket.uploaded_code.id
+resource "aws_s3_bucket_versioning" "buckets" {
+  for_each = local.s3_buckets
+  
+  bucket = aws_s3_bucket.buckets[each.key].id
   versioning_configuration {
     status = "Disabled"
   }
 }
 
-resource "aws_s3_bucket_policy" "uploaded_code" {
-  bucket = aws_s3_bucket.uploaded_code.id
-  policy = data.aws_iam_policy_document.uploaded_code_bucket_policy.json
-}
-
-resource "aws_s3_bucket" "compiled_so" {
-  bucket = "stock-trek-compiled-so"
+resource "aws_s3_bucket_policy" "buckets" {
+  for_each = local.s3_buckets
   
-  tags = {
-    Environment = "Production"
-    Name        = "Compiled .so Files Bucket"
-  }
+  bucket = aws_s3_bucket.buckets[each.key].id
+  policy = data.aws_iam_policy_document.bucket_policies[each.key].json
 }
 
-resource "aws_s3_bucket_versioning" "compiled_so" {
-  bucket = aws_s3_bucket.compiled_so.id
-  versioning_configuration {
-    status = "Disabled"
-  }
-}
-
-resource "aws_s3_bucket_policy" "compiled_so" {
-  bucket = aws_s3_bucket.compiled_so.id
-  policy = data.aws_iam_policy_document.compiled_so_bucket_policy.json
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "uploaded_code" {
-  bucket = aws_s3_bucket.uploaded_code.id
+resource "aws_s3_bucket_server_side_encryption_configuration" "buckets" {
+  for_each = local.s3_buckets
+  
+  bucket = aws_s3_bucket.buckets[each.key].id
   
   rule {
     apply_server_side_encryption_by_default {
@@ -50,31 +37,13 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "uploaded_code" {
   }
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "compiled_so" {
-  bucket = aws_s3_bucket.compiled_so.id
+resource "aws_s3_bucket_public_access_block" "buckets" {
+  for_each = local.s3_buckets
   
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "uploaded_code" {
-  bucket = aws_s3_bucket.uploaded_code.id
+  bucket = aws_s3_bucket.buckets[each.key].id
   
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
-
-resource "aws_s3_bucket_public_access_block" "compiled_so" {
-  bucket = aws_s3_bucket.compiled_so.id
-  
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
