@@ -9,8 +9,9 @@ resource "aws_lambda_function" "stock-trek-compile-rust" {
   }
   role          = aws_iam_role.run_lambda.arn
   publish       = true
+  architectures = ["arm64"]
   memory_size   = 2048
-  timeout       = 30
+  timeout       = 60
   depends_on    = [
     aws_iam_role_policy_attachment.logs,
     aws_iam_role_policy_attachment.pull_image
