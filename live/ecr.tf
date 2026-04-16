@@ -20,18 +20,19 @@ resource "aws_ecr_lifecycle_policy" "cleanup_untagged" {
   
   repository = each.value.name
   policy = jsonencode({
-    rules = [{
-      rulePriority = 1
-      description  = "Delete untagged images older than 1 day"
-      selection = {
-        tagStatus   = "untagged"
-        countType   = "sinceImagePushed"
-        countUnit   = "days"
-        countNumber = 1
+    rules = [
+      {
+        "rulePriority": 1,
+        "description": "Keep at most 1 untagged image",
+        "selection": {
+          "tagStatus": "untagged",
+          "countType": "imageCountMoreThan",
+          "countNumber": 1
+        },
+        "action": {
+          "type": "expire"
+        }
       }
-      action = {
-        type = "expire"
-      }
-    }]
+    ]
   })
 }
