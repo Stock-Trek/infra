@@ -13,7 +13,7 @@ locals {
   ]
   
   s3_buckets = {
-    uploaded_code = "stock-trek-uploaded-code"
-    compiled_so   = "stock-trek-compiled-so"
+    raw_code  = "stock-trek-raw-code"
+    cwasm     = "stock-trek-compiled-cwasm"
   }
 }

@@ -22,9 +22,6 @@ output "website_cloudfront_distribution_id" {
 
 output "s3_buckets" {
   value = {
-    for key, bucket in aws_s3_bucket.buckets : key => {
-      name = bucket.bucket
-      arn  = bucket.arn
-    }
+    for key, bucket in aws_s3_bucket.buckets : key => bucket.bucket
   }
 }
