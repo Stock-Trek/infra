@@ -15,5 +15,6 @@ locals {
   s3_buckets = {
     raw_code  = "stock-trek-raw-code"
     cwasm     = "stock-trek-compiled-cwasm"
+    metadata  = "stock-trek-metadata"
   }
 }
