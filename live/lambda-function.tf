@@ -43,10 +43,10 @@ resource "aws_lambda_function" "stock-trek-compile-rust" {
 }
 
 resource "aws_lambda_function_url" "stock-trek-compile-rust" {
-  for_each       = aws_lambda_function.stock-trek-compile-rust
+  for_each            = aws_lambda_function.stock-trek-compile-rust
 
-  function_name      = each.value.function_name
-  authorization_type = "NONE"
+  function_name       = each.value.function_name
+  authorization_type  = "NONE"
 
   cors {
     allow_origins     = [
