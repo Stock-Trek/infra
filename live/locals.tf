@@ -12,6 +12,7 @@ locals {
     "save"
   ]
   s3_buckets = {
-    uploads = "stock-trek-uploads"
+    uploads     = "stock-trek-uploads"
+    market_data = "stock-trek-market-data"
   }
 }
