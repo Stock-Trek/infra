@@ -1,3 +1,27 @@
+resource "aws_lambda_function" "stock-trek-market-data-updater" {
+  function_name     = "stock-trek-market-data-updater"
+  package_type      = "Zip"
+  handler           = "bootstrap"
+  filename          = data.archive_file.dummy.output_path
+  source_code_hash  = data.archive_file.dummy.output_base64sha256
+  runtime           = "provided.al2023"
+  role              = aws_iam_role.run_lambda.arn
+  publish           = true
+  architectures     = ["x86_64"]
+  memory_size       = 2048
+  timeout           = 300
+  depends_on        = [
+    aws_iam_role_policy_attachment.logs,
+    aws_iam_role_policy_attachment.pull_image
+  ]
+  lifecycle {
+    ignore_changes  = [
+      filename,
+      source_code_hash,
+    ]
+  }
+}
+
 resource "aws_lambda_function" "stock-trek-compile-rust" {
   for_each       = toset(local.algorithm_runner_handlers)
 
@@ -55,3 +79,15 @@ resource "aws_lambda_permission" "stock-trek-invoke-function-url" {
   principal                 = "*"
   function_url_auth_type    = "NONE"
 }
+
+data "archive_file" "dummy" {
+  type        = "zip"
+  output_path = "${path.module}/files/dummy_bootstrap.zip"
+  source {
+    content  = "#!/bin/bash\nexit 0"
+    filename = "bootstrap"
+  }
+  depends_on = [null_resource.trigger]
+}
+
+resource "null_resource" "trigger" {}
