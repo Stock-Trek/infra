@@ -1,27 +1,35 @@
-output "compile_rust_lambda_urls" {
-  value = {
-    for name, lambda_url in aws_lambda_function_url.stock-trek-compile-rust : name => lambda_url.function_url
-  }
+output "bucket-market-data-arn" {
+  value = module.bucket-market-data.arn
 }
 
-output "website_url" {
-  value = module.stock-trek.url
+output "bucket-uploads-arn" {
+  value = module.bucket-uploads.arn
 }
 
-output "website_bucket" {
-  value = module.stock-trek.bucket
+output "lambda-market-data-arn" {
+  value = module.lambda-market-data.arn
 }
 
-output "website_bucket_update_role" {
-  value = module.stock-trek.role
+output "lambda-compile-rust-arn" {
+  value = module.lambda-compile-rust.arn
 }
 
-output "website_cloudfront_distribution_id" {
-  value = module.stock-trek.cloudfront_distribution_id
+output "lambda-compile-rust-url" {
+  value = module.lambda-compile-rust.url
 }
 
-output "s3_buckets" {
-  value = {
-    for key, bucket in aws_s3_bucket.buckets : key => bucket.bucket
-  }
+output "website-url" {
+  value = module.website-stock-trek.url
+}
+
+output "website-bucket" {
+  value = module.website-stock-trek.bucket
+}
+
+output "website-bucket-update-role" {
+  value = module.website-stock-trek.role
+}
+
+output "website-cloudfront-distribution-id" {
+  value = module.website-stock-trek.cloudfront_distribution_id
 }
