@@ -1,23 +1,23 @@
 module "bucket-market-data" {
   source = "./s3-bucket"
-  name   = local.bucket-market-data
+  name   = local.market-data-bucket
   tags   = local.tags
 }
 
 module "bucket-uploads" {
   source = "./s3-bucket"
-  name   = local.bucket-uploads
+  name   = local.compile-rust-bucket
   tags   = local.tags
 }
 
 module "lambda-market-data" {
   source           = "./lambda"
-  name             = local.lambda-market-data
+  name             = local.market-data-lambda
   github-account   = local.github-account
   github-oidc-arn  = data.aws_iam_openid_connect_provider.github.arn
   memory           = 2048
   timeout          = 300
-  role-update-code = local.role-update-code-market-data
+  role-update-code = local.market-data-update-code-role
 }
 
 module "s3-access-market-data" {
@@ -29,13 +29,13 @@ module "s3-access-market-data" {
 
 module "lambda-compile-rust" {
   source                         = "./lambda"
-  name                           = local.lambda-compile-rust
+  name                           = local.compile-rust-lambda
   github-account                 = local.github-account
   github-oidc-arn                = data.aws_iam_openid_connect_provider.github.arn
   memory                         = 2048
   timeout                        = 300
-  role-update-code               = local.role-update-code-compile-rust
-  public-access-cors-bare-domain = local.bare-domain
+  role-update-code               = local.compile-rust-update-code-role
+  public-access-cors-bare-domain = local.website-bare-domain
 }
 
 module "s3-access-compile-rust" {
@@ -45,9 +45,17 @@ module "s3-access-compile-rust" {
   depends_on  = [module.lambda-compile-rust]
 }
 
+module "cron-update-market-data" {
+  source      = "./glue/cron"
+  name        = local.market-data-event-rule
+  cron        = local.market-data-cron
+  lambda-arn  = module.lambda-market-data.arn
+  lambda-name = local.market-data-lambda
+}
+
 module "website-stock-trek" {
   source                      = "github.com/NathanJAdams/aws_s3_website.git?ref=master"
-  bare_domain                 = local.bare-domain
+  bare_domain                 = local.website-bare-domain
   error_file                  = null
   oidc_role_name              = "StockTrekUpdateWebsite"
   oidc_connector              = "GitHub"

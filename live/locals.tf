@@ -1,13 +1,20 @@
 locals {
-  bare-domain                    = "stock-trek.com"
   github-account                 = "Stock-Trek"
   github-repository-name-website = "website"
-  bucket-market-data             = "stock-trek-market-data"
-  bucket-uploads                 = "stock-trek-uploads"
-  lambda-market-data             = "stock-trek-market-data"
-  lambda-compile-rust            = "stock-trek-compile-rust"
-  role-update-code-market-data   = "StockTrekUpdateCodeMarketData"
-  role-update-code-compile-rust  = "StockTrekUpdateCodeCompileRust"
+
+  website-bare-domain = "stock-trek.com"
+
+  market-data-bucket           = "stock-trek-market-data"
+  market-data-cron             = "rate(5 minutes)"
+  market-data-update           = "stock-trek-market-data"
+  market-data-lambda           = "stock-trek-market-data"
+  market-data-event-rule       = "stock-trek-market-data"
+  market-data-update-code-role = "StockTrekUpdateCodeMarketData"
+
+  compile-rust-lambda           = "stock-trek-compile-rust"
+  compile-rust-update-code-role = "StockTrekUpdateCodeCompileRust"
+  compile-rust-bucket           = "stock-trek-uploads"
+
   tags = {
     Environment = "production"
   }
