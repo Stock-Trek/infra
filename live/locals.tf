@@ -1,18 +1,14 @@
 locals {
-  bare_domain                     = "stock-trek.com"
-  github_account_name             = "Stock-Trek"
-  github_repository_name_website  = "website"
-  ecr_repositories                = [
-    "algorithm-runner"
-  ]
-  role_push_image                 = "StockTrekPushImage"
-  role_run_lambda                 = "StockTrekRunLambda"
-  algorithm_runner_handlers       = [
-    "check",
-    "save"
-  ]
-  s3_buckets = {
-    uploads     = "stock-trek-uploads"
-    market_data = "stock-trek-market-data"
+  bare-domain                    = "stock-trek.com"
+  github-account                 = "Stock-Trek"
+  github-repository-name-website = "website"
+  bucket-market-data             = "stock-trek-market-data"
+  bucket-uploads                 = "stock-trek-uploads"
+  lambda-market-data             = "stock-trek-market-data"
+  lambda-compile-rust            = "stock-trek-compile-rust"
+  role-update-code-market-data   = "StockTrekUpdateCodeMarketData"
+  role-update-code-compile-rust  = "StockTrekUpdateCodeCompileRust"
+  tags = {
+    Environment = "production"
   }
 }
