@@ -17,3 +17,15 @@ variable "cron" {
   description = "Cron expression to run on"
   type        = string
 }
+
+variable "retries" {
+  description = "Max retries"
+  type        = number
+  default     = 1
+}
+
+variable "retry-expiry-seconds" {
+  description = "When to stop retrying in seconds"
+  type        = number
+  default     = 60
+}
