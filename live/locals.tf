@@ -15,6 +15,8 @@ locals {
   compile-rust-update-code-role = "StockTrekUpdateCodeCompileRust"
   compile-rust-bucket           = "stock-trek-uploads"
 
+  algorithm-compiler-ecr-name = "algorithm-compiler"
+
   tags = {
     Environment = "production"
   }

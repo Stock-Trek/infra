@@ -53,6 +53,13 @@ module "cron-update-market-data" {
   lambda-name = local.market-data-lambda
 }
 
+module "ecr-algorithm-compiler" {
+  source                      = "./ecr-repository"
+  name                        = local.algorithm-compiler-ecr-name
+  mutability-exclusion-filter = "master"
+  tags                        = local.tags
+}
+
 module "website-stock-trek" {
   source                      = "github.com/NathanJAdams/aws_s3_website.git?ref=master"
   bare_domain                 = local.website-bare-domain
