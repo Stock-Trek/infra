@@ -1,19 +1,8 @@
 # update
 resource "aws_iam_role" "update" {
-  name               = var.role-update-code
+  name               = var.role-update
   assume_role_policy = data.aws_iam_policy_document.github-assume-web-identity.json
 }
-
-resource "aws_iam_policy" "update-code" {
-  name   = "${aws_iam_role.update.name}-update-code"
-  policy = data.aws_iam_policy_document.update-code.json
-}
-
-resource "aws_iam_role_policy_attachment" "update-code" {
-  role       = aws_iam_role.update.name
-  policy_arn = aws_iam_policy.update-code.arn
-}
-
 
 # run
 resource "aws_iam_role" "run" {

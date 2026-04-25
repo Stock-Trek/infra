@@ -11,13 +11,14 @@ module "bucket-uploads" {
 }
 
 module "lambda-market-data" {
-  source           = "./lambda"
-  name             = local.market-data-lambda
-  github-account   = local.github-account
-  github-oidc-arn  = data.aws_iam_openid_connect_provider.github.arn
-  memory           = 2048
-  timeout          = 300
-  role-update-code = local.market-data-update-code-role
+  source          = "./lambda"
+  name            = local.market-data-lambda
+  github-account  = local.github-account
+  github-oidc-arn = data.aws_iam_openid_connect_provider.github.arn
+  memory          = 2048
+  timeout         = 300
+  role-update     = local.market-data-update-role
+  package-type    = "Zip"
 }
 
 module "s3-access-market-data" {
@@ -25,24 +26,6 @@ module "s3-access-market-data" {
   role        = module.lambda-market-data.role-run-name
   bucket-arns = [module.bucket-market-data.arn]
   depends_on  = [module.lambda-market-data]
-}
-
-module "lambda-compile-rust" {
-  source                         = "./lambda"
-  name                           = local.compile-rust-lambda
-  github-account                 = local.github-account
-  github-oidc-arn                = data.aws_iam_openid_connect_provider.github.arn
-  memory                         = 2048
-  timeout                        = 300
-  role-update-code               = local.compile-rust-update-code-role
-  public-access-cors-bare-domain = local.website-bare-domain
-}
-
-module "s3-access-compile-rust" {
-  source      = "./glue/s3-access"
-  role        = module.lambda-compile-rust.role-run-name
-  bucket-arns = [module.bucket-uploads.arn]
-  depends_on  = [module.lambda-compile-rust]
 }
 
 module "cron-update-market-data" {
@@ -53,10 +36,36 @@ module "cron-update-market-data" {
   lambda-name = local.market-data-lambda
 }
 
+module "lambda-compile-rust" {
+  source          = "./lambda"
+  name            = local.compile-rust-lambda
+  github-account  = local.github-account
+  github-oidc-arn = data.aws_iam_openid_connect_provider.github.arn
+  memory          = 2048
+  timeout         = 300
+  role-update     = local.compile-rust-update-role
+  package-type    = "Image"
+  image = {
+    config = {
+    }
+    ecr-repository-arn = module.ecr-algorithm-compiler.arn
+    image_tag          = local.algorithm-compiler-ecr-image-tag
+    repository_url     = module.ecr-algorithm-compiler.repository_url
+  }
+  public-access-cors-bare-domain = local.website-bare-domain
+}
+
+module "s3-access-compile-rust" {
+  source      = "./glue/s3-access"
+  role        = module.lambda-compile-rust.role-run-name
+  bucket-arns = [module.bucket-uploads.arn]
+  depends_on  = [module.lambda-compile-rust]
+}
+
 module "ecr-algorithm-compiler" {
   source                      = "./ecr-repository"
   name                        = local.algorithm-compiler-ecr-name
-  mutability-exclusion-filter = "master"
+  mutability-exclusion-filter = local.algorithm-compiler-ecr-image-tag
   tags                        = local.tags
 }
 

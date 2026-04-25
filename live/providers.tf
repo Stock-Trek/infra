@@ -15,10 +15,10 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "state.stock-trek.com"
-    key            = "live/terraform.tfstate"
-    region         = "eu-west-1"
-    use_lockfile   = true
-    encrypt        = true
+    bucket       = "state.stock-trek.com"
+    key          = "live/terraform.tfstate"
+    region       = "eu-west-1"
+    use_lockfile = true
+    encrypt      = true
   }
 }

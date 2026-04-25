@@ -6,6 +6,10 @@ output "bucket-uploads-arn" {
   value = module.bucket-uploads.arn
 }
 
+output "algorithm-compiler-ecr-repository-url" {
+  value = module.ecr-algorithm-compiler.repository_url
+}
+
 output "lambda-market-data-arn" {
   value = module.lambda-market-data.arn
 }

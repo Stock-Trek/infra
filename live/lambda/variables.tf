@@ -13,8 +13,8 @@ variable "timeout" {
   type        = number
 }
 
-variable "role-update-code" {
-  description = "Role name for updating lambda code"
+variable "role-update" {
+  description = "Role name for updating the lambda"
   type        = string
 }
 
@@ -33,6 +33,53 @@ variable "tags" {
   type        = map(string)
   nullable    = true
   default     = {}
+}
+
+variable "package-type" {
+  description = "One of [Zip, Image]"
+  type        = string
+  validation {
+    condition     = (var.package-type == "Zip") || (var.package-type == "Image" && var.image != null)
+    error_message = "package-type must be one of [Zip, Image]. If package-type is Image, then image must not be null"
+  }
+}
+
+variable "env-vars" {
+  type    = map(string)
+  default = {}
+}
+
+variable "zip" {
+  description = "Zip lambdas, cannot be used with image"
+  type = object({
+    handler = string
+    runtime = string
+  })
+  default = {
+    handler = "bootstrap"
+    runtime = "provided.al2023"
+  }
+}
+
+variable "image" {
+  description = "Image lambdas, cannot be used with zip"
+  type = object({
+    ecr-repository-arn = string
+    repository_url     = string
+    image_tag          = string
+    config = object({
+      command           = optional(list(string))
+      entry_point       = optional(list(string))
+      working_directory = optional(string)
+    })
+  })
+  default = {
+    config = {
+    }
+    ecr-repository-arn = "Required"
+    image_tag          = "Required"
+    repository_url     = "Required"
+  }
 }
 
 variable "public-access-cors-bare-domain" {
