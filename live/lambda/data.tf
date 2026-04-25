@@ -19,15 +19,15 @@ data "aws_iam_policy_document" "github-assume-web-identity" {
   }
 }
 
-data "aws_iam_policy_document" "write-logs" {
+data "aws_iam_policy_document" "update-lambda" {
   statement {
     effect = "Allow"
     actions = [
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
+      "lambda:GetFunction",
+      "lambda:PublishVersion",
+      "lambda:UpdateFunctionCode"
     ]
-    resources = ["*"]
+    resources = [aws_lambda_function.lambda.arn]
   }
 }
 
@@ -41,5 +41,17 @@ data "aws_iam_policy_document" "assume-role" {
       type        = "Service"
       identifiers = ["lambda.amazonaws.com"]
     }
+  }
+}
+
+data "aws_iam_policy_document" "write-logs" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["*"]
   }
 }

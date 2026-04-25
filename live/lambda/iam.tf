@@ -4,6 +4,16 @@ resource "aws_iam_role" "update" {
   assume_role_policy = data.aws_iam_policy_document.github-assume-web-identity.json
 }
 
+resource "aws_iam_policy" "update-lambda" {
+  name   = "${aws_iam_role.update.name}-update-lambda"
+  policy = data.aws_iam_policy_document.update-lambda.json
+}
+
+resource "aws_iam_role_policy_attachment" "update-lambda" {
+  role       = aws_iam_role.update.name
+  policy_arn = aws_iam_policy.update-lambda.arn
+}
+
 # run
 resource "aws_iam_role" "run" {
   name               = local.role-run

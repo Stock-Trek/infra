@@ -6,6 +6,10 @@ output "url" {
   value = (local.public-count == 1) ? aws_lambda_function_url.public-url[0].function_url : null
 }
 
+output "role-update-name" {
+  value = var.role-update
+}
+
 output "role-run-name" {
   value = local.role-run
 }
