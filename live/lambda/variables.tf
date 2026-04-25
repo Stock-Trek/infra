@@ -65,20 +65,13 @@ variable "image" {
   description = "Image lambdas, cannot be used with zip"
   type = object({
     ecr-repository-arn = string
-    repository_url     = string
-    image_tag          = string
-    config = object({
-      command           = optional(list(string))
-      entry_point       = optional(list(string))
-      working_directory = optional(string)
-    })
+    repository-url     = string
+    image-tag          = string
   })
   default = {
-    config = {
-    }
-    ecr-repository-arn = "Required"
-    image_tag          = "Required"
-    repository_url     = "Required"
+    ecr-repository-arn = "Missing ecr-repository-arn"
+    image-tag          = "Missing image-tag"
+    repository-url     = "Missing repository-url"
   }
 }
 

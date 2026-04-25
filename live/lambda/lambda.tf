@@ -4,11 +4,6 @@ resource "aws_lambda_function" "lambda" {
 
   # Image
   image_uri = try(local.package-config.image_uri, null)
-  image_config {
-    command           = try(local.package-config.image_config.command, null)
-    entry_point       = try(local.package-config.image_config.entry_point, null)
-    working_directory = try(local.package-config.image_config.working_directory, null)
-  }
 
   # Zip
   filename         = try(local.package-config.filename, null)

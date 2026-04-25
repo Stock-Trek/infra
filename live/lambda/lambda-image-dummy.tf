@@ -23,7 +23,7 @@ resource "docker_tag" "dummy" {
   count = local.image-count
 
   source_image = docker_image.dummy[0].name
-  target_image = "${var.image.repository_url}:${var.image.image_tag}"
+  target_image = local.package-config.image_uri
 
   lifecycle {
     ignore_changes = all

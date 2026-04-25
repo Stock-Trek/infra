@@ -46,11 +46,9 @@ module "lambda-compile-rust" {
   role-update     = local.compile-rust-update-role
   package-type    = "Image"
   image = {
-    config = {
-    }
     ecr-repository-arn = module.ecr-algorithm-compiler.arn
-    image_tag          = local.algorithm-compiler-ecr-image-tag
-    repository_url     = module.ecr-algorithm-compiler.repository_url
+    image-tag          = local.algorithm-compiler-ecr-image-tag
+    repository-url     = module.ecr-algorithm-compiler.repository_url
   }
   public-access-cors-bare-domain = local.website-bare-domain
 }
