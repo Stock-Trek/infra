@@ -28,13 +28,13 @@ module "s3-access-market-data" {
   depends_on  = [module.lambda-market-data]
 }
 
-module "cron-update-market-data" {
-  source      = "./glue/cron"
-  name        = local.market-data-event-rule
-  cron        = local.market-data-cron
-  lambda-arn  = module.lambda-market-data.arn
-  lambda-name = local.market-data-lambda
-}
+# module "cron-update-market-data" {
+#   source      = "./glue/cron"
+#   name        = local.market-data-event-rule
+#   cron        = local.market-data-cron
+#   lambda-arn  = module.lambda-market-data.arn
+#   lambda-name = local.market-data-lambda
+# }
 
 module "lambda-compile-rust" {
   source          = "./lambda"
