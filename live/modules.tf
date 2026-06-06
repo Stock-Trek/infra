@@ -28,16 +28,6 @@ module "s3-access-market-data" {
   depends_on  = [module.lambda-market-data]
 }
 
-module "parameter-store-market-data" {
-  source            = "./glue/parameter-store"
-  prefix            = "/stock-trek/market-data"
-  repo-name         = "market-data"
-  lambda-role-name  = module.lambda-market-data.role-run-name
-  github-account    = local.github-account
-  github-oidc-arn   = data.aws_iam_openid_connect_provider.github.arn
-  depends_on        = [module.lambda-market-data]
-}
-
 # module "cron-update-market-data" {
 #   source      = "./glue/cron"
 #   name        = local.market-data-event-rule
@@ -68,6 +58,17 @@ module "s3-access-compile-rust" {
   role        = module.lambda-compile-rust.role-run-name
   bucket-arns = [module.bucket-uploads.arn]
   depends_on  = [module.lambda-compile-rust]
+}
+
+module "parameter-store-dependency-whitelist" {
+  source           = "./glue/parameter-store"
+  prefix           = "/stock-trek/dependency-whitelist"
+  repo-name        = "dependency-whitelist"
+  writer-role-name = local.dependency-whitelist-update-role
+  lambda-role-name = local.compile-rust-update-role
+  github-account   = local.github-account
+  github-oidc-arn  = data.aws_iam_openid_connect_provider.github.arn
+  depends_on       = [module.lambda-compile-rust]
 }
 
 module "ecr-algorithm-compiler" {

@@ -8,6 +8,11 @@ variable "repo-name" {
   type        = string
 }
 
+variable "writer-role-name" {
+  description = "Role name to grant write access to"
+  type        = string
+}
+
 variable "lambda-role-name" {
   description = "Lambda role name to grant read access to"
   type        = string
