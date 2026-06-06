@@ -28,6 +28,16 @@ module "s3-access-market-data" {
   depends_on  = [module.lambda-market-data]
 }
 
+module "parameter-store-market-data" {
+  source            = "./glue/parameter-store"
+  prefix            = "/stock-trek/market-data"
+  repo-name         = "market-data"
+  lambda-role-name  = module.lambda-market-data.role-run-name
+  github-account    = local.github-account
+  github-oidc-arn   = data.aws_iam_openid_connect_provider.github.arn
+  depends_on        = [module.lambda-market-data]
+}
+
 # module "cron-update-market-data" {
 #   source      = "./glue/cron"
 #   name        = local.market-data-event-rule
