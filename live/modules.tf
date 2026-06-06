@@ -60,6 +60,17 @@ module "s3-access-compile-rust" {
   depends_on  = [module.lambda-compile-rust]
 }
 
+module "parameter-store-dependency-whitelist" {
+  source           = "./glue/parameter-store"
+  prefix           = "/stock-trek/dependency-whitelist"
+  repo-name        = "dependency-whitelist"
+  writer-role-name = local.dependency-whitelist-update-role
+  lambda-role-name = local.compile-rust-update-role
+  github-account   = local.github-account
+  github-oidc-arn  = data.aws_iam_openid_connect_provider.github.arn
+  depends_on       = [module.lambda-compile-rust]
+}
+
 module "ecr-algorithm-compiler" {
   source                      = "./ecr-repository"
   name                        = local.algorithm-compiler-ecr-name

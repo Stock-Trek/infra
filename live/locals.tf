@@ -11,6 +11,8 @@ locals {
   market-data-event-rule  = "stock-trek-market-data"
   market-data-update-role = "StockTrekUpdateMarketData"
 
+  dependency-whitelist-update-role = "StockTrekUpdateDependencyWhitelist"
+
   compile-rust-lambda      = "stock-trek-compile-rust"
   compile-rust-update-role = "StockTrekUpdateCompileRust"
   compile-rust-bucket      = "stock-trek-uploads"
