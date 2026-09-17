@@ -1,5 +1,5 @@
 locals {
-  github-account                 = "Stock-Trek"
+  github-account                 = "Stock-Trek@269482059"
   github-repository-name-website = "website"
 
   website-bare-domain = "stock-trek.com"
