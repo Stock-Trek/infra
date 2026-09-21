@@ -3,7 +3,7 @@ data "aws_iam_policy_document" "bootstrap_assume_role" {
     sid    = "AssumeRoleGitHub"
     effect = "Allow"
     principals {
-      type = "Federated"
+      type        = "Federated"
       identifiers = [data.aws_iam_openid_connect_provider.bootstrap_github.arn]
     }
     actions = ["sts:AssumeRoleWithWebIdentity"]
