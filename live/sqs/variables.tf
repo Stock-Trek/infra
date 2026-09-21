@@ -11,7 +11,7 @@ variable "tags" {
 }
 
 variable "fifo" {
-  description = "Whether to create a FIFO queue"
+  description = "Whether this should be a FIFO queue"
   type        = bool
   default     = false
 }
@@ -23,4 +23,10 @@ variable "dead-letter" {
   })
   nullable = true
   default  = null
+}
+
+variable "visibility-timeout" {
+  description = "How long in seconds to wait for acknowledgement/deletion before the message is visible again"
+  type        = number
+  default     = 30
 }

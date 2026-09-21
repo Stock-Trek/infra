@@ -1,7 +1,8 @@
 resource "aws_sqs_queue" "queue" {
-  name                      = var.name
-  fifo_queue                = var.fifo
-  receive_wait_time_seconds = local.receive-wait
+  name                       = var.name
+  fifo_queue                 = var.fifo
+  receive_wait_time_seconds  = local.receive-wait
+  visibility_timeout_seconds = var.visibility-timeout
   redrive_policy = var.dead-letter == null ? null : jsonencode({
     deadLetterTargetArn = aws_sqs_queue.dead-letter[0].arn
     maxReceiveCount     = var.dead-letter.max-receive-count
@@ -10,7 +11,7 @@ resource "aws_sqs_queue" "queue" {
 }
 
 resource "aws_sqs_queue" "dead-letter" {
-  count = var.dead-letter != null ? 1 : 0
+  count = local.dead-letter-count
 
   name                      = "${var.name}-dead-letter"
   fifo_queue                = var.fifo
@@ -19,7 +20,7 @@ resource "aws_sqs_queue" "dead-letter" {
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "dead-letter" {
-  count = var.dead-letter != null ? 1 : 0
+  count = local.dead-letter-count
 
   queue_url = aws_sqs_queue.dead-letter[0].id
   redrive_allow_policy = jsonencode({
