@@ -13,6 +13,10 @@ locals {
 
   dependency-whitelist-update-role = "StockTrekUpdateDependencyWhitelist"
 
+  repo-event-sqs-name    = "repo-event"
+  repo-event-lambda      = "stock-trek-repo-event"
+  repo-event-update-role = "StockTrekUpdateRepoEvent"
+
   compile-rust-lambda      = "stock-trek-compile-rust"
   compile-rust-update-role = "StockTrekUpdateCompileRust"
   compile-rust-bucket      = "stock-trek-uploads"

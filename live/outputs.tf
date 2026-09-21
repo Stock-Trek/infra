@@ -6,7 +6,7 @@ output "bucket-uploads-arn" {
   value = module.bucket-uploads.arn
 }
 
-output "algorithm-compiler-ecr-repository-url" {
+output "ecr-repository-algorithm-compiler-url" {
   value = module.ecr-algorithm-compiler.repository_url
 }
 
@@ -26,8 +26,16 @@ output "lambda-compile-rust-arn" {
   value = module.lambda-compile-rust.arn
 }
 
-output "lambda-compile-rust-url" {
-  value = module.lambda-compile-rust.url
+output "lambda-repo-event-update-role" {
+  value = module.lambda-repo-event.role-update-name
+}
+
+output "lambda-repo-event-arn" {
+  value = module.lambda-repo-event.arn
+}
+
+output "lambda-repo-event-url" {
+  value = module.lambda-repo-event.url
 }
 
 output "website-url" {
