@@ -1,16 +1,3 @@
-resource "aws_sqs_queue" "dead-letter" {
-  count = var.dead-letter != null ? 1 : 0
-
-  name                       = "${var.name}-dead-letter"
-  fifo_queue                 = var.fifo
-  message_retention_seconds  = var.message-retention
-  visibility_timeout_seconds = var.visibility-timeout
-  receive_wait_time_seconds  = var.receive-wait
-  sqs_managed_sse_enabled    = var.kms-master-key-id == null
-  kms_master_key_id          = var.kms-master-key-id
-  tags                       = var.tags
-}
-
 resource "aws_sqs_queue" "queue" {
   name                        = var.name
   fifo_queue                  = var.fifo
@@ -27,6 +14,19 @@ resource "aws_sqs_queue" "queue" {
     maxReceiveCount     = var.dead-letter.max-receive-count
   })
   tags = var.tags
+}
+
+resource "aws_sqs_queue" "dead-letter" {
+  count = var.dead-letter != null ? 1 : 0
+
+  name                       = "${var.name}-dead-letter"
+  fifo_queue                 = var.fifo
+  message_retention_seconds  = var.message-retention
+  visibility_timeout_seconds = var.visibility-timeout
+  receive_wait_time_seconds  = var.receive-wait
+  sqs_managed_sse_enabled    = var.kms-master-key-id == null
+  kms_master_key_id          = var.kms-master-key-id
+  tags                       = var.tags
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "dead-letter" {
