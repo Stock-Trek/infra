@@ -1,0 +1,19 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Run checks
+        run: |
+          terraform fmt -check -recursive bootstrap
+          terraform fmt -check -recursive live
