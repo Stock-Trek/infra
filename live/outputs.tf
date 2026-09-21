@@ -26,16 +26,16 @@ output "lambda-compile-rust-arn" {
   value = module.lambda-compile-rust.arn
 }
 
-output "lambda-repo-event-update-role" {
-  value = module.lambda-repo-event.role-update-name
+output "lambda-git-webhook-handler-update-role" {
+  value = module.lambda-git-webhook-handler.role-update-name
 }
 
-output "lambda-repo-event-arn" {
-  value = module.lambda-repo-event.arn
+output "lambda-git-webhook-handler-arn" {
+  value = module.lambda-git-webhook-handler.arn
 }
 
-output "lambda-repo-event-url" {
-  value = module.lambda-repo-event.url
+output "lambda-git-webhook-handler-url" {
+  value = module.lambda-git-webhook-handler.url
 }
 
 output "website-url" {

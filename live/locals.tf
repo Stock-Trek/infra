@@ -13,9 +13,9 @@ locals {
 
   dependency-whitelist-update-role = "StockTrekUpdateDependencyWhitelist"
 
-  repo-event-sqs-name    = "repo-event"
-  repo-event-lambda      = "stock-trek-repo-event"
-  repo-event-update-role = "StockTrekUpdateRepoEvent"
+  git-webhook-handler-sqs-name    = "git-webhook-handler"
+  git-webhook-handler-lambda      = "stock-trek-git-webhook-handler"
+  git-webhook-handler-update-role = "StockTrekUpdateGitWebhookHandler"
 
   compile-rust-lambda      = "stock-trek-compile-rust"
   compile-rust-update-role = "StockTrekUpdateCompileRust"

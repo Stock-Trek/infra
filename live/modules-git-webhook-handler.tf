@@ -1,19 +1,19 @@
-module "lambda-repo-event" {
+module "lambda-git-webhook-handler" {
   source                         = "./lambda"
-  name                           = local.repo-event-lambda
+  name                           = local.git-webhook-handler-lambda
   github-account                 = local.github-account
   github-oidc-arn                = data.aws_iam_openid_connect_provider.github.arn
   memory                         = 1024
   timeout                        = 30
-  role-update                    = local.repo-event-update-role
+  role-update                    = local.git-webhook-handler-update-role
   package-type                   = "Zip"
   public-access-cors-bare-domain = "github.com"
   tags                           = local.tags
 }
 
-module "sqs-repo-event" {
+module "sqs-git-webhook-handler" {
   source = "./sqs"
-  name   = local.repo-event-sqs-name
+  name   = local.git-webhook-handler-sqs-name
   dead-letter = {
     max-receive-count = 10
   }
