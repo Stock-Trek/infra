@@ -19,6 +19,7 @@ module "lambda-git-webhook-handler" {
 module "sqs-git-webhook-handler" {
   source = "./sqs"
   name   = local.git-webhook-handler-sqs-name
+  role   = module.lambda-git-webhook-handler.role-run-name
   dead-letter = {
     max-receive-count = 10
   }
