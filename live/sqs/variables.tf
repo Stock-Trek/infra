@@ -3,6 +3,11 @@ variable "name" {
   type        = string
 }
 
+variable "role" {
+  description = "Role to attach send message permission to"
+  type        = string
+}
+
 variable "tags" {
   description = "Tags"
   type        = map(string)
