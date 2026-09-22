@@ -2,6 +2,10 @@ output "arn" {
   value = aws_lambda_function.lambda.arn
 }
 
+output "invoke-arn" {
+  value = aws_lambda_function.lambda.invoke_arn
+}
+
 output "url" {
   value = (local.public-count == 1) ? aws_lambda_function_url.public-url[0].function_url : null
 }
