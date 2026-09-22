@@ -42,6 +42,10 @@ output "lambda-git-webhook-handler-url" {
   value = module.lambda-git-webhook-handler.url
 }
 
+output "sqs-git-webhook-event-url" {
+  value = module.sqs-git-webhook-handler.url
+}
+
 output "website-url" {
   value = module.website-stock-trek.url
 }
