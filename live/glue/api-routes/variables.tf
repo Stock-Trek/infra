@@ -8,13 +8,13 @@ variable "api-execution-arn" {
   type        = string
 }
 
-variable "lambda-invoke-arn" {
-  description = "Invoke ARN of the Lambda function to proxy requests to"
+variable "lambda-name" {
+  description = "Name of the Lambda function to proxy requests to"
   type        = string
 }
 
-variable "lambda-name" {
-  description = "Name of the Lambda function to proxy requests to"
+variable "lambda-invoke-arn" {
+  description = "Invoke ARN of the Lambda function to proxy requests to"
   type        = string
 }
 
