@@ -13,9 +13,10 @@ locals {
 
   dependency-whitelist-update-role = "StockTrekUpdateDependencyWhitelist"
 
-  git-webhook-handler-sqs-name    = "git-webhook-handler"
+  git-webhook-handler-sqs-name    = "stock-trek-git-webhook-handler"
   git-webhook-handler-lambda      = "stock-trek-git-webhook-handler"
   git-webhook-handler-update-role = "StockTrekUpdateGitWebhookHandler"
+  git-webhook-handler-api-name    = "stock-trek-git-webhook-handler"
 
   compile-rust-lambda      = "stock-trek-compile-rust"
   compile-rust-update-role = "StockTrekUpdateCompileRust"

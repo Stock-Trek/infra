@@ -6,7 +6,7 @@ resource "aws_apigatewayv2_integration" "lambda" {
 }
 
 resource "aws_apigatewayv2_route" "route" {
-  for_each = toset(var.routes)
+  for_each = toset(local.route_keys)
 
   api_id    = var.api-id
   route_key = each.value

@@ -19,7 +19,19 @@ variable "lambda-invoke-arn" {
 }
 
 variable "routes" {
-  description = "Route keys to match requests against, use $default to match all requests"
-  type        = list(string)
-  default     = ["$default"]
+  description = "Route keys to match requests against"
+  type = list(object({
+    method = string
+    path   = string
+  }))
+  default = null
+
+  validation {
+    condition = var.routes == null || alltrue([
+      for r in var.routes :
+      contains(["ANY", "HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"], r.method)
+      && startswith(r.path, "/")
+    ])
+    error_message = "Each route must have a valid method (ANY, HEAD, OPTIONS, GET, POST, PUT, PATCH, DELETE) and a path beginning with '/'."
+  }
 }
