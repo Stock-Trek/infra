@@ -1,3 +1,7 @@
+output "api-git-webhook-url" {
+  value = module.api-git-webhook-handler.url
+}
+
 output "bucket-market-data-arn" {
   value = module.bucket-market-data.arn
 }
