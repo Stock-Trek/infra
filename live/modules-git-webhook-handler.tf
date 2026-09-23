@@ -44,11 +44,3 @@ module "api-git-webhook-handler-route-github" {
     path   = "/github"
   }]
 }
-
-module "sqs-lambda-git-webhook-handler" {
-  source      = "./glue/sqs-lambda"
-  queue-arn   = module.sqs-git-webhook-handler.arn
-  lambda-name = local.git-webhook-handler-lambda
-  role        = module.lambda-git-webhook-handler.role-run-name
-  depends_on  = [module.lambda-git-webhook-handler, module.sqs-git-webhook-handler]
-}

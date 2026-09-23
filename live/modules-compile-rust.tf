@@ -34,6 +34,14 @@ module "lambda-compile-rust" {
   tags = local.tags
 }
 
+module "sqs-lambda-compile-rust" {
+  source      = "./glue/sqs-lambda"
+  queue-arn   = module.sqs-git-webhook-handler.arn
+  lambda-name = local.compile-rust-lambda
+  role        = module.lambda-compile-rust.role-run-name
+  depends_on  = [module.lambda-compile-rust, module.sqs-git-webhook-handler]
+}
+
 module "s3-access-compile-rust" {
   source      = "./glue/s3-access"
   role        = module.lambda-compile-rust.role-run-name
