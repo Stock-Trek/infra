@@ -34,21 +34,6 @@ module "lambda-compile-rust" {
   tags = local.tags
 }
 
-module "sqs-lambda-compile-rust" {
-  source      = "./glue/sqs-lambda"
-  queue-arn   = module.sqs-git-webhook-handler.arn
-  lambda-name = local.compile-rust-lambda
-  role        = module.lambda-compile-rust.role-run-name
-  depends_on  = [module.lambda-compile-rust, module.sqs-git-webhook-handler]
-}
-
-module "s3-access-compile-rust" {
-  source      = "./glue/s3-access"
-  role        = module.lambda-compile-rust.role-run-name
-  bucket-arns = [module.bucket-uploads.arn]
-  depends_on  = [module.lambda-compile-rust]
-}
-
 module "parameter-store-dependency-whitelist" {
   source           = "./glue/parameter-store"
   prefix           = "/stock-trek/dependency-whitelist"
@@ -58,4 +43,19 @@ module "parameter-store-dependency-whitelist" {
   github-account   = local.github-account
   github-oidc-arn  = data.aws_iam_openid_connect_provider.github.arn
   depends_on       = [module.lambda-compile-rust]
+}
+
+module "s3-access-compile-rust" {
+  source      = "./glue/s3-access"
+  role        = module.lambda-compile-rust.role-run-name
+  bucket-arns = [module.bucket-uploads.arn]
+  depends_on  = [module.lambda-compile-rust]
+}
+
+module "sqs-lambda-compile-rust" {
+  source      = "./glue/sqs-lambda"
+  queue-arn   = module.sqs-git-webhook-handler.arn
+  lambda-name = local.compile-rust-lambda
+  role        = module.lambda-compile-rust.role-run-name
+  depends_on  = [module.lambda-compile-rust, module.sqs-git-webhook-handler]
 }
