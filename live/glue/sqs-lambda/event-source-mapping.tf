@@ -4,4 +4,5 @@ resource "aws_lambda_event_source_mapping" "sqs" {
   batch_size                         = var.batch-size
   maximum_batching_window_in_seconds = var.maximum-batching-window-in-seconds
   enabled                            = var.enabled
+  function_response_types            = ["ReportBatchItemFailures"]
 }
