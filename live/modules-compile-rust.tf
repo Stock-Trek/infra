@@ -62,5 +62,6 @@ module "sqs-lambda-compile-rust" {
   queue-arn   = module.sqs-git-webhook-handler.arn
   lambda-name = local.compile-rust-lambda
   role        = module.lambda-compile-rust.role-run-name
+  batch-size  = 1
   depends_on  = [module.lambda-compile-rust, module.sqs-git-webhook-handler]
 }
