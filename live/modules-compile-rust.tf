@@ -35,6 +35,7 @@ module "lambda-compile-rust" {
     INFISICAL_PROJECT_ID          = "a6b3a1c2-b598-4d17-80ac-da8f47a953f2"
     INFISICAL_ENVIRONMENT         = "prod"
     S3_BUCKET_COMMIT_ARTIFACTS    = "stock-trek-commit-artifacts"
+    SQS_URL                       = module.sqs-git-webhook-handler.url
   }
   tags = local.tags
 }
