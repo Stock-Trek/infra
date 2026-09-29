@@ -21,6 +21,28 @@ variable "fifo" {
   default     = false
 }
 
+variable "deduplication" {
+  description = "Deduplication strategy. Only valid on a FIFO queue"
+  type = object({
+    mode = string           # "none" | "content" | "explicit"
+    id   = optional(string) # required when mode = "explicit"
+  })
+  default = { mode = "none" }
+
+  validation {
+    condition     = contains(["none", "content", "explicit"], var.deduplication.mode)
+    error_message = "mode must be one of ['none', 'content', 'explicit']."
+  }
+
+  validation {
+    condition = (
+      (var.deduplication.mode == "explicit" && var.deduplication.id != null) ||
+      (var.deduplication.mode != "explicit" && var.deduplication.id == null)
+    )
+    error_message = "id must be set when mode = 'explicit', and omitted otherwise."
+  }
+}
+
 variable "dead-letter" {
   description = "Optional dead letter queue configuration"
   type = object({

@@ -20,6 +20,10 @@ module "sqs-git-webhook-handler" {
   source = "./sqs"
   name   = local.git-webhook-handler-sqs-name
   role   = module.lambda-git-webhook-handler.role-run-name
+  fifo   = true
+  deduplication = {
+    mode = "content"
+  }
   dead-letter = {
     max-receive-count = 10
   }
