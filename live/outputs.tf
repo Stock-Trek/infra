@@ -10,24 +10,12 @@ output "bucket-uploads-arn" {
   value = module.bucket-uploads.arn
 }
 
-output "ecr-repository-algorithm-compiler-url" {
-  value = module.ecr-algorithm-compiler.repository_url
-}
-
 output "lambda-market-data-update-role" {
   value = module.lambda-market-data.role-update-name
 }
 
 output "lambda-market-data-arn" {
   value = module.lambda-market-data.arn
-}
-
-output "lambda-compile-rust-update-role" {
-  value = module.lambda-compile-rust.role-update-name
-}
-
-output "lambda-compile-rust-arn" {
-  value = module.lambda-compile-rust.arn
 }
 
 output "lambda-git-webhook-handler-update-role" {
