@@ -7,11 +7,25 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_ecr_authorization_token" "dummy" {}
+
+provider "docker" {
+  registry_auth {
+    address  = data.aws_ecr_authorization_token.dummy.proxy_endpoint
+    username = data.aws_ecr_authorization_token.dummy.user_name
+    password = data.aws_ecr_authorization_token.dummy.password
+  }
+}
+
 terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~>6.40.0"
+    }
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "~> 4.2.0"
     }
   }
   backend "s3" {
