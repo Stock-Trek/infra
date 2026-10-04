@@ -10,6 +10,14 @@ output "bucket-build-agent-artifacts-arn" {
   value = module.bucket-build-agent-artifacts.arn
 }
 
+output "ec2-build-agent-id" {
+  value = module.ec2-build-agent.id
+}
+
+output "ec2-build-agent-arn" {
+  value = module.ec2-build-agent.arn
+}
+
 output "lambda-market-data-update-role" {
   value = module.lambda-market-data.role-update-name
 }

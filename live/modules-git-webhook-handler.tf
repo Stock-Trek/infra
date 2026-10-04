@@ -37,6 +37,13 @@ module "api-git-webhook-handler" {
   tags   = local.tags
 }
 
+module "ec2-access-git-webhook-handler" {
+  source       = "./glue/ec2-access"
+  role         = module.lambda-git-webhook-handler.role-run-name
+  instance-arn = module.ec2-build-agent.arn
+  depends_on   = [module.lambda-git-webhook-handler, module.ec2-build-agent]
+}
+
 module "api-git-webhook-handler-route-github" {
   source            = "./glue/api-routes"
   api-id            = module.api-git-webhook-handler.id

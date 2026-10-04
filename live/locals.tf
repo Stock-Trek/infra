@@ -21,6 +21,8 @@ locals {
   build-agent-rust-bucket        = "stock-trek-user-artifacts"
   build-agent-rust-ecr-name      = "stock-trek-build-agent"
   build-agent-rust-ecr-image-tag = "master"
+  build-agent-rust-ec2-name      = "stock-trek-build-agent"
+  build-agent-rust-instance-type = "t4g.medium"
 
   tags = {
     Environment = "production"

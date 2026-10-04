@@ -1,0 +1,20 @@
+#!/bin/bash
+set -euo pipefail
+
+dnf install -y docker amazon-ecr-credential-helper
+systemctl enable --now docker
+
+mkdir -p /root/.docker
+cat > /root/.docker/config.json <<EOF
+{
+  "credHelpers": {
+    "${registry}": "ecr-login"
+  }
+}
+EOF
+
+docker run \
+  --detach \
+  --restart always \
+  --publish ${port}:${port} \
+  "${repository-url}:${image-tag}"
