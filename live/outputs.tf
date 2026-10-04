@@ -6,8 +6,8 @@ output "bucket-market-data-arn" {
   value = module.bucket-market-data.arn
 }
 
-output "bucket-uploads-arn" {
-  value = module.bucket-uploads.arn
+output "bucket-build-agent-artifacts-arn" {
+  value = module.bucket-build-agent-artifacts.arn
 }
 
 output "lambda-market-data-update-role" {

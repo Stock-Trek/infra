@@ -18,12 +18,9 @@ locals {
   git-webhook-handler-update-role = "StockTrekUpdateGitWebhookHandler"
   git-webhook-handler-api-name    = "stock-trek-git-webhook-handler"
 
-  compile-rust-lambda      = "stock-trek-compile-rust"
-  compile-rust-update-role = "StockTrekUpdateCompileRust"
-  compile-rust-bucket      = "stock-trek-uploads"
-
-  algorithm-compiler-ecr-name      = "algorithm-compiler"
-  algorithm-compiler-ecr-image-tag = "master"
+  build-agent-rust-bucket        = "stock-trek-user-artifacts"
+  build-agent-rust-ecr-name      = "stock-trek-build-agent"
+  build-agent-rust-ecr-image-tag = "master"
 
   tags = {
     Environment = "production"
