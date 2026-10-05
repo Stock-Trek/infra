@@ -14,13 +14,13 @@ output "ecr-repository-build-agent-url" {
   value = module.ecr-build-agent.repository_url
 }
 
-output "lambda-build-agent-rust-arn" {
-  value = module.lambda-build-agent-rust.arn
-}
+# output "lambda-build-agent-rust-arn" {
+#   value = module.lambda-build-agent-rust.arn
+# }
 
-output "lambda-build-agent-rust-update-role" {
-  value = module.lambda-build-agent-rust.role-update-name
-}
+# output "lambda-build-agent-rust-update-role" {
+#   value = module.lambda-build-agent-rust.role-update-name
+# }
 
 output "lambda-market-data-arn" {
   value = module.lambda-market-data.arn

@@ -18,12 +18,6 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = var.env-vars
   }
-  dynamic "tenancy_config" {
-    for_each = var.per-tenant-config ? [1] : []
-    content {
-      tenant_isolation_mode = "PER_TENANT"
-    }
-  }
   tags = var.tags
   depends_on = [
     aws_iam_role_policy_attachment.write-logs,

@@ -75,12 +75,6 @@ variable "image" {
   }
 }
 
-variable "per-tenant-config" {
-  description = "Whether to enable per tenant config for the Lambda"
-  type        = bool
-  default     = false
-}
-
 variable "public-access-cors-bare-domain" {
   description = "Bare domain"
   type        = string
