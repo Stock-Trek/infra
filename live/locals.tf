@@ -1,4 +1,5 @@
 locals {
+  build-agent-rust-artifact-prefix                  = "artifacts"
   build-agent-rust-bucket                           = "stock-trek-user-artifacts"
   build-agent-rust-dependency-whitelist-prefix      = "/stock-trek/dependency-whitelist"
   build-agent-rust-dependency-whitelist-repo        = "stock-trek-dependency-whitelist"
@@ -7,7 +8,9 @@ locals {
   build-agent-rust-ecr-image-tag                    = "master"
   build-agent-rust-ecr-name                         = "stock-trek-build-agent"
   build-agent-rust-lambda                           = "stock-trek-build-agent"
+  build-agent-rust-task                             = "stock-trek-build-agent"
   build-agent-rust-update-role                      = "StockTrekUpdateBuildAgent"
+  build-agent-rust-vpc                              = "stock-trek-build-agent"
 
   git-webhook-handler-api-name    = "stock-trek-git-webhook-handler"
   git-webhook-handler-lambda      = "stock-trek-git-webhook-handler"
