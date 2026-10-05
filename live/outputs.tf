@@ -14,14 +14,6 @@ output "ecr-repository-build-agent-url" {
   value = module.ecr-build-agent.repository_url
 }
 
-output "ecs-build-agent-cluster-name" {
-  value = module.ecs-build-agent.cluster-name
-}
-
-output "ecs-build-agent-task-definition-arn" {
-  value = module.ecs-build-agent.task-definition-arn
-}
-
 output "lambda-market-data-arn" {
   value = module.lambda-market-data.arn
 }
@@ -44,18 +36,6 @@ output "lambda-git-webhook-handler-url" {
 
 output "sqs-git-webhook-event-url" {
   value = module.sqs-git-webhook-handler.url
-}
-
-output "vpc-build-agent-id" {
-  value = module.vpc-build-agent.id
-}
-
-output "vpc-build-agent-subnet-ids" {
-  value = module.vpc-build-agent.subnet-ids
-}
-
-output "vpc-build-agent-task-security-group-id" {
-  value = module.vpc-build-agent.task-security-group-id
 }
 
 output "website-bucket" {

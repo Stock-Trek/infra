@@ -11,12 +11,6 @@ module "ecr-build-agent" {
   tags                        = local.tags
 }
 
-module "vpc-build-agent" {
-  source = "./vpc"
-  name   = local.build-agent-rust-vpc
-  tags   = local.tags
-}
-
 module "ecs-build-agent" {
   source = "./ecs"
   name   = local.build-agent-rust-task
@@ -34,4 +28,10 @@ module "s3-put-build-agent" {
   role       = module.ecs-build-agent.task-role-name
   bucket-arn = module.bucket-build-agent-artifacts.arn
   prefix     = local.build-agent-rust-artifact-prefix
+}
+
+module "vpc-build-agent" {
+  source = "./vpc"
+  name   = local.build-agent-rust-vpc
+  tags   = local.tags
 }
