@@ -8,6 +8,9 @@ module "ecr-build-agent" {
   source                      = "./ecr-repository"
   name                        = local.build-agent-rust-ecr-name
   mutability-exclusion-filter = local.build-agent-rust-ecr-image-tag
+  github-account              = local.github-account
+  github-oidc-arn             = data.aws_iam_openid_connect_provider.github.arn
+  role-update                 = local.build-agent-rust-update-role
   tags                        = local.tags
 }
 

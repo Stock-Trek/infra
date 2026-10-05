@@ -14,6 +14,10 @@ output "ecr-repository-build-agent-url" {
   value = module.ecr-build-agent.repository_url
 }
 
+output "ecr-repository-build-agent-update-role" {
+  value = module.ecr-build-agent.role-update-name
+}
+
 output "lambda-market-data-arn" {
   value = module.lambda-market-data.arn
 }
