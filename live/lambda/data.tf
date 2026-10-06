@@ -44,14 +44,23 @@ data "aws_iam_policy_document" "assume-role" {
   }
 }
 
+data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
+
 data "aws_iam_policy_document" "write-logs" {
+  statement {
+    effect    = "Allow"
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.name}"]
+  }
+
   statement {
     effect = "Allow"
     actions = [
-      "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-    resources = ["*"]
+    resources = ["arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.name}:*"]
   }
 }
