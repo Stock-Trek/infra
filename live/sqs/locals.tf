@@ -4,7 +4,7 @@ locals {
   content_based_deduplication = (
     var.fifo && var.deduplication.mode == "content"
   ) ? true : null
-  deduplication_scope = var.fifo ? var.deduplication.id : null
+  deduplication_scope = var.fifo ? var.deduplication.scope : null
   receive-wait        = 20
   dead-letter-count   = var.dead-letter == null ? 0 : 1
 }

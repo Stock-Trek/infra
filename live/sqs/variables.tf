@@ -24,8 +24,8 @@ variable "fifo" {
 variable "deduplication" {
   description = "Deduplication strategy. Only valid on a FIFO queue"
   type = object({
-    mode = string           # "none" | "content" | "explicit"
-    id   = optional(string) # required when mode = "explicit"
+    mode  = string           # "none" | "content" | "explicit"
+    scope = optional(string) # "queue" | "messageGroup"
   })
   default = { mode = "none" }
 
@@ -36,10 +36,10 @@ variable "deduplication" {
 
   validation {
     condition = (
-      (var.deduplication.mode == "explicit" && var.deduplication.id != null) ||
-      (var.deduplication.mode != "explicit" && var.deduplication.id == null)
+      var.deduplication.scope == null ||
+      contains(["queue", "messageGroup"], var.deduplication.scope)
     )
-    error_message = "id must be set when mode = 'explicit', and omitted otherwise."
+    error_message = "scope must be one of [null, 'queue', 'messageGroup']."
   }
 }
 
