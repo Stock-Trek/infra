@@ -12,7 +12,6 @@ data "aws_iam_policy_document" "push-image" {
       "ecr:BatchCheckLayerAvailability",
       "ecr:BatchGetImage",
       "ecr:CompleteLayerUpload",
-      "ecr:GetAuthorizationToken",
       "ecr:InitiateLayerUpload",
       "ecr:PutImage",
       "ecr:UploadLayerPart"
