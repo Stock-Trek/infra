@@ -47,7 +47,7 @@ resource "aws_vpc_security_group_egress_rule" "tasks-dns-udp" {
   from_port         = 53
   to_port           = 53
   ip_protocol       = "udp"
-  cidr_ipv4         = cidrhost(var.cidr, 2)
+  cidr_ipv4         = "${cidrhost(var.cidr, 2)}/32"
 }
 
 resource "aws_vpc_security_group_egress_rule" "tasks-dns-tcp" {
@@ -56,7 +56,7 @@ resource "aws_vpc_security_group_egress_rule" "tasks-dns-tcp" {
   from_port         = 53
   to_port           = 53
   ip_protocol       = "tcp"
-  cidr_ipv4         = cidrhost(var.cidr, 2)
+  cidr_ipv4         = "${cidrhost(var.cidr, 2)}/32"
 }
 
 resource "aws_vpc_security_group_egress_rule" "tasks-s3" {
