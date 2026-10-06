@@ -9,13 +9,13 @@ data "aws_iam_policy_document" "bootstrap_assume_role" {
     actions = ["sts:AssumeRoleWithWebIdentity"]
     condition {
       test     = "StringEquals"
-      variable = "${local.oidc_github_bare_url}:aud"
-      values   = local.oidc_github_audience
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
     }
     condition {
       test     = "StringLike"
-      variable = "${local.oidc_github_bare_url}:sub"
-      values   = local.oidc_github_subject
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = ["repo:${locals.github-account}/*:*"]
     }
   }
 }
