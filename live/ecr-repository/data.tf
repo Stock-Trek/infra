@@ -29,6 +29,7 @@ data "aws_iam_policy_document" "push-image" {
     effect = "Allow"
     actions = [
       "ecr:BatchCheckLayerAvailability",
+      "ecr:BatchGetImage",
       "ecr:CompleteLayerUpload",
       "ecr:GetDownloadUrlForLayer",
       "ecr:InitiateLayerUpload",
