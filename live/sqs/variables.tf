@@ -39,7 +39,7 @@ variable "deduplication" {
       var.deduplication.scope == null ||
       contains(["queue", "messageGroup"], var.deduplication.scope)
     )
-    error_message = "scope must be one of ['queue', 'messageGroup']."
+    error_message = "scope must be one of [null, 'queue', 'messageGroup']."
   }
 }
 
