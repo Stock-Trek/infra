@@ -37,6 +37,15 @@ module "api-git-webhook-handler" {
   tags   = local.tags
 }
 
+module "ecs-run-task-git-webhook-handler" {
+  source              = "./glue/ecs-run-task"
+  role                = module.lambda-git-webhook-handler.role-run-name
+  task-definition-arn = module.ecs-build-agent.task-definition-arn
+  execution-role-arn  = module.ecs-build-agent.execution-role-arn
+  task-role-arn       = module.ecs-build-agent.task-role-arn
+  depends_on          = [module.lambda-git-webhook-handler, module.ecs-build-agent]
+}
+
 module "api-git-webhook-handler-route-github" {
   source            = "./glue/api-routes"
   api-id            = module.api-git-webhook-handler.id
