@@ -35,11 +35,15 @@ module "lambda-git-webhook-handler" {
   role-update     = local.git-webhook-handler-update-role
   package-type    = "Zip"
   env-vars = {
-    INFISICAL_BASE_URL    = "https://us.infisical.com"
-    INFISICAL_IDENTITY_ID = "7bbc17ad-dedb-4297-a89b-07f266374a38"
-    INFISICAL_PROJECT_ID  = "a6b3a1c2-b598-4d17-80ac-da8f47a953f2"
-    INFISICAL_ENVIRONMENT = "prod"
-    SQS_URL               = module.sqs-git-webhook-handler.url
+    BUILD_AGENT_CLUSTER_ARN         = module.ecs-build-agent.cluster-arn
+    BUILD_AGENT_SECURITY_GROUP_IDS  = join(",", module.ecs-build-agent.security-group-ids)
+    BUILD_AGENT_SUBNET_IDS          = join(",", module.ecs-build-agent.subnet-ids)
+    BUILD_AGENT_TASK_DEFINITION_ARN = module.ecs-build-agent.task-definition-arn
+    INFISICAL_BASE_URL              = "https://us.infisical.com"
+    INFISICAL_IDENTITY_ID           = "7bbc17ad-dedb-4297-a89b-07f266374a38"
+    INFISICAL_PROJECT_ID            = "a6b3a1c2-b598-4d17-80ac-da8f47a953f2"
+    INFISICAL_ENVIRONMENT           = "prod"
+    SQS_URL                         = module.sqs-git-webhook-handler.url
   }
   tags = local.tags
 }
