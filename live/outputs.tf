@@ -18,6 +18,10 @@ output "ecr-repository-build-agent-update-role" {
   value = module.ecr-build-agent.role-update-name
 }
 
+output "ecs-build-agent-container-name" {
+  value = module.ecs-build-agent.container-name
+}
+
 output "lambda-market-data-arn" {
   value = module.lambda-market-data.arn
 }

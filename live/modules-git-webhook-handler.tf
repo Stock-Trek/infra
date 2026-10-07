@@ -36,6 +36,7 @@ module "lambda-git-webhook-handler" {
   package-type    = "Zip"
   env-vars = {
     BUILD_AGENT_CLUSTER_ARN         = module.ecs-build-agent.cluster-arn
+    BUILD_AGENT_CONTAINER_NAME      = module.ecs-build-agent.container-name
     BUILD_AGENT_SECURITY_GROUP_IDS  = join(",", module.ecs-build-agent.security-group-ids)
     BUILD_AGENT_SUBNET_IDS          = join(",", module.ecs-build-agent.subnet-ids)
     BUILD_AGENT_TASK_DEFINITION_ARN = module.ecs-build-agent.task-definition-arn
