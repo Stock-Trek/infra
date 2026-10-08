@@ -4,7 +4,7 @@ locals {
   build-agent-rust-dependency-whitelist-prefix      = "/stock-trek/dependency-whitelist"
   build-agent-rust-dependency-whitelist-repo        = "stock-trek-dependency-whitelist"
   build-agent-rust-dependency-whitelist-update-role = "StockTrekUpdateDependencyWhitelist"
-  build-agent-rust-dynamodb-table                   = "stock-trek-repo-locks"
+  build-agent-rust-dynamodb-table                   = "stock-trek-idempotency-locks"
   build-agent-rust-ecr-image-tag                    = "master"
   build-agent-rust-ecr-name                         = "stock-trek-build-agent"
   build-agent-rust-lambda                           = "stock-trek-build-agent"

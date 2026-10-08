@@ -40,6 +40,7 @@ module "lambda-git-webhook-handler" {
     BUILD_AGENT_SECURITY_GROUP_IDS  = join(",", module.ecs-build-agent.security-group-ids)
     BUILD_AGENT_SUBNET_IDS          = join(",", module.ecs-build-agent.subnet-ids)
     BUILD_AGENT_TASK_DEFINITION_ARN = module.ecs-build-agent.task-definition-arn
+    DYNAMODB_IDEMPOTENCY_TABLE      = local.build-agent-rust-dynamodb-table
     INFISICAL_BASE_URL              = "https://us.infisical.com"
     INFISICAL_IDENTITY_ID           = "7bbc17ad-dedb-4297-a89b-07f266374a38"
     INFISICAL_PROJECT_ID            = "a6b3a1c2-b598-4d17-80ac-da8f47a953f2"
