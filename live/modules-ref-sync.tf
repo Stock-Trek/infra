@@ -1,18 +1,3 @@
-locals {
-  lambda_ref_sync_env_vars = {
-    BUILD_AGENT_CLUSTER_ARN         = module.ecs_build_agent.cluster_arn
-    BUILD_AGENT_CONTAINER_NAME      = module.ecs_build_agent.container_name
-    BUILD_AGENT_SECURITY_GROUP_IDS  = join(",", module.ecs_build_agent.security_group_ids)
-    BUILD_AGENT_SUBNET_IDS          = join(",", module.ecs_build_agent.subnet_ids)
-    BUILD_AGENT_TASK_DEFINITION_ARN = module.ecs_build_agent.task_definition_arn
-    DYNAMODB_IDEMPOTENCY_TABLE      = local.build_agent_rust_dynamodb_table
-    INFISICAL_BASE_URL              = "https://us.infisical.com"
-    INFISICAL_IDENTITY_ID           = "7bbc17ad-dedb-4297-a89b-07f266374a38"
-    INFISICAL_PROJECT_ID            = "a6b3a1c2-b598-4d17-80ac-da8f47a953f2"
-    INFISICAL_ENVIRONMENT           = "prod"
-  }
-}
-
 module "api_ref_sync" {
   source = "./api-gateway"
   name   = local.ref_sync_api_name
@@ -23,13 +8,13 @@ module "api_ref_sync_route_github" {
   source            = "./glue/api-routes"
   api_id            = module.api_ref_sync.id
   api_execution_arn = module.api_ref_sync.execution_arn
-  lambda_name       = local.ref_sync_webhook_lambda
+  lambda_name       = local.ref_sync_lambda_webhook
   lambda_invoke_arn = module.lambda_ref_sync_webhook.invoke_arn
   routes = [{
     method = "POST"
     path   = "/github"
   }]
-  depends_on = [module.api_ref_sync]
+  depends_on = [module.api_ref_sync, module.lambda_ref_sync_webhook]
 }
 
 module "bucket_ref_sync_dlq" {
@@ -68,46 +53,59 @@ module "dynamodb_lambda_ref_sync" {
   source                             = "./glue/dynamodb-lambda"
   bisect_batch_on_function_error     = true
   dlq_bucket_arn                     = module.bucket_ref_sync_dlq.arn
-  lambda_arn                         = module.lambda_ref_sync_stream.arn
+  lambda_arn                         = module.lambda_ref_sync_orchestrator.arn
   maximum_batching_window_in_seconds = 5
   maximum_record_age_in_seconds      = 60 * 60
   maximum_retry_attempts             = 3
-  role_name                          = module.lambda_ref_sync_stream.role_run_name
+  role_name                          = module.lambda_ref_sync_orchestrator.role_run_name
   stream_arn                         = module.dynamodb_ref_sync.stream_arn
-  depends_on                         = [module.bucket_ref_sync_dlq, module.lambda_ref_sync_stream, module.dynamodb_ref_sync]
+  depends_on                         = [module.bucket_ref_sync_dlq, module.lambda_ref_sync_orchestrator, module.dynamodb_ref_sync]
 }
 
 module "ecs_run_task_ref_sync" {
   source              = "./glue/ecs-run-task"
-  role                = module.lambda_ref_sync_webhook.role_run_name
+  role                = module.lambda_ref_sync_orchestrator.role_run_name
   task_definition_arn = module.ecs_build_agent.task_definition_arn
   execution_role_arn  = module.ecs_build_agent.execution_role_arn
   task_role_arn       = module.ecs_build_agent.task_role_arn
-  depends_on          = [module.lambda_ref_sync_webhook, module.ecs_build_agent]
+  depends_on          = [module.lambda_ref_sync_orchestrator, module.ecs_build_agent]
 }
 
 module "lambda_ref_sync_webhook" {
   source          = "./lambda"
-  name            = local.ref_sync_webhook_lambda
+  name            = local.ref_sync_lambda_webhook
   github_account  = local.github_account
   github_oidc_arn = data.aws_iam_openid_connect_provider.github.arn
   memory          = 1024
   timeout         = 30
   role_update     = local.ref_sync_webhook_update_role
   package_type    = "Zip"
-  env_vars        = local.lambda_ref_sync_env_vars
-  tags            = local.tags
+  env_vars = {
+    DYNAMODB_IDEMPOTENCY_TABLE = local.ref_sync_dynamodb_table
+    INFISICAL_BASE_URL         = "https://us.infisical.com"
+    INFISICAL_IDENTITY_ID      = "7bbc17ad-dedb-4297-a89b-07f266374a38"
+    INFISICAL_PROJECT_ID       = "a6b3a1c2-b598-4d17-80ac-da8f47a953f2"
+    INFISICAL_ENVIRONMENT      = "prod"
+  }
+  tags = local.tags
 }
 
-module "lambda_ref_sync_stream" {
+module "lambda_ref_sync_orchestrator" {
   source          = "./lambda"
-  name            = local.ref_sync_stream_lambda
+  name            = local.ref_sync_lambda_orchestrator
   github_account  = local.github_account
   github_oidc_arn = data.aws_iam_openid_connect_provider.github.arn
   memory          = 1024
   timeout         = 30
-  role_update     = local.ref_sync_stream_update_role
+  role_update     = local.ref_sync_orchestrator_update_role
   package_type    = "Zip"
-  env_vars        = local.lambda_ref_sync_env_vars
-  tags            = local.tags
+  env_vars = {
+    BUILD_AGENT_CLUSTER_ARN         = module.ecs_build_agent.cluster_arn
+    BUILD_AGENT_CONTAINER_NAME      = module.ecs_build_agent.container_name
+    BUILD_AGENT_SECURITY_GROUP_IDS  = join(",", module.ecs_build_agent.security_group_ids)
+    BUILD_AGENT_SUBNET_IDS          = join(",", module.ecs_build_agent.subnet_ids)
+    BUILD_AGENT_TASK_DEFINITION_ARN = module.ecs_build_agent.task_definition_arn
+    DYNAMODB_IDEMPOTENCY_TABLE      = local.ref_sync_dynamodb_table
+  }
+  tags = local.tags
 }
