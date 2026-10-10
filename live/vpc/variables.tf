@@ -9,7 +9,7 @@ variable "cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "availability-zone-count" {
+variable "availability_zone_count" {
   description = "Number of availability zones to place private subnets in"
   type        = number
   default     = 2

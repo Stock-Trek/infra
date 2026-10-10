@@ -3,16 +3,16 @@ resource "aws_s3_bucket" "bucket" {
   tags   = var.tags
 }
 
-resource "aws_s3_bucket_versioning" "disable-versioning" {
+resource "aws_s3_bucket_versioning" "disable_versioning" {
   bucket = aws_s3_bucket.bucket.id
   versioning_configuration {
     status = "Disabled"
   }
 }
 
-resource "aws_s3_bucket_policy" "secure-transport-policy" {
+resource "aws_s3_bucket_policy" "secure_transport_policy" {
   bucket = aws_s3_bucket.bucket.id
-  policy = data.aws_iam_policy_document.secure-transport.json
+  policy = data.aws_iam_policy_document.secure_transport.json
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt" {
@@ -25,7 +25,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt" {
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "block-public-access" {
+resource "aws_s3_bucket_public_access_block" "block_public_access" {
   bucket                  = aws_s3_bucket.bucket.id
   block_public_acls       = true
   block_public_policy     = true

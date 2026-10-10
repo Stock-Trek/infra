@@ -6,7 +6,7 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_subnet" "private" {
-  count = var.availability-zone-count
+  count = var.availability_zone_count
 
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = cidrsubnet(var.cidr, 8, count.index)
@@ -20,7 +20,7 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private" {
-  count = var.availability-zone-count
+  count = var.availability_zone_count
 
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private.id

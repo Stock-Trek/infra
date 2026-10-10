@@ -1,5 +1,5 @@
 resource "docker_image" "dummy" {
-  count = local.image-count
+  count = local.image_count
 
   name         = "alpine:latest"
   keep_locally = false
@@ -10,10 +10,10 @@ resource "docker_image" "dummy" {
 }
 
 resource "docker_tag" "dummy" {
-  count = local.image-count
+  count = local.image_count
 
   source_image = docker_image.dummy[0].name
-  target_image = local.package-config.image_uri
+  target_image = local.package_config.image_uri
 
   lifecycle {
     ignore_changes = all
@@ -21,7 +21,7 @@ resource "docker_tag" "dummy" {
 }
 
 resource "docker_registry_image" "dummy" {
-  count = local.image-count
+  count = local.image_count
 
   name = docker_tag.dummy[0].target_image
 

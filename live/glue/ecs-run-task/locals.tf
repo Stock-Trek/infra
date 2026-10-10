@@ -1,3 +1,3 @@
 locals {
-  task-definition-family-arn = replace(var.task-definition-arn, "/:[0-9]+$/", "")
+  task_definition_family_arn = replace(var.task_definition_arn, "/:[0-9]+$/", "")
 }

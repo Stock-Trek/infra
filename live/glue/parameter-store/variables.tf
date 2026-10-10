@@ -3,27 +3,27 @@ variable "prefix" {
   type        = string
 }
 
-variable "repo-name" {
+variable "repo_name" {
   description = "Repository name to grant write access to (master branch only)"
   type        = string
 }
 
-variable "writer-role-name" {
+variable "writer_role_name" {
   description = "Role name to grant write access to"
   type        = string
 }
 
-variable "lambda-role-name" {
+variable "lambda_role_name" {
   description = "Lambda role name to grant read access to"
   type        = string
 }
 
-variable "github-account" {
+variable "github_account" {
   description = "GitHub account name"
   type        = string
 }
 
-variable "github-oidc-arn" {
+variable "github_oidc_arn" {
   description = "OIDC provider arn for GitHub"
   type        = string
 }

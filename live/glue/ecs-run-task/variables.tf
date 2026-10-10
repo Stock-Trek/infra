@@ -3,17 +3,17 @@ variable "role" {
   type        = string
 }
 
-variable "task-definition-arn" {
+variable "task_definition_arn" {
   description = "Task definition arn to allow running"
   type        = string
 }
 
-variable "execution-role-arn" {
+variable "execution_role_arn" {
   description = "Task execution role arn to pass to ECS"
   type        = string
 }
 
-variable "task-role-arn" {
+variable "task_role_arn" {
   description = "Task role arn to pass to ECS"
   type        = string
 }

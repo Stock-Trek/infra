@@ -1,10 +1,10 @@
-data "aws_iam_policy_document" "github-assume-web-identity" {
+data "aws_iam_policy_document" "github_assume_web_identity" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRoleWithWebIdentity"]
     principals {
       type        = "Federated"
-      identifiers = [var.github-oidc-arn]
+      identifiers = [var.github_oidc_arn]
     }
     condition {
       test     = "StringEquals"
@@ -14,12 +14,12 @@ data "aws_iam_policy_document" "github-assume-web-identity" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github-account}/*:*"]
+      values   = ["repo:${var.github_account}/*:*"]
     }
   }
 }
 
-data "aws_iam_policy_document" "update-lambda" {
+data "aws_iam_policy_document" "update_lambda" {
   statement {
     effect = "Allow"
     actions = [
@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "update-lambda" {
   }
 }
 
-data "aws_iam_policy_document" "assume-role" {
+data "aws_iam_policy_document" "assume_role" {
   statement {
     effect = "Allow"
     actions = [
@@ -48,7 +48,7 @@ data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
 
-data "aws_iam_policy_document" "write-logs" {
+data "aws_iam_policy_document" "write_logs" {
   statement {
     effect    = "Allow"
     actions   = ["logs:CreateLogGroup"]

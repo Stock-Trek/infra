@@ -3,12 +3,12 @@ variable "name" {
   type        = string
 }
 
-variable "lambda-arn" {
+variable "lambda_arn" {
   description = "Lambda arn to run"
   type        = string
 }
 
-variable "lambda-name" {
+variable "lambda_name" {
   description = "Lambda function name"
   type        = string
 }
@@ -24,7 +24,7 @@ variable "retries" {
   default     = 1
 }
 
-variable "retry-expiry-seconds" {
+variable "retry_expiry_seconds" {
   description = "When to stop retrying in seconds"
   type        = number
   default     = 60

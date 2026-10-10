@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "send-message" {
+data "aws_iam_policy_document" "send_message" {
   statement {
     effect    = "Allow"
     actions   = ["sqs:SendMessage"]

@@ -3,7 +3,7 @@ variable "role" {
   type        = string
 }
 
-variable "bucket-arns" {
+variable "bucket_arns" {
   description = "Bucket arns to give the role access to"
   type        = list(string)
 }

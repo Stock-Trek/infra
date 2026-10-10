@@ -1,40 +1,40 @@
-module "bucket-build-agent-artifacts" {
+module "bucket_build_agent_artifacts" {
   source = "./s3-bucket"
-  name   = local.build-agent-rust-bucket
+  name   = local.build_agent_rust_bucket
   tags   = local.tags
 }
 
-module "ecr-build-agent" {
+module "ecr_build_agent" {
   source                      = "./ecr-repository"
-  name                        = local.build-agent-rust-ecr-name
-  mutability-exclusion-filter = local.build-agent-rust-ecr-image-tag
-  github-account              = local.github-account
-  github-oidc-arn             = data.aws_iam_openid_connect_provider.github.arn
-  role-update                 = local.build-agent-rust-update-role
+  name                        = local.build_agent_rust_ecr_name
+  mutability_exclusion_filter = local.build_agent_rust_ecr_image_tag
+  github_account              = local.github_account
+  github_oidc_arn             = data.aws_iam_openid_connect_provider.github.arn
+  role_update                 = local.build_agent_rust_update_role
   tags                        = local.tags
 }
 
-module "ecs-build-agent" {
+module "ecs_build_agent" {
   source = "./ecs"
-  name   = local.build-agent-rust-task
+  name   = local.build_agent_rust_task
   image = {
-    repository-url = module.ecr-build-agent.repository_url
-    image-tag      = local.build-agent-rust-ecr-image-tag
+    repository_url = module.ecr_build_agent.repository_url
+    image_tag      = local.build_agent_rust_ecr_image_tag
   }
-  subnet-ids         = module.vpc-build-agent.subnet-ids
-  security-group-ids = [module.vpc-build-agent.task-security-group-id]
+  subnet_ids         = module.vpc_build_agent.subnet_ids
+  security_group_ids = [module.vpc_build_agent.task_security_group_id]
   tags               = local.tags
 }
 
-module "s3-put-build-agent" {
+module "s3_put_build_agent" {
   source     = "./glue/s3-put"
-  role       = module.ecs-build-agent.task-role-name
-  bucket-arn = module.bucket-build-agent-artifacts.arn
-  prefix     = local.build-agent-rust-artifact-prefix
+  role       = module.ecs_build_agent.task_role_name
+  bucket_arn = module.bucket_build_agent_artifacts.arn
+  prefix     = local.build_agent_rust_artifact_prefix
 }
 
-module "vpc-build-agent" {
+module "vpc_build_agent" {
   source = "./vpc"
-  name   = local.build-agent-rust-vpc
+  name   = local.build_agent_rust_vpc
   tags   = local.tags
 }

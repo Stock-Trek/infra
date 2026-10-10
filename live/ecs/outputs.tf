@@ -1,35 +1,35 @@
-output "cluster-arn" {
+output "cluster_arn" {
   value = aws_ecs_cluster.cluster.arn
 }
 
-output "cluster-name" {
+output "cluster_name" {
   value = aws_ecs_cluster.cluster.name
 }
 
-output "container-name" {
+output "container_name" {
   value = var.name
 }
 
-output "execution-role-arn" {
+output "execution_role_arn" {
   value = aws_iam_role.execution.arn
 }
 
-output "security-group-ids" {
-  value = var.security-group-ids
+output "security_group_ids" {
+  value = var.security_group_ids
 }
 
-output "subnet-ids" {
-  value = var.subnet-ids
+output "subnet_ids" {
+  value = var.subnet_ids
 }
 
-output "task-definition-arn" {
+output "task_definition_arn" {
   value = aws_ecs_task_definition.task.arn
 }
 
-output "task-role-arn" {
+output "task_role_arn" {
   value = aws_iam_role.task.arn
 }
 
-output "task-role-name" {
+output "task_role_name" {
   value = aws_iam_role.task.name
 }

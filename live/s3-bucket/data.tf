@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "secure-transport" {
+data "aws_iam_policy_document" "secure_transport" {
   statement {
     sid    = "SecureTransport"
     effect = "Deny"

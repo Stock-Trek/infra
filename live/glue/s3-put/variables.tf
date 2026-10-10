@@ -3,7 +3,7 @@ variable "role" {
   type        = string
 }
 
-variable "bucket-arn" {
+variable "bucket_arn" {
   description = "Bucket arn to grant put access to"
   type        = string
 }

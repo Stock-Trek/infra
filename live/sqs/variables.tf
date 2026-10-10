@@ -43,16 +43,16 @@ variable "deduplication" {
   }
 }
 
-variable "dead-letter" {
+variable "dead_letter" {
   description = "Optional dead letter queue configuration"
   type = object({
-    max-receive-count = number
+    max_receive_count = number
   })
   nullable = true
   default  = null
 }
 
-variable "visibility-timeout" {
+variable "visibility_timeout" {
   description = "How long in seconds to wait for acknowledgement/deletion before the message is visible again"
   type        = number
   default     = 30

@@ -1,8 +1,8 @@
-data "aws_iam_policy_document" "ecs-run-task" {
+data "aws_iam_policy_document" "ecs_run_task" {
   statement {
     effect    = "Allow"
     actions   = ["ecs:RunTask"]
-    resources = ["${local.task-definition-family-arn}:*"]
+    resources = ["${local.task_definition_family_arn}:*"]
   }
 
   statement {
@@ -15,8 +15,8 @@ data "aws_iam_policy_document" "ecs-run-task" {
     effect  = "Allow"
     actions = ["iam:PassRole"]
     resources = [
-      var.execution-role-arn,
-      var.task-role-arn
+      var.execution_role_arn,
+      var.task_role_arn
     ]
     condition {
       test     = "StringEquals"

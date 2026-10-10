@@ -1,12 +1,12 @@
-resource "aws_lambda_function_url" "public-url" {
-  count = local.public-count
+resource "aws_lambda_function_url" "public_url" {
+  count = local.public_count
 
   function_name      = aws_lambda_function.lambda.function_name
   authorization_type = "NONE"
   cors {
     allow_origins = [
-      "https://${var.public-access-cors-bare-domain}",
-      "https://www.${var.public-access-cors-bare-domain}"
+      "https://${var.public_access_cors_bare_domain}",
+      "https://www.${var.public_access_cors_bare_domain}"
     ]
     allow_headers  = ["*"]
     allow_methods  = ["POST", "GET"]
@@ -15,8 +15,8 @@ resource "aws_lambda_function_url" "public-url" {
   }
 }
 
-resource "aws_lambda_permission" "allow-invoking" {
-  count = local.public-count
+resource "aws_lambda_permission" "allow_invoking" {
+  count = local.public_count
 
   statement_id             = "InvokeFunction"
   action                   = "lambda:InvokeFunction"
@@ -25,8 +25,8 @@ resource "aws_lambda_permission" "allow-invoking" {
   invoked_via_function_url = true
 }
 
-resource "aws_lambda_permission" "allow-public-access" {
-  count = local.public-count
+resource "aws_lambda_permission" "allow_public_access" {
+  count = local.public_count
 
   function_name          = aws_lambda_function.lambda.function_name
   statement_id           = "AllowPublicAccess"

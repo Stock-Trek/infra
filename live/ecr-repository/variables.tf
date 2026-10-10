@@ -3,23 +3,23 @@ variable "name" {
   type        = string
 }
 
-variable "mutability-exclusion-filter" {
+variable "mutability_exclusion_filter" {
   description = "Image name that can be mutable"
   type        = string
   nullable    = true
 }
 
-variable "github-account" {
+variable "github_account" {
   description = "GitHub account name"
   type        = string
 }
 
-variable "github-oidc-arn" {
+variable "github_oidc_arn" {
   description = "OIDC provider arn for GitHub"
   type        = string
 }
 
-variable "role-update" {
+variable "role_update" {
   description = "Role name for pushing/updating images in the repository"
   type        = string
 }

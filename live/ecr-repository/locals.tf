@@ -1,5 +1,5 @@
 locals {
-  remove-untagged = {
+  remove_untagged = {
     rules = [
       {
         rulePriority = 1
