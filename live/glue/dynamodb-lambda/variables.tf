@@ -8,8 +8,8 @@ variable "lambda_arn" {
   type        = string
 }
 
-variable "role" {
-  description = "Role to attach DynamoDB stream consume and DLQ write permissions to"
+variable "role_name" {
+  description = "Name of the role to attach DynamoDB stream consume and DLQ write permissions to"
   type        = string
 }
 

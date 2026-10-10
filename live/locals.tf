@@ -14,7 +14,7 @@ locals {
 
   git_webhook_handler_api_name    = "stock-trek-git-webhook-handler"
   git_webhook_handler_lambda      = "stock-trek-git-webhook-handler"
-  git_webhook_handler_sqs_name    = "stock-trek-git-webhook-handler"
+  git_webhook_handler_bucket_dlq  = "stock-trek-git-webhook-handler-dlq"
   git_webhook_handler_update_role = "StockTrekUpdateGitWebhookHandler"
 
   github_account                 = "Stock-Trek@269482059"

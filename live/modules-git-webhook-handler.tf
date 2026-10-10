@@ -16,6 +16,50 @@ module "api_git_webhook_handler_route_github" {
   }]
 }
 
+module "bucket_git_webhook_handler_dlq" {
+  source = "./s3-bucket"
+  name   = local.git_webhook_handler_bucket_dlq
+  tags   = local.tags
+}
+
+module "dynamodb_git_webhook_handler" {
+  source = "./dynamodb"
+  attributes = {
+    pk           = "S"
+    sk           = "S"
+    host_repo_id = "S"
+    status       = "S"
+  }
+  global_secondary_indexes = {
+    "GSI-RepoByHostAndId" = {
+      hash_key        = "host_repo_id"
+      projection_type = "ALL"
+    }
+    "GSI-ByStatus" = {
+      hash_key        = "status"
+      range_key       = "pk"
+      projection_type = "KEYS_ONLY"
+    }
+  }
+  hash_key         = "pk"
+  name             = "git-state"
+  range_key        = "sk"
+  ttl_attribute    = "ttl"
+  stream_view_type = "NEW_AND_OLD_IMAGES"
+}
+
+module "dynamodb_lambda_git_webhook_handler" {
+  source                             = "./glue/dynamodb-lambda"
+  bisect_batch_on_function_error     = true
+  dlq_bucket_arn                     = module.bucket_git_webhook_handler_dlq.arn
+  lambda_arn                         = module.lambda_git_webhook_handler.arn
+  maximum_batching_window_in_seconds = 5
+  maximum_record_age_in_seconds      = 60 * 60
+  maximum_retry_attempts             = 3
+  role_name                          = module.lambda_git_webhook_handler.role_run_name
+  stream_arn                         = module.dynamodb_git_webhook_handler.stream_arn
+}
+
 module "ecs_run_task_git_webhook_handler" {
   source              = "./glue/ecs-run-task"
   role                = module.lambda_git_webhook_handler.role_run_name

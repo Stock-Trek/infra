@@ -15,6 +15,12 @@ data "aws_iam_policy_document" "consume" {
 }
 
 data "aws_iam_policy_document" "dlq_write" {
+
+  statement {
+    effect    = "Allow"
+    actions   = ["s3:ListBucket"]
+    resources = [var.dlq_bucket_arn]
+  }
   statement {
     effect    = "Allow"
     actions   = ["s3:PutObject"]
