@@ -4,16 +4,13 @@ variable "name" {
 }
 
 variable "attributes" {
-  description = "Map of table attributes. Each attribute has a key (attribute name) and a type. type must be one of [S, N, B]"
-  type = map(object({
-    key  = string
-    type = string
-  }))
+  description = "Map of table attribute names to types. Each type must be one of [S, N, B]"
+  type        = map(string)
 
   validation {
     condition = alltrue([
-      for attribute in values(var.attributes) :
-      contains(["S", "N", "B"], attribute.type)
+      for type in values(var.attributes) :
+      contains(["S", "N", "B"], type)
     ])
     error_message = "Each attribute type must be one of [S, N, B]."
   }
@@ -24,7 +21,7 @@ variable "hash-key" {
   type        = string
 
   validation {
-    condition     = contains([for attribute in values(var.attributes) : attribute.key], var.hash-key)
+    condition     = contains(keys(var.attributes), var.hash-key)
     error_message = "hash-key must be one of the attribute keys."
   }
 }
@@ -38,7 +35,7 @@ variable "range-key" {
   validation {
     condition = (
       var.range-key == null ||
-      contains([for attribute in values(var.attributes) : attribute.key], var.range-key)
+      contains(keys(var.attributes), var.range-key)
     )
     error_message = "range-key must be null or one of the attribute keys."
   }
