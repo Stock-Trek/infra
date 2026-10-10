@@ -35,9 +35,54 @@ variable "range-key" {
   validation {
     condition = (
       var.range-key == null ||
-      contains(keys(var.attributes), var.range-key)
+      try(contains(keys(var.attributes), var.range-key), false)
     )
     error_message = "range-key must be null or one of the attribute keys."
+  }
+}
+
+variable "global-secondary-indexes" {
+  description = "Map of global secondary index names to their configuration"
+  type = map(object({
+    hash-key           = string
+    range-key          = optional(string)
+    projection-type    = string
+    non-key-attributes = optional(list(string), [])
+    read-capacity      = optional(number)
+    write-capacity     = optional(number)
+  }))
+  default = {}
+
+  validation {
+    condition = alltrue([
+      for index in values(var.global-secondary-indexes) :
+      contains(keys(var.attributes), index.hash-key)
+    ])
+    error_message = "Each global secondary index hash-key must be one of the attribute keys."
+  }
+
+  validation {
+    condition = alltrue([
+      for index in values(var.global-secondary-indexes) :
+      index.range-key == null || try(contains(keys(var.attributes), index.range-key), false)
+    ])
+    error_message = "Each global secondary index range-key must be null or one of the attribute keys."
+  }
+
+  validation {
+    condition = alltrue([
+      for index in values(var.global-secondary-indexes) :
+      contains(["ALL", "INCLUDE", "KEYS_ONLY"], index.projection-type)
+    ])
+    error_message = "Each global secondary index projection-type must be one of [ALL, INCLUDE, KEYS_ONLY]."
+  }
+
+  validation {
+    condition = alltrue([
+      for index in values(var.global-secondary-indexes) :
+      index.projection-type != "INCLUDE" || length(index.non-key-attributes) > 0
+    ])
+    error_message = "Each global secondary index with projection-type INCLUDE must set at least one non-key-attribute."
   }
 }
 
@@ -63,12 +108,12 @@ variable "stream-view-type" {
   default     = null
 
   validation {
-    condition = var.stream-view-type == null || contains([
+    condition = var.stream-view-type == null || try(contains([
       "KEYS_ONLY",
       "NEW_IMAGE",
       "OLD_IMAGE",
       "NEW_AND_OLD_IMAGES"
-    ], var.stream-view-type)
+    ], var.stream-view-type), false)
     error_message = "stream-view-type must be one of [null, KEYS_ONLY, NEW_IMAGE, OLD_IMAGE, NEW_AND_OLD_IMAGES]."
   }
 }
