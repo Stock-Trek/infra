@@ -4,18 +4,18 @@ variable "name" {
 }
 
 variable "attributes" {
-  description = "Map of table attributes. Each attribute has a key (attribute name) and a data_type. data_type must be one of [S, N, B]"
+  description = "Map of table attributes. Each attribute has a key (attribute name) and a type. type must be one of [S, N, B]"
   type = map(object({
-    key       = string
-    data_type = string
+    key  = string
+    type = string
   }))
 
   validation {
     condition = alltrue([
       for attribute in values(var.attributes) :
-      contains(["S", "N", "B"], attribute.data_type)
+      contains(["S", "N", "B"], attribute.type)
     ])
-    error_message = "Each attribute data_type must be one of [S, N, B]."
+    error_message = "Each attribute type must be one of [S, N, B]."
   }
 }
 
