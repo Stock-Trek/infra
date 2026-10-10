@@ -30,16 +30,20 @@ output "lambda_market_data_update_role" {
   value = module.lambda_market_data.role_update_name
 }
 
-output "lambda_ref_sync_arn" {
-  value = module.lambda_ref_sync.arn
+output "lambda_ref_sync_orchestrator_arn" {
+  value = module.lambda_ref_sync_orchestrator.arn
 }
 
-output "lambda_ref_sync_update_role" {
-  value = module.lambda_ref_sync.role_update_name
+output "lambda_ref_sync_orchestrator_update_role" {
+  value = module.lambda_ref_sync_orchestrator.role_update_name
 }
 
-output "lambda_ref_sync_url" {
-  value = module.lambda_ref_sync.url
+output "lambda_ref_sync_webhook_arn" {
+  value = module.lambda_ref_sync_webhook.arn
+}
+
+output "lambda_ref_sync_webhook_update_role" {
+  value = module.lambda_ref_sync_webhook.role_update_name
 }
 
 output "website_bucket" {
