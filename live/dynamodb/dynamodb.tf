@@ -7,21 +7,16 @@ resource "aws_dynamodb_table" "table" {
   read_capacity  = var.billing-mode == "PROVISIONED" ? var.read-capacity : null
   write_capacity = var.billing-mode == "PROVISIONED" ? var.write-capacity : null
 
-  attribute {
-    name = var.hash-key
-    type = var.hash-key-type
-  }
-
   dynamic "attribute" {
-    for_each = var.range-key == null ? [] : [1]
+    for_each = var.attributes
     content {
-      name = var.range-key
-      type = var.range-key-type
+      name = attribute.value.key
+      type = attribute.value.data_type
     }
   }
 
-  stream_enabled   = var.stream-enabled
-  stream_view_type = var.stream-enabled ? var.stream-view-type : null
+  stream_enabled   = var.stream-view-type != null
+  stream_view_type = var.stream-view-type
 
   ttl {
     attribute_name = var.ttl-attribute

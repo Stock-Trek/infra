@@ -3,8 +3,8 @@ variable "stream-arn" {
   type        = string
 }
 
-variable "lambda-name" {
-  description = "Name of the Lambda function to invoke with DynamoDB stream records"
+variable "lambda-arn" {
+  description = "ARN of the Lambda function to invoke with DynamoDB stream records"
   type        = string
 }
 
@@ -42,8 +42,22 @@ variable "starting-position" {
   }
 }
 
-variable "enabled" {
-  description = "Whether the event source mapping is enabled"
+variable "bisect-batch-on-function-error" {
+  description = "Whether to split the batch in two and retry when the function returns an error"
   type        = bool
-  default     = true
+  default     = false
+}
+
+variable "maximum-retry-attempts" {
+  description = "Maximum number of times to retry a failed batch before sending records to the on-failure destination"
+  type        = number
+  nullable    = true
+  default     = null
+}
+
+variable "maximum-record-age-in-seconds" {
+  description = "Maximum age in seconds of a record before it is sent to the on-failure destination"
+  type        = number
+  nullable    = true
+  default     = null
 }

@@ -3,38 +3,44 @@ variable "name" {
   type        = string
 }
 
-variable "hash-key" {
-  description = "Partition key attribute name"
-  type        = string
-}
-
-variable "hash-key-type" {
-  description = "Partition key attribute type. One of [S, N, B]"
-  type        = string
-  default     = "S"
+variable "attributes" {
+  description = "Map of table attributes. Each attribute has a key (attribute name) and a data_type. data_type must be one of [S, N, B]"
+  type = map(object({
+    key       = string
+    data_type = string
+  }))
 
   validation {
-    condition     = contains(["S", "N", "B"], var.hash-key-type)
-    error_message = "hash-key-type must be one of [S, N, B]."
+    condition = alltrue([
+      for attribute in values(var.attributes) :
+      contains(["S", "N", "B"], attribute.data_type)
+    ])
+    error_message = "Each attribute data_type must be one of [S, N, B]."
+  }
+}
+
+variable "hash-key" {
+  description = "Partition key attribute name. Must be one of the attribute keys"
+  type        = string
+
+  validation {
+    condition     = contains([for attribute in values(var.attributes) : attribute.key], var.hash-key)
+    error_message = "hash-key must be one of the attribute keys."
   }
 }
 
 variable "range-key" {
-  description = "Optional sort key attribute name"
+  description = "Optional sort key attribute name. Must be one of the attribute keys when set"
   type        = string
   nullable    = true
   default     = null
-}
-
-variable "range-key-type" {
-  description = "Sort key attribute type. One of [S, N, B]"
-  type        = string
-  nullable    = true
-  default     = "S"
 
   validation {
-    condition     = var.range-key-type == null || contains(["S", "N", "B"], var.range-key-type)
-    error_message = "range-key-type must be one of [null, S, N, B]."
+    condition = (
+      var.range-key == null ||
+      contains([for attribute in values(var.attributes) : attribute.key], var.range-key)
+    )
+    error_message = "range-key must be null or one of the attribute keys."
   }
 }
 
@@ -63,14 +69,8 @@ variable "write-capacity" {
   default     = null
 }
 
-variable "stream-enabled" {
-  description = "Whether to enable DynamoDB streams for the table"
-  type        = bool
-  default     = false
-}
-
 variable "stream-view-type" {
-  description = "Stream view type. One of [KEYS_ONLY, NEW_IMAGE, OLD_IMAGE, NEW_AND_OLD_IMAGES]"
+  description = "Stream view type. Streams are enabled when set. One of [KEYS_ONLY, NEW_IMAGE, OLD_IMAGE, NEW_AND_OLD_IMAGES]"
   type        = string
   nullable    = true
   default     = null
@@ -83,11 +83,6 @@ variable "stream-view-type" {
       "NEW_AND_OLD_IMAGES"
     ], var.stream-view-type)
     error_message = "stream-view-type must be one of [null, KEYS_ONLY, NEW_IMAGE, OLD_IMAGE, NEW_AND_OLD_IMAGES]."
-  }
-
-  validation {
-    condition     = var.stream-enabled ? var.stream-view-type != null : var.stream-view-type == null
-    error_message = "stream-view-type must be set when stream-enabled is true, and null when stream-enabled is false."
   }
 }
 
