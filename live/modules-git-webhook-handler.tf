@@ -14,6 +14,7 @@ module "api_git_webhook_handler_route_github" {
     method = "POST"
     path   = "/github"
   }]
+  depends_on = [module.api_git_webhook_handler]
 }
 
 module "bucket_git_webhook_handler_dlq" {
@@ -58,6 +59,7 @@ module "dynamodb_lambda_git_webhook_handler" {
   maximum_retry_attempts             = 3
   role_name                          = module.lambda_git_webhook_handler.role_run_name
   stream_arn                         = module.dynamodb_git_webhook_handler.stream_arn
+  depends_on                         = [module.bucket_git_webhook_handler_dlq, module.lambda_git_webhook_handler, module.dynamodb_git_webhook_handler]
 }
 
 module "ecs_run_task_git_webhook_handler" {
