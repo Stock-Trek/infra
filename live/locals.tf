@@ -12,11 +12,11 @@ locals {
   build_agent_rust_update_role                      = "StockTrekUpdateBuildAgent"
   build_agent_rust_vpc                              = "stock-trek-build-agent"
 
-  git_webhook_handler_api_name       = "stock-trek-ref-sync-webhook"
-  git_webhook_handler_dynamodb_table = "stock-trek-ref-sync-git-state"
-  git_webhook_handler_lambda         = "stock-trek-ref-sync"
-  git_webhook_handler_bucket_dlq     = "stock-trek-ref-sync-dlq"
-  git_webhook_handler_update_role    = "StockTrekUpdateRefSync"
+  ref_sync_api_name       = "stock-trek-ref-sync-webhook"
+  ref_sync_dynamodb_table = "stock-trek-ref-sync-git-state"
+  ref_sync_lambda         = "stock-trek-ref-sync"
+  ref_sync_bucket_dlq     = "stock-trek-ref-sync-dlq"
+  ref_sync_update_role    = "StockTrekUpdateRefSync"
 
   github_account                 = "Stock-Trek@269482059"
   github_repository_name_website = "website"
