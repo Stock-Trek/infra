@@ -1,10 +1,10 @@
-data "aws_iam_policy_document" "github-assume-web-identity" {
+data "aws_iam_policy_document" "github_assume_web_identity" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRoleWithWebIdentity"]
     principals {
       type        = "Federated"
-      identifiers = [var.github-oidc-arn]
+      identifiers = [var.github_oidc_arn]
     }
     condition {
       test     = "StringEquals"
@@ -14,12 +14,12 @@ data "aws_iam_policy_document" "github-assume-web-identity" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github-account}/*:*"]
+      values   = ["repo:${var.github_account}/*:*"]
     }
   }
 }
 
-data "aws_iam_policy_document" "push-image" {
+data "aws_iam_policy_document" "push_image" {
   statement {
     effect    = "Allow"
     actions   = ["ecr:GetAuthorizationToken"]

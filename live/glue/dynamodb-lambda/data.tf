@@ -8,16 +8,16 @@ data "aws_iam_policy_document" "consume" {
       "dynamodb:ListStreams"
     ]
     resources = [
-      var.stream-arn,
-      "${var.stream-arn}/*"
+      var.stream_arn,
+      "${var.stream_arn}/*"
     ]
   }
 }
 
-data "aws_iam_policy_document" "dlq-write" {
+data "aws_iam_policy_document" "dlq_write" {
   statement {
     effect    = "Allow"
     actions   = ["s3:PutObject"]
-    resources = ["${var.dlq-bucket-arn}/*"]
+    resources = ["${var.dlq_bucket_arn}/*"]
   }
 }

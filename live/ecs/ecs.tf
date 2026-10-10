@@ -26,7 +26,7 @@ resource "aws_ecs_task_definition" "task" {
   container_definitions = jsonencode([
     {
       name                   = var.name
-      image                  = "${var.image.repository-url}:${var.image.image-tag}"
+      image                  = "${var.image.repository_url}:${var.image.image_tag}"
       essential              = true
       user                   = "1000:1000"
       readonlyRootFilesystem = true

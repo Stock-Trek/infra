@@ -13,7 +13,7 @@ variable "tags" {
 variable "cors" {
   description = "Optional CORS configuration, no CORS configuration is applied when null"
   type = object({
-    allow-origins = list(string)
+    allow_origins = list(string)
   })
   nullable = true
   default  = null

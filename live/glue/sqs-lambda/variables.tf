@@ -1,9 +1,9 @@
-variable "queue-arn" {
+variable "queue_arn" {
   description = "SQS queue arn to consume messages from"
   type        = string
 }
 
-variable "lambda-name" {
+variable "lambda_name" {
   description = "Name of the Lambda function to invoke with SQS messages"
   type        = string
 }
@@ -13,13 +13,13 @@ variable "role" {
   type        = string
 }
 
-variable "batch-size" {
+variable "batch_size" {
   description = "Maximum number of messages to retrieve per batch"
   type        = number
   default     = 10
 }
 
-variable "maximum-batching-window-in-seconds" {
+variable "maximum_batching_window_in_seconds" {
   description = "Maximum amount of time in seconds to gather records before invoking the function"
   type        = number
   nullable    = true

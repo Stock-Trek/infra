@@ -1,9 +1,9 @@
 resource "null_resource" "dummy" {
-  count = local.zip-count
+  count = local.zip_count
 }
 
 data "archive_file" "dummy" {
-  count = local.zip-count
+  count = local.zip_count
 
   type        = "zip"
   output_path = "${path.module}/files/dummy.zip"

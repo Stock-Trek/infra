@@ -1,10 +1,10 @@
-data "aws_iam_policy_document" "github-assume-web-identity" {
+data "aws_iam_policy_document" "github_assume_web_identity" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRoleWithWebIdentity"]
     principals {
       type        = "Federated"
-      identifiers = [var.github-oidc-arn]
+      identifiers = [var.github_oidc_arn]
     }
     condition {
       test     = "StringEquals"
@@ -14,12 +14,12 @@ data "aws_iam_policy_document" "github-assume-web-identity" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github-account}/${var.repo-name}:ref:refs/heads/master"]
+      values   = ["repo:${var.github_account}/${var.repo_name}:ref:refs/heads/master"]
     }
   }
 }
 
-data "aws_iam_policy_document" "parameter-store-read" {
+data "aws_iam_policy_document" "parameter_store_read" {
   statement {
     effect = "Allow"
     actions = [
@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "parameter-store-read" {
   }
 }
 
-data "aws_iam_policy_document" "parameter-store-write" {
+data "aws_iam_policy_document" "parameter_store_write" {
   statement {
     effect = "Allow"
     actions = [

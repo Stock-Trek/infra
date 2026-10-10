@@ -18,17 +18,17 @@ variable "memory" {
 variable "image" {
   description = "Container image configuration"
   type = object({
-    repository-url = string
-    image-tag      = string
+    repository_url = string
+    image_tag      = string
   })
 }
 
-variable "subnet-ids" {
+variable "subnet_ids" {
   description = "Subnet ids to run tasks in"
   type        = list(string)
 }
 
-variable "security-group-ids" {
+variable "security_group_ids" {
   description = "Security group ids to attach to tasks"
   type        = list(string)
 }
@@ -39,7 +39,7 @@ variable "environment" {
   default     = {}
 }
 
-variable "log-retention-days" {
+variable "log_retention_days" {
   description = "CloudWatch log retention in days"
   type        = number
   default     = 30

@@ -2,22 +2,22 @@ output "arn" {
   value = aws_lambda_function.lambda.arn
 }
 
-output "invoke-arn" {
+output "invoke_arn" {
   value = aws_lambda_function.lambda.invoke_arn
 }
 
 output "url" {
-  value = (local.public-count == 1) ? aws_lambda_function_url.public-url[0].function_url : null
+  value = (local.public_count == 1) ? aws_lambda_function_url.public_url[0].function_url : null
 }
 
-output "role-update-name" {
-  value = var.role-update
+output "role_update_name" {
+  value = var.role_update
 }
 
-output "role-run-name" {
-  value = local.role-run
+output "role_run_name" {
+  value = local.role_run
 }
 
-output "role-run-arn" {
+output "role_run_arn" {
   value = aws_iam_role.run.arn
 }

@@ -1,59 +1,59 @@
-output "api-git-webhook-url" {
-  value = module.api-git-webhook-handler.url
+output "api_git_webhook_url" {
+  value = module.api_git_webhook_handler.url
 }
 
-output "bucket-build-agent-artifacts-arn" {
-  value = module.bucket-build-agent-artifacts.arn
+output "bucket_build_agent_artifacts_arn" {
+  value = module.bucket_build_agent_artifacts.arn
 }
 
-output "bucket-market-data-arn" {
-  value = module.bucket-market-data.arn
+output "bucket_market_data_arn" {
+  value = module.bucket_market_data.arn
 }
 
-output "ecr-repository-build-agent-url" {
-  value = module.ecr-build-agent.repository_url
+output "ecr_repository_build_agent_url" {
+  value = module.ecr_build_agent.repository_url
 }
 
-output "ecr-repository-build-agent-update-role" {
-  value = module.ecr-build-agent.role-update-name
+output "ecr_repository_build_agent_update_role" {
+  value = module.ecr_build_agent.role_update_name
 }
 
-output "ecs-build-agent-container-name" {
-  value = module.ecs-build-agent.container-name
+output "ecs_build_agent_container_name" {
+  value = module.ecs_build_agent.container_name
 }
 
-output "lambda-market-data-arn" {
-  value = module.lambda-market-data.arn
+output "lambda_market_data_arn" {
+  value = module.lambda_market_data.arn
 }
 
-output "lambda-market-data-update-role" {
-  value = module.lambda-market-data.role-update-name
+output "lambda_market_data_update_role" {
+  value = module.lambda_market_data.role_update_name
 }
 
-output "lambda-git-webhook-handler-arn" {
-  value = module.lambda-git-webhook-handler.arn
+output "lambda_git_webhook_handler_arn" {
+  value = module.lambda_git_webhook_handler.arn
 }
 
-output "lambda-git-webhook-handler-update-role" {
-  value = module.lambda-git-webhook-handler.role-update-name
+output "lambda_git_webhook_handler_update_role" {
+  value = module.lambda_git_webhook_handler.role_update_name
 }
 
-output "lambda-git-webhook-handler-url" {
-  value = module.lambda-git-webhook-handler.url
+output "lambda_git_webhook_handler_url" {
+  value = module.lambda_git_webhook_handler.url
 }
 
-output "website-bucket" {
-  value = module.website-stock-trek.bucket
+output "website_bucket" {
+  value = module.website_stock_trek.bucket
 }
 
-output "website-bucket-update-role" {
-  value = module.website-stock-trek.role
+output "website_bucket_update_role" {
+  value = module.website_stock_trek.role
 }
 
-output "website-cloudfront-distribution-id" {
-  value = module.website-stock-trek.cloudfront_distribution_id
+output "website_cloudfront_distribution_id" {
+  value = module.website_stock_trek.cloudfront_distribution_id
 }
 
-output "website-url" {
-  value = module.website-stock-trek.url
+output "website_url" {
+  value = module.website_stock_trek.url
 }

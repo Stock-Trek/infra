@@ -6,6 +6,6 @@ data "aws_iam_policy_document" "consume" {
       "sqs:DeleteMessage",
       "sqs:GetQueueAttributes"
     ]
-    resources = [var.queue-arn]
+    resources = [var.queue_arn]
   }
 }

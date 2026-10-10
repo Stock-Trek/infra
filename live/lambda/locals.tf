@@ -1,10 +1,10 @@
 locals {
-  image-count  = (var.package-type == "Image" ? 1 : 0)
-  zip-count    = (var.package-type == "Zip" ? 1 : 0)
-  public-count = (var.public-access-cors-bare-domain == null ? 0 : 1)
-  role-run     = "${var.name}-run"
-  package-config = var.package-type == "Image" ? {
-    image_uri        = "${var.image.repository-url}:${var.image.image-tag}"
+  image_count  = (var.package_type == "Image" ? 1 : 0)
+  zip_count    = (var.package_type == "Zip" ? 1 : 0)
+  public_count = (var.public_access_cors_bare_domain == null ? 0 : 1)
+  role_run     = "${var.name}-run"
+  package_config = var.package_type == "Image" ? {
+    image_uri        = "${var.image.repository_url}:${var.image.image_tag}"
     filename         = null
     handler          = null
     runtime          = null

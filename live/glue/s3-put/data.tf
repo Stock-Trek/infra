@@ -1,7 +1,7 @@
-data "aws_iam_policy_document" "s3-put" {
+data "aws_iam_policy_document" "s3_put" {
   statement {
     effect    = "Allow"
     actions   = ["s3:PutObject"]
-    resources = ["${var.bucket-arn}/${local.prefix}*"]
+    resources = ["${var.bucket_arn}/${local.prefix}*"]
   }
 }

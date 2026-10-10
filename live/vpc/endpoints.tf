@@ -1,9 +1,9 @@
 locals {
-  interface-endpoints = ["ecr.api", "ecr.dkr", "logs"]
+  interface_endpoints = ["ecr.api", "ecr.dkr", "logs"]
 }
 
 resource "aws_vpc_endpoint" "interface" {
-  for_each = toset(local.interface-endpoints)
+  for_each = toset(local.interface_endpoints)
 
   vpc_id              = aws_vpc.vpc.id
   service_name        = "com.amazonaws.${data.aws_region.current.region}.${each.value}"

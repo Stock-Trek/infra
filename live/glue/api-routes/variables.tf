@@ -1,19 +1,19 @@
-variable "api-id" {
+variable "api_id" {
   description = "API Gateway id to integrate with"
   type        = string
 }
 
-variable "api-execution-arn" {
+variable "api_execution_arn" {
   description = "API Gateway execution ARN to grant invocation from"
   type        = string
 }
 
-variable "lambda-name" {
+variable "lambda_name" {
   description = "Name of the Lambda function to proxy requests to"
   type        = string
 }
 
-variable "lambda-invoke-arn" {
+variable "lambda_invoke_arn" {
   description = "Invoke ARN of the Lambda function to proxy requests to"
   type        = string
 }

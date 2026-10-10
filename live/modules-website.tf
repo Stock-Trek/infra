@@ -1,11 +1,11 @@
-module "website-stock-trek" {
+module "website_stock_trek" {
   source                      = "github.com/NathanJAdams/aws_s3_website.git?ref=master"
-  bare_domain                 = local.website-bare-domain
+  bare_domain                 = local.website_bare_domain
   error_file                  = null
   oidc_role_name              = "StockTrekUpdateWebsite"
   oidc_connector              = "GitHub"
-  oidc_github_account_name    = local.github-account
-  oidc_github_repository_name = local.github-repository-name-website
+  oidc_github_account_name    = local.github_account
+  oidc_github_repository_name = local.github_repository_name_website
   tags                        = local.tags
   providers = {
     aws           = aws

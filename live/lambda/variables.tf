@@ -13,17 +13,17 @@ variable "timeout" {
   type        = number
 }
 
-variable "role-update" {
+variable "role_update" {
   description = "Role name for updating the lambda"
   type        = string
 }
 
-variable "github-oidc-arn" {
+variable "github_oidc_arn" {
   description = "OIDC provider arn for GitHub"
   type        = string
 }
 
-variable "github-account" {
+variable "github_account" {
   description = "GitHub account name"
   type        = string
 }
@@ -35,16 +35,16 @@ variable "tags" {
   default     = {}
 }
 
-variable "package-type" {
+variable "package_type" {
   description = "One of [Zip, Image]"
   type        = string
   validation {
-    condition     = (var.package-type == "Zip") || (var.package-type == "Image" && var.image != null)
+    condition     = (var.package_type == "Zip") || (var.package_type == "Image" && var.image != null)
     error_message = "package-type must be one of [Zip, Image]. If package-type is Image, then image must not be null"
   }
 }
 
-variable "env-vars" {
+variable "env_vars" {
   type    = map(string)
   default = {}
 }
@@ -64,18 +64,18 @@ variable "zip" {
 variable "image" {
   description = "Image lambdas, cannot be used with zip"
   type = object({
-    ecr-repository-arn = string
-    repository-url     = string
-    image-tag          = string
+    ecr_repository_arn = string
+    repository_url     = string
+    image_tag          = string
   })
   default = {
-    ecr-repository-arn = "Missing ecr-repository-arn"
-    image-tag          = "Missing image-tag"
-    repository-url     = "Missing repository-url"
+    ecr_repository_arn = "Missing ecr-repository-arn"
+    image_tag          = "Missing image-tag"
+    repository_url     = "Missing repository-url"
   }
 }
 
-variable "public-access-cors-bare-domain" {
+variable "public_access_cors_bare_domain" {
   description = "Bare domain"
   type        = string
   nullable    = true

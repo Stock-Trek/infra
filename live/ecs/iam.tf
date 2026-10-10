@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "assume-role" {
+data "aws_iam_policy_document" "assume_role" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -11,7 +11,7 @@ data "aws_iam_policy_document" "assume-role" {
 
 resource "aws_iam_role" "execution" {
   name               = "${var.name}-execution"
-  assume_role_policy = data.aws_iam_policy_document.assume-role.json
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
   tags               = var.tags
 }
 
@@ -22,6 +22,6 @@ resource "aws_iam_role_policy_attachment" "execution" {
 
 resource "aws_iam_role" "task" {
   name               = "${var.name}-task"
-  assume_role_policy = data.aws_iam_policy_document.assume-role.json
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
   tags               = var.tags
 }

@@ -8,12 +8,12 @@ resource "aws_iam_role_policy_attachment" "consume" {
   policy_arn = aws_iam_policy.consume.arn
 }
 
-resource "aws_iam_policy" "dlq-write" {
+resource "aws_iam_policy" "dlq_write" {
   name   = "${var.role}-dlq-write"
-  policy = data.aws_iam_policy_document.dlq-write.json
+  policy = data.aws_iam_policy_document.dlq_write.json
 }
 
-resource "aws_iam_role_policy_attachment" "dlq-write" {
+resource "aws_iam_role_policy_attachment" "dlq_write" {
   role       = var.role
-  policy_arn = aws_iam_policy.dlq-write.arn
+  policy_arn = aws_iam_policy.dlq_write.arn
 }

@@ -3,28 +3,28 @@ resource "aws_sqs_queue" "queue" {
   fifo_queue                  = var.fifo
   content_based_deduplication = local.content_based_deduplication
   deduplication_scope         = local.deduplication_scope
-  receive_wait_time_seconds   = local.receive-wait
-  visibility_timeout_seconds  = var.visibility-timeout
-  redrive_policy = var.dead-letter == null ? null : jsonencode({
-    deadLetterTargetArn = aws_sqs_queue.dead-letter[0].arn
-    maxReceiveCount     = var.dead-letter.max-receive-count
+  receive_wait_time_seconds   = local.receive_wait
+  visibility_timeout_seconds  = var.visibility_timeout
+  redrive_policy = var.dead_letter == null ? null : jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.dead_letter[0].arn
+    maxReceiveCount     = var.dead_letter.max_receive_count
   })
   tags = var.tags
 }
 
-resource "aws_sqs_queue" "dead-letter" {
-  count = local.dead-letter-count
+resource "aws_sqs_queue" "dead_letter" {
+  count = local.dead_letter_count
 
   name                      = local.dead_letter_name
   fifo_queue                = var.fifo
-  receive_wait_time_seconds = local.receive-wait
+  receive_wait_time_seconds = local.receive_wait
   tags                      = var.tags
 }
 
-resource "aws_sqs_queue_redrive_allow_policy" "dead-letter" {
-  count = local.dead-letter-count
+resource "aws_sqs_queue_redrive_allow_policy" "dead_letter" {
+  count = local.dead_letter_count
 
-  queue_url = aws_sqs_queue.dead-letter[0].id
+  queue_url = aws_sqs_queue.dead_letter[0].id
   redrive_allow_policy = jsonencode({
     redrivePermission = "byQueue"
     sourceQueueArns   = [aws_sqs_queue.queue.arn]
