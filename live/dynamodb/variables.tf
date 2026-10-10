@@ -44,29 +44,19 @@ variable "range-key" {
   }
 }
 
-variable "billing-mode" {
-  description = "Billing mode. One of [PAY_PER_REQUEST, PROVISIONED]"
-  type        = string
-  default     = "PAY_PER_REQUEST"
+variable "billing" {
+  description = "Billing configuration. read-capacity and write-capacity are only valid when mode is PROVISIONED"
+  type = object({
+    mode           = string
+    read-capacity  = optional(number)
+    write-capacity = optional(number)
+  })
+  default = { mode = "PAY_PER_REQUEST" }
 
   validation {
-    condition     = contains(["PAY_PER_REQUEST", "PROVISIONED"], var.billing-mode)
-    error_message = "billing-mode must be one of [PAY_PER_REQUEST, PROVISIONED]."
+    condition     = contains(["PAY_PER_REQUEST", "PROVISIONED"], var.billing.mode)
+    error_message = "mode must be one of ['PAY_PER_REQUEST', 'PROVISIONED']."
   }
-}
-
-variable "read-capacity" {
-  description = "Read capacity units. Only valid when billing-mode is PROVISIONED"
-  type        = number
-  nullable    = true
-  default     = null
-}
-
-variable "write-capacity" {
-  description = "Write capacity units. Only valid when billing-mode is PROVISIONED"
-  type        = number
-  nullable    = true
-  default     = null
 }
 
 variable "stream-view-type" {
