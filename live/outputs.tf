@@ -1,5 +1,5 @@
-output "api_git_webhook_url" {
-  value = module.api_git_webhook_handler.url
+output "api_ref_sync_url" {
+  value = module.api_ref_sync.url
 }
 
 output "bucket_build_agent_artifacts_arn" {
@@ -30,16 +30,16 @@ output "lambda_market_data_update_role" {
   value = module.lambda_market_data.role_update_name
 }
 
-output "lambda_git_webhook_handler_arn" {
-  value = module.lambda_git_webhook_handler.arn
+output "lambda_ref_sync_arn" {
+  value = module.lambda_ref_sync.arn
 }
 
-output "lambda_git_webhook_handler_update_role" {
-  value = module.lambda_git_webhook_handler.role_update_name
+output "lambda_ref_sync_update_role" {
+  value = module.lambda_ref_sync.role_update_name
 }
 
-output "lambda_git_webhook_handler_url" {
-  value = module.lambda_git_webhook_handler.url
+output "lambda_ref_sync_url" {
+  value = module.lambda_ref_sync.url
 }
 
 output "website_bucket" {
