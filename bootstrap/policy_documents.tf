@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "bootstrap_assume_role" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${locals.github-account}/*:*"]
+      values   = ["repo:${local.github_account}/*:*"]
     }
   }
 }
