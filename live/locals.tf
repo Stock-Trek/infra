@@ -8,12 +8,12 @@ locals {
   build_agent_rust_vpc             = "stock-trek-build-agent"
 
   ref_sync_api_name                 = "stock-trek-ref-sync-webhook"
-  ref_sync_bucket_dlq               = "stock-trek-ref-sync-dlq"
-  ref_sync_dynamodb_table           = "stock-trek-ref-sync-git-state"
+  ref_sync_dynamodb_table_tombstone = "stock-trek-ref-sync-git-tombstone"
   ref_sync_lambda_orchestrator      = "stock-trek-ref-sync-orchestrator"
   ref_sync_lambda_webhook           = "stock-trek-ref-sync-webhook"
   ref_sync_orchestrator_update_role = "StockTrekUpdateRefSyncOrchestrator"
   ref_sync_webhook_update_role      = "StockTrekUpdateRefSyncWebhook"
+  ref_sync_sqs_name                 = "stock-trek-ref-sync"
 
   github_account                 = "Stock-Trek@269482059"
   github_repository_name_website = "website"

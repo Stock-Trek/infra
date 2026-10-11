@@ -17,49 +17,33 @@ module "api_ref_sync_route_github" {
   depends_on = [module.api_ref_sync, module.lambda_ref_sync_webhook]
 }
 
-module "bucket_ref_sync_dlq" {
-  source = "./s3-bucket"
-  name   = local.ref_sync_bucket_dlq
-  tags   = local.tags
-}
-
-module "dynamodb_ref_sync" {
-  source = "./dynamodb"
-  attributes = {
-    pk           = "S"
-    sk           = "S"
-    host_repo_id = "S"
-    status       = "S"
-  }
-  global_secondary_indexes = {
-    "GSI-RepoByHostAndId" = {
-      hash_key        = "host_repo_id"
-      projection_type = "ALL"
-    }
-    "GSI-ByStatus" = {
-      hash_key        = "status"
-      range_key       = "pk"
-      projection_type = "KEYS_ONLY"
-    }
-  }
+module "dynamodb_ref_sync_tombstones" {
+  source           = "./dynamodb"
+  name             = local.ref_sync_dynamodb_table_tombstone
   hash_key         = "pk"
-  name             = "git-state"
   range_key        = "sk"
   ttl_attribute    = "ttl"
   stream_view_type = "NEW_AND_OLD_IMAGES"
-}
-
-module "dynamodb_lambda_ref_sync" {
-  source                             = "./glue/dynamodb-lambda"
-  bisect_batch_on_function_error     = true
-  dlq_bucket_arn                     = module.bucket_ref_sync_dlq.arn
-  lambda_arn                         = module.lambda_ref_sync_orchestrator.arn
-  maximum_batching_window_in_seconds = 5
-  maximum_record_age_in_seconds      = 60 * 60
-  maximum_retry_attempts             = 3
-  role_name                          = module.lambda_ref_sync_orchestrator.role_run_name
-  stream_arn                         = module.dynamodb_ref_sync.stream_arn
-  depends_on                         = [module.bucket_ref_sync_dlq, module.lambda_ref_sync_orchestrator, module.dynamodb_ref_sync]
+  attributes = {
+    pk       = "S"
+    sk       = "S"
+    scope_pk = "S"
+    scope_sk = "S"
+    audit_pk = "S"
+    audit_sk = "S"
+  }
+  global_secondary_indexes = {
+    "ByScope" = {
+      hash_key        = "scope_pk"
+      range_key       = "scope_sk"
+      projection_type = "ALL"
+    }
+    "ByHostTypeTime" = {
+      hash_key        = "audit_pk"
+      range_key       = "audit_sk"
+      projection_type = "KEYS_ONLY"
+    }
+  }
 }
 
 module "ecs_run_task_ref_sync" {
@@ -81,11 +65,11 @@ module "lambda_ref_sync_webhook" {
   role_update     = local.ref_sync_webhook_update_role
   package_type    = "Zip"
   env_vars = {
-    DYNAMODB_IDEMPOTENCY_TABLE = local.ref_sync_dynamodb_table
-    INFISICAL_BASE_URL         = "https://us.infisical.com"
-    INFISICAL_IDENTITY_ID      = "7bbc17ad-dedb-4297-a89b-07f266374a38"
-    INFISICAL_PROJECT_ID       = "a6b3a1c2-b598-4d17-80ac-da8f47a953f2"
-    INFISICAL_ENVIRONMENT      = "prod"
+    INFISICAL_BASE_URL    = "https://us.infisical.com"
+    INFISICAL_IDENTITY_ID = "7bbc17ad-dedb-4297-a89b-07f266374a38"
+    INFISICAL_PROJECT_ID  = "a6b3a1c2-b598-4d17-80ac-da8f47a953f2"
+    INFISICAL_ENVIRONMENT = "prod"
+    SQS_URL               = module.sqs_ref_sync.url
   }
   tags = local.tags
 }
@@ -105,7 +89,22 @@ module "lambda_ref_sync_orchestrator" {
     BUILD_AGENT_SECURITY_GROUP_IDS  = join(",", module.ecs_build_agent.security_group_ids)
     BUILD_AGENT_SUBNET_IDS          = join(",", module.ecs_build_agent.subnet_ids)
     BUILD_AGENT_TASK_DEFINITION_ARN = module.ecs_build_agent.task_definition_arn
-    DYNAMODB_IDEMPOTENCY_TABLE      = local.ref_sync_dynamodb_table
+    DYNAMODB_TOMBSTONE_TABLE        = local.ref_sync_dynamodb_table_tombstone
+  }
+  tags = local.tags
+}
+
+module "sqs_ref_sync" {
+  source             = "./sqs"
+  fifo               = false
+  name               = local.ref_sync_sqs_name
+  role               = module.lambda_ref_sync_webhook.role_run_name
+  visibility_timeout = 300
+  dead_letter = {
+    max_receive_count = 3
+  }
+  deduplication = {
+    mode = "content"
   }
   tags = local.tags
 }
