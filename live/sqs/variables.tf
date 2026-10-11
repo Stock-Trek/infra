@@ -37,7 +37,7 @@ variable "deduplication" {
   validation {
     condition = (
       var.deduplication.scope == null ||
-      contains(["queue", "messageGroup"], var.deduplication.scope)
+      try(contains(["queue", "messageGroup"], var.deduplication.scope), false)
     )
     error_message = "scope must be one of [null, 'queue', 'messageGroup']."
   }

@@ -103,8 +103,5 @@ module "sqs_ref_sync" {
   dead_letter = {
     max_receive_count = 3
   }
-  deduplication = {
-    mode = "content"
-  }
   tags = local.tags
 }
