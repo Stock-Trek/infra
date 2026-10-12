@@ -94,6 +94,14 @@ module "lambda_ref_sync_orchestrator" {
   tags = local.tags
 }
 
+module "sqs_lambda_ref_sync" {
+  source      = "./glue/sqs-lambda"
+  queue_arn   = module.sqs_ref_sync.arn
+  lambda_name = local.ref_sync_lambda_orchestrator
+  role        = module.lambda_ref_sync_orchestrator.role_run_name
+  depends_on  = [module.lambda_ref_sync_orchestrator, module.sqs_ref_sync]
+}
+
 module "sqs_ref_sync" {
   source             = "./sqs"
   fifo               = false
