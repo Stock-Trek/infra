@@ -46,6 +46,14 @@ module "dynamodb_ref_sync_tombstones" {
   }
 }
 
+module "dynamodb_lambda_ref_sync" {
+  source         = "./glue/dynamodb-lambda"
+  stream_arn     = module.dynamodb_ref_sync_tombstones.stream_arn
+  lambda_arn     = module.lambda_ref_sync_orchestrator.arn
+  role_name      = module.lambda_ref_sync_orchestrator.role_run_name
+  dlq_bucket_arn = module.bucket_build_agent_artifacts.arn
+}
+
 module "ecs_run_task_ref_sync" {
   source              = "./glue/ecs-run-task"
   role                = module.lambda_ref_sync_orchestrator.role_run_name
@@ -92,6 +100,14 @@ module "lambda_ref_sync_orchestrator" {
     DYNAMODB_TOMBSTONE_TABLE        = local.ref_sync_dynamodb_table_tombstone
   }
   tags = local.tags
+}
+
+module "sqs_lambda_ref_sync" {
+  source      = "./glue/sqs-lambda"
+  queue_arn   = module.sqs_ref_sync.arn
+  lambda_name = local.ref_sync_lambda_orchestrator
+  role        = module.lambda_ref_sync_orchestrator.role_run_name
+  depends_on  = [module.lambda_ref_sync_orchestrator, module.sqs_ref_sync]
 }
 
 module "sqs_ref_sync" {
