@@ -41,6 +41,13 @@ resource "aws_vpc_security_group_egress_rule" "tasks" {
   referenced_security_group_id = aws_security_group.endpoints.id
 }
 
+resource "aws_vpc_security_group_egress_rule" "tasks_internet" {
+  security_group_id = aws_security_group.tasks.id
+  description       = "Outbound internet access via NAT gateway"
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
+}
+
 resource "aws_vpc_security_group_egress_rule" "tasks_dns_udp" {
   security_group_id = aws_security_group.tasks.id
   description       = "DNS to VPC resolver"
