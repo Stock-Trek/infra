@@ -45,7 +45,6 @@ jobs:
           directory: .
           framework: terraform
           output_format: sarif
-          output_file_path: checkov-results.sarif
 
       - name: Run Terraform Tests
         run: terraform test -verbose
