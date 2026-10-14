@@ -17,6 +17,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "bootstrap" {
   }
 }
 
+resource "aws_s3_bucket_notification" "bootstrap" {
+  bucket      = aws_s3_bucket.bootstrap.id
+  eventbridge = true
+}
+
 resource "aws_s3_bucket_public_access_block" "bootstrap" {
   bucket                  = aws_s3_bucket.bootstrap.id
   block_public_acls       = true
