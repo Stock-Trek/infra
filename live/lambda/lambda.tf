@@ -16,10 +16,10 @@ resource "aws_lambda_function" "lambda" {
   memory_size             = var.memory
   timeout                 = var.timeout
   code_signing_config_arn = aws_lambda_code_signing_config.lambda.arn
+  kms_key_arn             = data.aws_kms_alias.lambda.target_key_arn
   tracing_config {
     mode = "Active"
   }
-  kms_key_arn = data.aws_kms_alias.lambda.target_key_arn
   environment {
     variables = var.env_vars
   }
