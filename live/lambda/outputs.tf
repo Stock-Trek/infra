@@ -15,7 +15,7 @@ output "role_update_name" {
 }
 
 output "role_run_name" {
-  value = local.role_run
+  value = aws_iam_role.run.name
 }
 
 output "role_run_arn" {
