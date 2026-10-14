@@ -1,13 +1,6 @@
 resource "aws_ecr_repository" "repository" {
   name                 = var.name
-  image_tag_mutability = "IMMUTABLE_WITH_EXCLUSION"
-  dynamic "image_tag_mutability_exclusion_filter" {
-    for_each = var.mutability_exclusion_filter != null ? [1] : []
-    content {
-      filter_type = "WILDCARD"
-      filter      = var.mutability_exclusion_filter
-    }
-  }
+  image_tag_mutability = "IMMUTABLE"
   encryption_configuration {
     encryption_type = "KMS"
   }
