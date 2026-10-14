@@ -12,6 +12,11 @@ resource "aws_vpc" "vpc" {
   }
 }
 
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_vpc.vpc.id
+  tags   = var.tags
+}
+
 resource "aws_internet_gateway" "internet" {
   vpc_id = aws_vpc.vpc.id
   tags   = var.tags
