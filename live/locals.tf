@@ -19,8 +19,6 @@ locals {
   github_repository_name_website = "website"
 
   market_data_bucket      = "stock-trek-market-data"
-  market_data_cron        = "rate(3 minutes)"
-  market_data_event_rule  = "stock-trek-market-data"
   market_data_lambda      = "stock-trek-market-data"
   market_data_update_role = "StockTrekUpdateMarketData"
 
