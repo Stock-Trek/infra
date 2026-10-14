@@ -26,6 +26,12 @@ variable "nat_gateway_mode" {
   }
 }
 
+variable "log_retention_days" {
+  description = "CloudWatch flow log retention in days"
+  type        = number
+  default     = 365
+}
+
 variable "tags" {
   description = "Tags"
   type        = map(string)
