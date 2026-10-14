@@ -8,6 +8,11 @@ variable "task_definition_arn" {
   type        = string
 }
 
+variable "cluster_arn" {
+  description = "Cluster arn containing the tasks to allow describing"
+  type        = string
+}
+
 variable "execution_role_arn" {
   description = "Task execution role arn to pass to ECS"
   type        = string
