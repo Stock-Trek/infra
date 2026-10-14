@@ -22,5 +22,5 @@ variable "cors" {
 variable "log_retention_days" {
   description = "CloudWatch access log retention in days"
   type        = number
-  default     = 30
+  default     = 365
 }
