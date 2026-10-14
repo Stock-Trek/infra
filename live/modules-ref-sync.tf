@@ -57,14 +57,16 @@ module "ecs_run_task_ref_sync" {
 }
 
 module "lambda_ref_sync_webhook" {
-  source          = "./lambda"
-  name            = local.ref_sync_lambda_webhook
-  github_account  = local.github_account
-  github_oidc_arn = data.aws_iam_openid_connect_provider.github.arn
-  memory          = 1024
-  timeout         = 30
-  role_update     = local.ref_sync_webhook_update_role
-  package_type    = "Zip"
+  source             = "./lambda"
+  name               = local.ref_sync_lambda_webhook
+  github_account     = local.github_account
+  github_oidc_arn    = data.aws_iam_openid_connect_provider.github.arn
+  memory             = 1024
+  timeout            = 30
+  role_update        = local.ref_sync_webhook_update_role
+  package_type       = "Zip"
+  subnet_ids         = module.vpc_build_agent.subnet_ids
+  security_group_ids = [module.vpc_build_agent.task_security_group_id]
   env_vars = {
     INFISICAL_BASE_URL    = "https://us.infisical.com"
     INFISICAL_IDENTITY_ID = "7bbc17ad-dedb-4297-a89b-07f266374a38"
