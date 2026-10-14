@@ -61,6 +61,13 @@ variable "security_group_ids" {
   default     = []
 }
 
+variable "vpc_id" {
+  description = "VPC ID the Lambda subnets belong to. Required when subnet_ids is set."
+  type        = string
+  nullable    = true
+  default     = null
+}
+
 variable "zip" {
   description = "Zip lambdas, cannot be used with image"
   type = object({

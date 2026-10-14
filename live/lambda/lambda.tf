@@ -35,8 +35,8 @@ resource "aws_lambda_function" "lambda" {
   ]
   lifecycle {
     precondition {
-      condition     = local.vpc_count == 0 || length(var.security_group_ids) > 0
-      error_message = "security_group_ids must be set when subnet_ids is set."
+      condition     = local.vpc_count == 0 || (length(var.security_group_ids) > 0 && var.vpc_id != null)
+      error_message = "security_group_ids and vpc_id must be set when subnet_ids is set."
     }
     ignore_changes = [
       filename,
