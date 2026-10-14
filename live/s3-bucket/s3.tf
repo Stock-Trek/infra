@@ -3,10 +3,10 @@ resource "aws_s3_bucket" "bucket" {
   tags   = var.tags
 }
 
-resource "aws_s3_bucket_versioning" "disable_versioning" {
+resource "aws_s3_bucket_versioning" "versioning" {
   bucket = aws_s3_bucket.bucket.id
   versioning_configuration {
-    status = "Disabled"
+    status = "Enabled"
   }
 }
 
@@ -36,6 +36,13 @@ resource "aws_s3_bucket_public_access_block" "block_public_access" {
 resource "aws_s3_bucket" "logs" {
   bucket = "${var.name}-logs"
   tags   = var.tags
+}
+
+resource "aws_s3_bucket_versioning" "logs" {
+  bucket = aws_s3_bucket.logs.id
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 resource "aws_s3_bucket_logging" "access_logging" {
