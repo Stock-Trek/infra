@@ -19,5 +19,7 @@ jobs:
         run: |
           terraform fmt -check -recursive bootstrap
           terraform fmt -check -recursive live
+          terraform -chdir=bootstrap init -backend=false
+          terraform -chdir=live init -backend=false
           terraform -chdir=bootstrap validate
           terraform -chdir=live validate
