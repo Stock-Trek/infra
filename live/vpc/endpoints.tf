@@ -1,7 +1,3 @@
-locals {
-  interface_endpoints = ["ecr.api", "ecr.dkr", "logs"]
-}
-
 resource "aws_vpc_endpoint" "interface" {
   for_each = toset(local.interface_endpoints)
 
@@ -18,6 +14,6 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.vpc.id
   service_name      = "com.amazonaws.${data.aws_region.current.region}.s3"
   vpc_endpoint_type = "Gateway"
-  route_table_ids   = [aws_route_table.private.id]
+  route_table_ids   = aws_route_table.private[*].id
   tags              = var.tags
 }

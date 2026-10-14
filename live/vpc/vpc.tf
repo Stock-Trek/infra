@@ -27,9 +27,11 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_subnet" "public" {
+  count = var.availability_zone_count
+
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = cidrsubnet(var.cidr, 8, 128)
-  availability_zone       = data.aws_availability_zones.available.names[0]
+  cidr_block              = cidrsubnet(var.cidr, 8, 128 + count.index)
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
   tags                    = var.tags
 }
@@ -46,43 +48,52 @@ resource "aws_route" "public" {
 }
 
 resource "aws_route_table_association" "public" {
-  subnet_id      = aws_subnet.public.id
+  count = var.availability_zone_count
+
+  subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
 }
 
 resource "aws_eip" "nat" {
-  count = var.enable_nat_gateway ? 1 : 0
+  count = local.nat_count
 
   domain = "vpc"
   tags   = var.tags
 }
 
-resource "aws_nat_gateway" "nat" {
-  count = var.enable_nat_gateway ? 1 : 0
+resource "aws_nat_gateway" "this" {
+  count = local.nat_count
 
-  allocation_id = aws_eip.nat[0].id
-  subnet_id     = aws_subnet.public.id
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public[count.index].id
   tags          = var.tags
 
   depends_on = [aws_internet_gateway.internet]
 }
 
 resource "aws_route_table" "private" {
+  count = var.availability_zone_count
+
   vpc_id = aws_vpc.vpc.id
   tags   = var.tags
 }
 
-resource "aws_route" "private" {
-  count = var.enable_nat_gateway ? 1 : 0
+resource "aws_route" "private_nat" {
+  count = local.nat_count == 0 ? 0 : var.availability_zone_count
 
-  route_table_id         = aws_route_table.private.id
+  route_table_id         = aws_route_table.private[count.index].id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat[0].id
+
+  nat_gateway_id = (
+    var.nat_gateway_mode == "single"
+    ? aws_nat_gateway.this[0].id
+    : aws_nat_gateway.this[count.index].id
+  )
 }
 
 resource "aws_route_table_association" "private" {
   count = var.availability_zone_count
 
   subnet_id      = aws_subnet.private[count.index].id
-  route_table_id = aws_route_table.private.id
+  route_table_id = aws_route_table.private[count.index].id
 }
