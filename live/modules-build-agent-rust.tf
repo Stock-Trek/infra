@@ -36,6 +36,6 @@ module "s3_put_build_agent" {
 module "vpc_build_agent" {
   source           = "./vpc"
   name             = local.build_agent_rust_vpc
-  nat_gateway_mode = "single"
+  nat_gateway_mode = "per_az"
   tags             = local.tags
 }
