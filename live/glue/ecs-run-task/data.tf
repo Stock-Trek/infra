@@ -8,7 +8,7 @@ data "aws_iam_policy_document" "ecs_run_task" {
   statement {
     effect    = "Allow"
     actions   = ["ecs:DescribeTasks"]
-    resources = ["*"]
+    resources = ["${local.cluster_task_arn_prefix}/*"]
   }
 
   statement {

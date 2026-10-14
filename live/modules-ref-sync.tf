@@ -50,6 +50,7 @@ module "ecs_run_task_ref_sync" {
   source              = "./glue/ecs-run-task"
   role                = module.lambda_ref_sync_orchestrator.role_run_name
   task_definition_arn = module.ecs_build_agent.task_definition_arn
+  cluster_arn         = module.ecs_build_agent.cluster_arn
   execution_role_arn  = module.ecs_build_agent.execution_role_arn
   task_role_arn       = module.ecs_build_agent.task_role_arn
   depends_on          = [module.lambda_ref_sync_orchestrator, module.ecs_build_agent]
