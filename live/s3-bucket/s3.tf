@@ -3,6 +3,11 @@ resource "aws_s3_bucket" "bucket" {
   tags   = var.tags
 }
 
+resource "aws_s3_bucket_notification" "bucket" {
+  bucket      = aws_s3_bucket.bucket.id
+  eventbridge = true
+}
+
 resource "aws_s3_bucket_lifecycle_configuration" "bucket" {
   bucket = aws_s3_bucket.bucket.id
 
@@ -52,6 +57,11 @@ resource "aws_s3_bucket_public_access_block" "block_public_access" {
 resource "aws_s3_bucket" "logs" {
   bucket = "${var.name}-logs"
   tags   = var.tags
+}
+
+resource "aws_s3_bucket_notification" "logs" {
+  bucket      = aws_s3_bucket.logs.id
+  eventbridge = true
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "logs" {
