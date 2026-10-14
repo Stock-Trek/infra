@@ -17,6 +17,9 @@ resource "aws_lambda_function" "lambda" {
   timeout                 = var.timeout
   code_signing_config_arn = aws_lambda_code_signing_config.lambda.arn
   kms_key_arn             = data.aws_kms_alias.lambda.target_key_arn
+  tracing_config {
+    mode = "Active"
+  }
   environment {
     variables = var.env_vars
   }
@@ -30,6 +33,7 @@ resource "aws_lambda_function" "lambda" {
   tags = var.tags
   depends_on = [
     aws_iam_role_policy_attachment.write_logs,
+    aws_iam_role_policy_attachment.xray_write,
     aws_iam_role_policy_attachment.vpc_access,
     docker_registry_image.dummy[0],
     data.archive_file.dummy[0],
