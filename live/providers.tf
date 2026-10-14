@@ -1,10 +1,18 @@
 provider "aws" {
   region = "eu-west-1"
+
+  default_tags {
+    tags = local.tags
+  }
 }
 
 provider "aws" {
   alias  = "us_east_1"
   region = "us-east-1"
+
+  default_tags {
+    tags = local.tags
+  }
 }
 
 data "aws_ecr_authorization_token" "dummy" {}

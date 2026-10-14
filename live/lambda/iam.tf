@@ -2,6 +2,7 @@
 resource "aws_iam_role" "update" {
   name               = var.role_update
   assume_role_policy = data.aws_iam_policy_document.github_assume_web_identity.json
+  tags               = var.tags
 }
 
 resource "aws_iam_policy" "update_lambda" {
@@ -18,6 +19,7 @@ resource "aws_iam_role_policy_attachment" "update_lambda" {
 resource "aws_iam_role" "run" {
   name               = local.role_run
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  tags               = var.tags
 }
 
 resource "aws_iam_policy" "write_logs" {
