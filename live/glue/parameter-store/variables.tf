@@ -4,8 +4,19 @@ variable "prefix" {
 }
 
 variable "repo_name" {
-  description = "Repository name to grant write access to (master branch only)"
+  description = "Repository name to grant write access to"
   type        = string
+}
+
+variable "repo_id" {
+  description = "Immutable GitHub repository ID, used as the @id suffix in the OIDC subject"
+  type        = string
+}
+
+variable "branch_name" {
+  description = "Branch to grant write access to"
+  type        = string
+  default     = "master"
 }
 
 variable "writer_role_name" {
