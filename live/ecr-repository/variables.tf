@@ -3,12 +3,6 @@ variable "name" {
   type        = string
 }
 
-variable "mutability_exclusion_filter" {
-  description = "Image name that can be mutable"
-  type        = string
-  nullable    = true
-}
-
 variable "github_account" {
   description = "GitHub account name"
   type        = string
