@@ -1,5 +1,5 @@
 module "website_stock_trek" {
-  source                      = "github.com/NathanJAdams/aws_s3_website.git?ref=master"
+  source                      = "github.com/NathanJAdams/aws_s3_website.git?ref=1.0.3"
   bare_domain                 = local.website_bare_domain
   error_file                  = null
   oidc_role_name              = "StockTrekUpdateWebsite"
