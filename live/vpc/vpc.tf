@@ -3,6 +3,13 @@ resource "aws_vpc" "vpc" {
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags                 = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.availability_zone_count <= length(data.aws_availability_zones.available.names)
+      error_message = "availability_zone_count=${var.availability_zone_count} exceeds available AZs=${length(data.aws_availability_zones.available.names)} in ${data.aws_region.current.region}."
+    }
+  }
 }
 
 resource "aws_internet_gateway" "internet" {
