@@ -65,6 +65,17 @@ data "aws_iam_policy_document" "write_logs" {
   }
 }
 
+data "aws_iam_policy_document" "xray_write" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "xray:PutTelemetryRecords",
+      "xray:PutTraceSegments",
+    ]
+    resources = ["*"]
+  }
+}
+
 data "aws_iam_policy_document" "vpc_access" {
   statement {
     effect = "Allow"
