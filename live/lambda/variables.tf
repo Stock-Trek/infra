@@ -49,6 +49,17 @@ variable "env_vars" {
   default = {}
 }
 
+variable "reserved_concurrent_executions" {
+  description = "Function-level reserved concurrency. Set to a positive number to cap concurrent executions."
+  type        = number
+  default     = 5
+
+  validation {
+    condition     = var.reserved_concurrent_executions >= 0
+    error_message = "reserved_concurrent_executions must be greater than or equal to 0."
+  }
+}
+
 variable "subnet_ids" {
   description = "Private subnet IDs to run the Lambda in. When empty, the Lambda runs outside a VPC."
   type        = list(string)

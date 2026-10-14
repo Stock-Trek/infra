@@ -11,12 +11,13 @@ resource "aws_lambda_function" "lambda" {
   runtime          = try(local.package_config.runtime, null)
   source_code_hash = try(local.package_config.source_code_hash, null)
 
-  role                    = aws_iam_role.run.arn
-  architectures           = ["x86_64"]
-  memory_size             = var.memory
-  timeout                 = var.timeout
-  code_signing_config_arn = aws_lambda_code_signing_config.lambda.arn
-  kms_key_arn             = data.aws_kms_alias.lambda.target_key_arn
+  role                           = aws_iam_role.run.arn
+  architectures                  = ["x86_64"]
+  memory_size                    = var.memory
+  timeout                        = var.timeout
+  reserved_concurrent_executions = var.reserved_concurrent_executions
+  code_signing_config_arn        = aws_lambda_code_signing_config.lambda.arn
+  kms_key_arn                    = data.aws_kms_alias.lambda.target_key_arn
   environment {
     variables = var.env_vars
   }
