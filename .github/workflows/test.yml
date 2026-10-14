@@ -10,16 +10,47 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: hashicorp/setup-terraform@v4
-
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Run checks
+      - uses: hashicorp/setup-terraform@v4
+
+      - name: Format
         run: |
           terraform fmt -check -recursive bootstrap
           terraform fmt -check -recursive live
+
+      - name: Init
+        run: |
           terraform -chdir=bootstrap init -backend=false
           terraform -chdir=live init -backend=false
+
+      - name: Validate
+        run: |
           terraform -chdir=bootstrap validate
           terraform -chdir=live validate
+
+
+      - uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.64.0
+      - name: TFLint Init
+        run: tflint --init
+      - name: TFLint
+        run: tflint --recursive
+
+      - name: Checkov Security Scan
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          framework: terraform
+          output_format: sarif
+          output_file_path: checkov-results.sarif
+      - name: Upload Checkov SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: checkov-results.sarif
+
+      - name: Run Terraform Tests
+        run: terraform test -verbose
