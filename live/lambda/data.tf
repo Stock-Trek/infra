@@ -1,3 +1,7 @@
+data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
+
 data "aws_iam_policy_document" "github_assume_web_identity" {
   statement {
     effect  = "Allow"
@@ -44,10 +48,6 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-data "aws_region" "current" {}
-
-data "aws_caller_identity" "current" {}
-
 data "aws_iam_policy_document" "write_logs" {
   statement {
     effect    = "Allow"
@@ -62,5 +62,19 @@ data "aws_iam_policy_document" "write_logs" {
       "logs:PutLogEvents"
     ]
     resources = ["arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.name}:*"]
+  }
+}
+
+data "aws_iam_policy_document" "vpc_access" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:AssignPrivateIpAddresses",
+      "ec2:CreateNetworkInterface",
+      "ec2:DeleteNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:UnassignPrivateIpAddresses",
+    ]
+    resources = ["*"]
   }
 }
