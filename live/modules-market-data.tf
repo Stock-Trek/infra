@@ -2,6 +2,11 @@ module "bucket_market_data" {
   source = "./s3-bucket"
   name   = local.market_data_bucket
   tags   = local.tags
+
+  providers = {
+    aws         = aws
+    aws.replica = aws.us_east_1
+  }
 }
 
 module "lambda_market_data" {

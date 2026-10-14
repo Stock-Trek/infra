@@ -2,6 +2,11 @@ module "bucket_build_agent_artifacts" {
   source = "./s3-bucket"
   name   = local.build_agent_rust_bucket
   tags   = local.tags
+
+  providers = {
+    aws         = aws
+    aws.replica = aws.us_east_1
+  }
 }
 
 module "ecr_build_agent" {
