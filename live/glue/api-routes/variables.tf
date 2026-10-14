@@ -18,6 +18,20 @@ variable "lambda_invoke_arn" {
   type        = string
 }
 
+variable "authorization_type" {
+  description = "Authorization type for the routes"
+  type        = string
+  default     = "AWS_IAM"
+
+  validation {
+    condition = contains(
+      ["AWS_IAM", "CUSTOM", "JWT"],
+      var.authorization_type
+    )
+    error_message = "authorization_type must be one of AWS_IAM, CUSTOM or JWT."
+  }
+}
+
 variable "routes" {
   description = "Route keys to match requests against"
   type = list(object({

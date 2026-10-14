@@ -8,9 +8,10 @@ resource "aws_apigatewayv2_integration" "lambda" {
 resource "aws_apigatewayv2_route" "route" {
   for_each = toset(local.route_keys)
 
-  api_id    = var.api_id
-  route_key = each.value
-  target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
+  api_id             = var.api_id
+  route_key          = each.value
+  target             = "integrations/${aws_apigatewayv2_integration.lambda.id}"
+  authorization_type = var.authorization_type
 }
 
 resource "aws_lambda_permission" "allow_api" {
