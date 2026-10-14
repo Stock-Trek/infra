@@ -37,7 +37,7 @@ resource "aws_iam_policy" "vpc_access" {
   count = local.vpc_count
 
   name   = "${aws_iam_role.run.name}-vpc-access"
-  policy = data.aws_iam_policy_document.vpc_access.json
+  policy = data.aws_iam_policy_document.vpc_access[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "vpc_access" {
