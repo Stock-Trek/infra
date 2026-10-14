@@ -1,7 +1,3 @@
-locals {
-  interface_endpoints = ["ecr.api", "ecr.dkr", "logs"]
-}
-
 resource "aws_vpc_endpoint" "interface" {
   for_each = toset(local.interface_endpoints)
 

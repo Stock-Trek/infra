@@ -1,11 +1,3 @@
-locals {
-  nat_count = {
-    none   = 0
-    single = 1
-    per_az = var.availability_zone_count
-  }[var.nat_gateway_mode]
-}
-
 resource "aws_vpc" "vpc" {
   cidr_block           = var.cidr
   enable_dns_support   = true
