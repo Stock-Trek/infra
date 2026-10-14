@@ -9,7 +9,7 @@ resource "aws_ecr_repository" "repository" {
     }
   }
   encryption_configuration {
-    encryption_type = "AES256"
+    encryption_type = "KMS"
   }
   image_scanning_configuration {
     scan_on_push = true
