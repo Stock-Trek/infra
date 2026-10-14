@@ -1,5 +1,9 @@
 data "aws_region" "current" {}
 
+data "aws_kms_alias" "logs" {
+  name = "alias/aws/logs"
+}
+
 data "aws_availability_zones" "available" {
   state = "available"
 
