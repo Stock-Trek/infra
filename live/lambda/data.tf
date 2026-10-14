@@ -2,6 +2,10 @@ data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
 
+data "aws_kms_alias" "lambda" {
+  name = "alias/aws/lambda"
+}
+
 data "aws_iam_policy_document" "github_assume_web_identity" {
   statement {
     effect  = "Allow"
