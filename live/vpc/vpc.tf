@@ -29,11 +29,10 @@ resource "aws_subnet" "private" {
 resource "aws_subnet" "public" {
   count = length(var.availability_zones)
 
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = cidrsubnet(var.cidr, 8, 128 + count.index)
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
-  map_public_ip_on_launch = true
-  tags                    = var.tags
+  vpc_id            = aws_vpc.vpc.id
+  cidr_block        = cidrsubnet(var.cidr, 8, 128 + count.index)
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  tags              = var.tags
 }
 
 resource "aws_route_table" "public" {
