@@ -10,7 +10,7 @@ resource "aws_lambda_code_signing_config" "lambda" {
   }
 
   policies {
-    untrusted_artifact_on_deployment = "Enforce"
+    untrusted_artifact_on_deployment = "Warn" # TODO Use "Enforce" when code signing is in effect
   }
 
   tags = var.tags
