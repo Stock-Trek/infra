@@ -9,10 +9,14 @@ variable "cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "availability_zone_count" {
-  description = "Number of availability zones to place private subnets in"
-  type        = number
-  default     = 2
+variable "availability_zones" {
+  description = "Availability zone names to place subnets in. Pinning the zone identity prevents the VPC's subnet set from silently expanding when AWS adds an Availability Zone."
+  type        = list(string)
+
+  validation {
+    condition     = length(var.availability_zones) > 0
+    error_message = "availability_zones must contain at least one availability zone."
+  }
 }
 
 variable "nat_gateway_mode" {
