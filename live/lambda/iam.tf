@@ -31,3 +31,32 @@ resource "aws_iam_role_policy_attachment" "write_logs" {
   role       = aws_iam_role.run.name
   policy_arn = aws_iam_policy.write_logs.arn
 }
+
+# vpc
+data "aws_iam_policy_document" "vpc_access" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:AssignPrivateIpAddresses",
+      "ec2:CreateNetworkInterface",
+      "ec2:DeleteNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:UnassignPrivateIpAddresses",
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "vpc_access" {
+  count = local.vpc_count
+
+  name   = "${aws_iam_role.run.name}-vpc-access"
+  policy = data.aws_iam_policy_document.vpc_access.json
+}
+
+resource "aws_iam_role_policy_attachment" "vpc_access" {
+  count = local.vpc_count
+
+  role       = aws_iam_role.run.name
+  policy_arn = aws_iam_policy.vpc_access[0].arn
+}
