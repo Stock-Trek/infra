@@ -15,6 +15,12 @@ variable "availability_zone_count" {
   default     = 2
 }
 
+variable "enable_nat_gateway" {
+  description = "Whether to create a NAT gateway, Elastic IP, and private route to it"
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "Tags"
   type        = map(string)
