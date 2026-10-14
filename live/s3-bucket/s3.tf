@@ -3,6 +3,21 @@ resource "aws_s3_bucket" "bucket" {
   tags   = var.tags
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "bucket" {
+  bucket = aws_s3_bucket.bucket.id
+
+  rule {
+    id     = "abort-incomplete-multipart-uploads"
+    status = "Enabled"
+
+    filter {}
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
+}
+
 resource "aws_s3_bucket_versioning" "disable_versioning" {
   bucket = aws_s3_bucket.bucket.id
   versioning_configuration {
@@ -36,6 +51,21 @@ resource "aws_s3_bucket_public_access_block" "block_public_access" {
 resource "aws_s3_bucket" "logs" {
   bucket = "${var.name}-logs"
   tags   = var.tags
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "logs" {
+  bucket = aws_s3_bucket.logs.id
+
+  rule {
+    id     = "abort-incomplete-multipart-uploads"
+    status = "Enabled"
+
+    filter {}
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
 }
 
 resource "aws_s3_bucket_logging" "access_logging" {
