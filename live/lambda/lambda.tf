@@ -11,10 +11,11 @@ resource "aws_lambda_function" "lambda" {
   runtime          = try(local.package_config.runtime, null)
   source_code_hash = try(local.package_config.source_code_hash, null)
 
-  role          = aws_iam_role.run.arn
-  architectures = ["x86_64"]
-  memory_size   = var.memory
-  timeout       = var.timeout
+  role                    = aws_iam_role.run.arn
+  architectures           = ["x86_64"]
+  memory_size             = var.memory
+  timeout                 = var.timeout
+  code_signing_config_arn = aws_lambda_code_signing_config.lambda.arn
   environment {
     variables = var.env_vars
   }
