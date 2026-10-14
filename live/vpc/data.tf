@@ -16,6 +16,11 @@ data "aws_availability_zones" "available" {
     name   = "zone-type"
     values = ["availability-zone"]
   }
+
+  filter {
+    name   = "zone-name"
+    values = var.availability_zones
+  }
 }
 
 data "aws_iam_policy_document" "flow_logs_assume_role" {

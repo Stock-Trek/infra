@@ -6,8 +6,8 @@ resource "aws_vpc" "vpc" {
 
   lifecycle {
     precondition {
-      condition     = var.availability_zone_count <= length(data.aws_availability_zones.available.names)
-      error_message = "availability_zone_count=${var.availability_zone_count} exceeds available AZs=${length(data.aws_availability_zones.available.names)} in ${data.aws_region.current.region}."
+      condition     = length(data.aws_availability_zones.available.names) == length(var.availability_zones)
+      error_message = "One or more availability zones in [${join(", ", var.availability_zones)}] are not available in ${data.aws_region.current.region}."
     }
   }
 }
@@ -18,7 +18,7 @@ resource "aws_internet_gateway" "internet" {
 }
 
 resource "aws_subnet" "private" {
-  count = var.availability_zone_count
+  count = length(var.availability_zones)
 
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = cidrsubnet(var.cidr, 8, count.index)
@@ -27,7 +27,7 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_subnet" "public" {
-  count = var.availability_zone_count
+  count = length(var.availability_zones)
 
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = cidrsubnet(var.cidr, 8, 128 + count.index)
@@ -48,7 +48,7 @@ resource "aws_route" "public" {
 }
 
 resource "aws_route_table_association" "public" {
-  count = var.availability_zone_count
+  count = length(var.availability_zones)
 
   subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
@@ -72,14 +72,14 @@ resource "aws_nat_gateway" "this" {
 }
 
 resource "aws_route_table" "private" {
-  count = var.availability_zone_count
+  count = length(var.availability_zones)
 
   vpc_id = aws_vpc.vpc.id
   tags   = var.tags
 }
 
 resource "aws_route" "private_nat" {
-  count = local.nat_count == 0 ? 0 : var.availability_zone_count
+  count = local.nat_count == 0 ? 0 : length(var.availability_zones)
 
   route_table_id         = aws_route_table.private[count.index].id
   destination_cidr_block = "0.0.0.0/0"
@@ -92,7 +92,7 @@ resource "aws_route" "private_nat" {
 }
 
 resource "aws_route_table_association" "private" {
-  count = var.availability_zone_count
+  count = length(var.availability_zones)
 
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private[count.index].id

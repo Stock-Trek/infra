@@ -3,6 +3,6 @@ locals {
   nat_count = {
     none   = 0
     single = 1
-    per_az = var.availability_zone_count
+    per_az = length(var.availability_zones)
   }[var.nat_gateway_mode]
 }
