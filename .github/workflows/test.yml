@@ -46,11 +46,6 @@ jobs:
           framework: terraform
           output_format: sarif
           output_file_path: checkov-results.sarif
-      - name: Upload Checkov SARIF
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: checkov-results.sarif
 
       - name: Run Terraform Tests
         run: terraform test -verbose
