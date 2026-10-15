@@ -2,6 +2,11 @@ provider "aws" {
   region = local.aws_region
 }
 
+provider "aws" {
+  alias  = "replica"
+  region = "us-east-1"
+}
+
 terraform {
   required_version = ">= 1.10"
 
