@@ -5,7 +5,7 @@ resource "aws_vpc_endpoint" "interface" {
   service_name        = "com.amazonaws.${data.aws_region.current.region}.${each.value}"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = aws_subnet.private[*].id
-  security_group_ids  = [aws_security_group.endpoints.id]
+  security_group_ids  = [aws_security_group.endpoints.id, aws_security_group.tasks.id]
   private_dns_enabled = true
   tags                = var.tags
 }
