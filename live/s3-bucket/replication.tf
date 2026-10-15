@@ -4,9 +4,47 @@ resource "aws_s3_bucket" "replica" {
   tags     = var.tags
 }
 
+resource "aws_s3_bucket" "replica_logs" {
+  provider = aws.replica
+  bucket   = "${var.name}-replica-logs"
+  tags     = var.tags
+}
+
+locals {
+  replica_buckets = {
+    replica      = aws_s3_bucket.replica.id
+    replica_logs = aws_s3_bucket.replica_logs.id
+  }
+}
+
+resource "aws_s3_bucket_notification" "replica" {
+  provider    = aws.replica
+  for_each    = local.replica_buckets
+  bucket      = each.value
+  eventbridge = true
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "replica" {
+  provider = aws.replica
+  for_each = local.replica_buckets
+  bucket   = each.value
+
+  rule {
+    id     = "abort-incomplete-multipart-uploads"
+    status = "Enabled"
+
+    filter {}
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 1
+    }
+  }
+}
+
 resource "aws_s3_bucket_versioning" "replica" {
   provider = aws.replica
-  bucket   = aws_s3_bucket.replica.id
+  for_each = local.replica_buckets
+  bucket   = each.value
   versioning_configuration {
     status = "Enabled"
   }
@@ -14,7 +52,8 @@ resource "aws_s3_bucket_versioning" "replica" {
 
 resource "aws_s3_bucket_public_access_block" "replica" {
   provider                = aws.replica
-  bucket                  = aws_s3_bucket.replica.id
+  for_each                = local.replica_buckets
+  bucket                  = each.value
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -23,85 +62,8 @@ resource "aws_s3_bucket_public_access_block" "replica" {
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "replica" {
   provider = aws.replica
-  bucket   = aws_s3_bucket.replica.id
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "aws:kms"
-    }
-    blocked_encryption_types = ["SSE-C"]
-  }
-}
-
-resource "aws_s3_bucket_notification" "replica" {
-  provider    = aws.replica
-  bucket      = aws_s3_bucket.replica.id
-  eventbridge = true
-}
-
-resource "aws_s3_bucket_lifecycle_configuration" "replica" {
-  provider = aws.replica
-  bucket   = aws_s3_bucket.replica.id
-
-  rule {
-    id     = "abort-incomplete-multipart-uploads"
-    status = "Enabled"
-
-    filter {}
-
-    abort_incomplete_multipart_upload {
-      days_after_initiation = 1
-    }
-  }
-}
-
-resource "aws_s3_bucket" "replica_logs" {
-  provider = aws.replica
-  bucket   = "${var.name}-replica-logs"
-  tags     = var.tags
-}
-
-resource "aws_s3_bucket_notification" "replica_logs" {
-  provider    = aws.replica
-  bucket      = aws_s3_bucket.replica_logs.id
-  eventbridge = true
-}
-
-resource "aws_s3_bucket_lifecycle_configuration" "replica_logs" {
-  provider = aws.replica
-  bucket   = aws_s3_bucket.replica_logs.id
-
-  rule {
-    id     = "abort-incomplete-multipart-uploads"
-    status = "Enabled"
-
-    filter {}
-
-    abort_incomplete_multipart_upload {
-      days_after_initiation = 1
-    }
-  }
-}
-
-resource "aws_s3_bucket_versioning" "replica_logs" {
-  provider = aws.replica
-  bucket   = aws_s3_bucket.replica_logs.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "replica_logs" {
-  provider                = aws.replica
-  bucket                  = aws_s3_bucket.replica_logs.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "replica_logs" {
-  provider = aws.replica
-  bucket   = aws_s3_bucket.replica_logs.id
+  for_each = local.replica_buckets
+  bucket   = each.value
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "aws:kms"
@@ -228,8 +190,8 @@ resource "aws_s3_bucket_replication_configuration" "bucket" {
   }
 
   depends_on = [
-    aws_s3_bucket_versioning.versioning,
-    aws_s3_bucket_versioning.replica,
+    aws_s3_bucket_versioning.primary["bucket"],
+    aws_s3_bucket_versioning.replica["replica"],
     aws_iam_role_policy.replication,
   ]
 }
@@ -248,8 +210,8 @@ resource "aws_s3_bucket_replication_configuration" "logs" {
   }
 
   depends_on = [
-    aws_s3_bucket_versioning.logs,
-    aws_s3_bucket_versioning.replica_logs,
+    aws_s3_bucket_versioning.primary["logs"],
+    aws_s3_bucket_versioning.replica["replica_logs"],
     aws_iam_role_policy.replication,
   ]
 }
