@@ -29,12 +29,6 @@ variable "environment" {
   default     = {}
 }
 
-variable "log_retention_days" {
-  description = "CloudWatch log retention in days"
-  type        = number
-  default     = 365
-}
-
 variable "tags" {
   description = "Tags"
   type        = map(string)

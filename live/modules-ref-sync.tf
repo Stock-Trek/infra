@@ -1,11 +1,11 @@
 module "api_ref_sync" {
-  source = "./api-gateway"
+  source = "../modules/api-gateway"
   name   = local.ref_sync_api_name
   tags   = local.tags
 }
 
 module "api_ref_sync_route_github" {
-  source            = "./glue/api-routes"
+  source            = "../modules/glue/api-routes"
   api_id            = module.api_ref_sync.id
   api_execution_arn = module.api_ref_sync.execution_arn
   lambda_name       = local.ref_sync_lambda_webhook
@@ -18,7 +18,7 @@ module "api_ref_sync_route_github" {
 }
 
 module "ecs_run_task_ref_sync" {
-  source              = "./glue/ecs-run-task"
+  source              = "../modules/glue/ecs-run-task"
   role                = module.lambda_ref_sync_orchestrator.role_run_name
   task_definition_arn = module.ecs_build_agent.task_definition_arn
   cluster_arn         = module.ecs_build_agent.cluster_arn
@@ -28,7 +28,7 @@ module "ecs_run_task_ref_sync" {
 }
 
 module "lambda_ref_sync_webhook" {
-  source          = "./lambda"
+  source          = "../modules/lambda"
   name            = local.ref_sync_lambda_webhook
   github_account  = local.github_account
   github_oidc_arn = data.aws_iam_openid_connect_provider.github.arn
@@ -47,7 +47,7 @@ module "lambda_ref_sync_webhook" {
 }
 
 module "lambda_ref_sync_orchestrator" {
-  source          = "./lambda"
+  source          = "../modules/lambda"
   name            = local.ref_sync_lambda_orchestrator
   github_account  = local.github_account
   github_oidc_arn = data.aws_iam_openid_connect_provider.github.arn
@@ -64,7 +64,7 @@ module "lambda_ref_sync_orchestrator" {
 }
 
 module "sqs_lambda_ref_sync" {
-  source      = "./glue/sqs-lambda"
+  source      = "../modules/glue/sqs-lambda"
   queue_arn   = module.sqs_ref_sync.arn
   lambda_name = local.ref_sync_lambda_orchestrator
   role        = module.lambda_ref_sync_orchestrator.role_run_name
@@ -72,7 +72,7 @@ module "sqs_lambda_ref_sync" {
 }
 
 module "sqs_ref_sync" {
-  source             = "./sqs"
+  source             = "../modules/sqs"
   fifo               = false
   name               = local.ref_sync_sqs_name
   role               = module.lambda_ref_sync_webhook.role_run_name
