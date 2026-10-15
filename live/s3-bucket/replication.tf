@@ -54,6 +54,98 @@ resource "aws_s3_bucket_lifecycle_configuration" "replica" {
   }
 }
 
+resource "aws_s3_bucket" "replica_logs" {
+  provider = aws.replica
+  bucket   = "${var.name}-replica-logs"
+  tags     = var.tags
+}
+
+resource "aws_s3_bucket_notification" "replica_logs" {
+  provider    = aws.replica
+  bucket      = aws_s3_bucket.replica_logs.id
+  eventbridge = true
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "replica_logs" {
+  provider = aws.replica
+  bucket   = aws_s3_bucket.replica_logs.id
+
+  rule {
+    id     = "abort-incomplete-multipart-uploads"
+    status = "Enabled"
+
+    filter {}
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 1
+    }
+  }
+}
+
+resource "aws_s3_bucket_versioning" "replica_logs" {
+  provider = aws.replica
+  bucket   = aws_s3_bucket.replica_logs.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "replica_logs" {
+  provider                = aws.replica
+  bucket                  = aws_s3_bucket.replica_logs.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "replica_logs" {
+  provider = aws.replica
+  bucket   = aws_s3_bucket.replica_logs.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "aws:kms"
+    }
+    blocked_encryption_types = ["SSE-C"]
+  }
+}
+
+data "aws_iam_policy_document" "replica_logs" {
+  statement {
+    sid    = "S3ServerAccessLogs"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["logging.s3.amazonaws.com"]
+    }
+    actions   = ["s3:PutObject"]
+    resources = ["${aws_s3_bucket.replica_logs.arn}/*"]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+    condition {
+      test     = "ArnLike"
+      variable = "aws:SourceArn"
+      values   = [aws_s3_bucket.replica.arn]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "replica_logs" {
+  provider = aws.replica
+  bucket   = aws_s3_bucket.replica_logs.id
+  policy   = data.aws_iam_policy_document.replica_logs.json
+}
+
+resource "aws_s3_bucket_logging" "replica" {
+  provider      = aws.replica
+  bucket        = aws_s3_bucket.replica.id
+  target_bucket = aws_s3_bucket.replica_logs.id
+  target_prefix = "logs/"
+}
+
 data "aws_iam_policy_document" "replication_assume_role" {
   statement {
     effect = "Allow"
