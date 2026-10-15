@@ -55,11 +55,12 @@ resource "aws_s3_bucket_public_access_block" "primary" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "primary" {
-  for_each = var.object_ownership == null ? {} : local.primary_buckets
+  for_each = local.primary_buckets
   bucket   = each.value
   rule {
-    object_ownership = var.object_ownership
+    object_ownership = "BucketOwnerEnforced"
   }
+  depends_on = [aws_s3_bucket_public_access_block.primary]
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "primary" {
