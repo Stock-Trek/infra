@@ -29,5 +29,5 @@ jobs:
 
       - name: Apply
         run: |
-          terraform -chdir=live init -backend=false
+          terraform -chdir=live init
           terraform -chdir=live apply -auto-approve
