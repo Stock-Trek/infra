@@ -17,35 +17,6 @@ module "api_ref_sync_route_github" {
   depends_on = [module.api_ref_sync, module.lambda_ref_sync_webhook]
 }
 
-module "dynamodb_ref_sync_tombstones" {
-  source           = "./dynamodb"
-  name             = local.ref_sync_dynamodb_table_tombstone
-  hash_key         = "pk"
-  range_key        = "sk"
-  ttl_attribute    = "ttl"
-  stream_view_type = "NEW_AND_OLD_IMAGES"
-  attributes = {
-    pk       = "S"
-    sk       = "S"
-    scope_pk = "S"
-    scope_sk = "S"
-    audit_pk = "S"
-    audit_sk = "S"
-  }
-  global_secondary_indexes = {
-    "ByScope" = {
-      hash_key        = "scope_pk"
-      range_key       = "scope_sk"
-      projection_type = "ALL"
-    }
-    "ByHostTypeTime" = {
-      hash_key        = "audit_pk"
-      range_key       = "audit_sk"
-      projection_type = "KEYS_ONLY"
-    }
-  }
-}
-
 module "ecs_run_task_ref_sync" {
   source              = "./glue/ecs-run-task"
   role                = module.lambda_ref_sync_orchestrator.role_run_name
@@ -57,17 +28,14 @@ module "ecs_run_task_ref_sync" {
 }
 
 module "lambda_ref_sync_webhook" {
-  source             = "./lambda"
-  name               = local.ref_sync_lambda_webhook
-  github_account     = local.github_account
-  github_oidc_arn    = data.aws_iam_openid_connect_provider.github.arn
-  memory             = 1024
-  timeout            = 30
-  role_update        = local.ref_sync_webhook_update_role
-  package_type       = "Zip"
-  subnet_ids         = module.vpc.subnet_ids
-  security_group_ids = [module.vpc.task_security_group_id]
-  vpc_id             = module.vpc.id
+  source          = "./lambda"
+  name            = local.ref_sync_lambda_webhook
+  github_account  = local.github_account
+  github_oidc_arn = data.aws_iam_openid_connect_provider.github.arn
+  memory          = 1024
+  timeout         = 30
+  role_update     = local.ref_sync_webhook_update_role
+  package_type    = "Zip"
   env_vars = {
     INFISICAL_BASE_URL    = "https://us.infisical.com"
     INFISICAL_IDENTITY_ID = "7bbc17ad-dedb-4297-a89b-07f266374a38"
@@ -90,10 +58,7 @@ module "lambda_ref_sync_orchestrator" {
   env_vars = {
     BUILD_AGENT_CLUSTER_ARN         = module.ecs_build_agent.cluster_arn
     BUILD_AGENT_CONTAINER_NAME      = module.ecs_build_agent.container_name
-    BUILD_AGENT_SECURITY_GROUP_IDS  = join(",", module.ecs_build_agent.security_group_ids)
-    BUILD_AGENT_SUBNET_IDS          = join(",", module.ecs_build_agent.subnet_ids)
     BUILD_AGENT_TASK_DEFINITION_ARN = module.ecs_build_agent.task_definition_arn
-    DYNAMODB_TOMBSTONE_TABLE        = local.ref_sync_dynamodb_table_tombstone
   }
   tags = local.tags
 }

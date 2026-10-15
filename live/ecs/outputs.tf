@@ -14,14 +14,6 @@ output "execution_role_arn" {
   value = aws_iam_role.execution.arn
 }
 
-output "security_group_ids" {
-  value = var.security_group_ids
-}
-
-output "subnet_ids" {
-  value = var.subnet_ids
-}
-
 output "task_definition_arn" {
   value = aws_ecs_task_definition.task.arn
 }

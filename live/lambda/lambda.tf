@@ -27,27 +27,15 @@ resource "aws_lambda_function" "lambda" {
   dead_letter_config {
     target_arn = aws_sqs_queue.dead_letter.arn
   }
-  dynamic "vpc_config" {
-    for_each = local.vpc_count == 1 ? [true] : []
-    content {
-      subnet_ids         = var.subnet_ids
-      security_group_ids = var.security_group_ids
-    }
-  }
   tags = var.tags
   depends_on = [
     aws_iam_role_policy_attachment.write_logs,
     aws_iam_role_policy_attachment.xray_write,
     aws_iam_role_policy_attachment.dead_letter_write,
-    aws_iam_role_policy_attachment.vpc_access,
     docker_registry_image.dummy[0],
     data.archive_file.dummy[0],
   ]
   lifecycle {
-    precondition {
-      condition     = local.vpc_count == 0 || (length(var.security_group_ids) > 0 && var.vpc_id != null)
-      error_message = "security_group_ids and vpc_id must be set when subnet_ids is set."
-    }
     ignore_changes = [
       filename,
       source_code_hash,

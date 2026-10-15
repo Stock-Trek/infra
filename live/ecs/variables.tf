@@ -23,16 +23,6 @@ variable "image" {
   })
 }
 
-variable "subnet_ids" {
-  description = "Subnet ids to run tasks in"
-  type        = list(string)
-}
-
-variable "security_group_ids" {
-  description = "Security group ids to attach to tasks"
-  type        = list(string)
-}
-
 variable "environment" {
   description = "Environment variables to pass to the container"
   type        = map(string)
