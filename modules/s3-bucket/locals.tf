@@ -1,5 +1,4 @@
 locals {
-  replica_name     = "${var.name}-replica"
   replication_name = "${var.name}-replication"
 
   replica_buckets = {
