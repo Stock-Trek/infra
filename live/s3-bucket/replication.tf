@@ -1,16 +1,18 @@
 resource "aws_s3_bucket" "replica" {
   provider = aws.replica
-  bucket   = "${var.name}-replica"
+  bucket   = local.replica_name
   tags     = var.tags
 }
 
 resource "aws_s3_bucket" "replica_logs" {
   provider = aws.replica
-  bucket   = "${var.name}-replica-logs"
+  bucket   = "${local.replica_name}-logs"
   tags     = var.tags
 }
 
 locals {
+  replica_name = "${var.name}-replica"
+
   replica_buckets = {
     replica      = aws_s3_bucket.replica.id
     replica_logs = aws_s3_bucket.replica_logs.id
@@ -60,6 +62,16 @@ resource "aws_s3_bucket_public_access_block" "replica" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_ownership_controls" "replica" {
+  provider = aws.replica
+  for_each = local.replica_buckets
+  bucket   = each.value
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+  depends_on = [aws_s3_bucket_public_access_block.replica]
+}
+
 resource "aws_s3_bucket_server_side_encryption_configuration" "replica" {
   provider = aws.replica
   for_each = local.replica_buckets
@@ -69,6 +81,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "replica" {
       sse_algorithm = "aws:kms"
     }
     blocked_encryption_types = ["SSE-C"]
+    bucket_key_enabled       = true
   }
 }
 

@@ -54,6 +54,15 @@ resource "aws_s3_bucket_public_access_block" "primary" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_ownership_controls" "primary" {
+  for_each = local.primary_buckets
+  bucket   = each.value
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+  depends_on = [aws_s3_bucket_public_access_block.primary]
+}
+
 resource "aws_s3_bucket_server_side_encryption_configuration" "primary" {
   for_each = local.primary_buckets
   bucket   = each.value
@@ -63,6 +72,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "primary" {
       kms_master_key_id = data.aws_kms_alias.s3.target_key_arn
     }
     blocked_encryption_types = ["SSE-C"]
+    bucket_key_enabled       = true
   }
 }
 
