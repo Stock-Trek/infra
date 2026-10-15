@@ -25,6 +25,7 @@ jobs:
         run: |
           terraform fmt -check -recursive bootstrap
           terraform fmt -check -recursive live
+          terraform fmt -check -recursive modules
 
       - name: Init
         run: |
@@ -35,6 +36,7 @@ jobs:
         run: |
           terraform -chdir=bootstrap validate
           terraform -chdir=live validate
+          terraform -chdir=modules validate
 
 
       - uses: terraform-linters/setup-tflint@v4
