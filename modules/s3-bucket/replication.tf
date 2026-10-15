@@ -11,7 +11,8 @@ resource "aws_s3_bucket" "replica_logs" {
 }
 
 locals {
-  replica_name = "${var.name}-replica"
+  replica_name     = "${var.name}-replica"
+  replication_name = "${var.name}-replication"
 
   replica_buckets = {
     replica      = aws_s3_bucket.replica.id
@@ -133,7 +134,7 @@ data "aws_iam_policy_document" "replication_assume_role" {
 }
 
 resource "aws_iam_role" "replication" {
-  name               = coalesce(var.replication_role_name, "${var.name}-replication")
+  name               = local.replication_name
   assume_role_policy = data.aws_iam_policy_document.replication_assume_role.json
   tags               = var.tags
 }
@@ -184,7 +185,7 @@ data "aws_iam_policy_document" "replication" {
 }
 
 resource "aws_iam_role_policy" "replication" {
-  name   = coalesce(var.replication_role_name, "${var.name}-replication")
+  name   = local.replication_name
   role   = aws_iam_role.replication.id
   policy = data.aws_iam_policy_document.replication.json
 }
