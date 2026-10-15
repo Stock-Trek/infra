@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "bootstrap_replica" {
   provider = aws.replica
-  bucket   = "state-replica.${local.bare_domain}"
+  bucket   = "state.${local.bare_domain}-replica"
 }
 
 resource "aws_s3_bucket" "bootstrap_replica_logs" {
@@ -74,6 +74,7 @@ resource "aws_s3_bucket_ownership_controls" "replica" {
   rule {
     object_ownership = "BucketOwnerEnforced"
   }
+  depends_on = [aws_s3_bucket_public_access_block.replica]
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "replica" {
@@ -115,7 +116,7 @@ data "aws_iam_policy_document" "bootstrap_replication_assume_role" {
 }
 
 resource "aws_iam_role" "bootstrap_replication" {
-  name               = "${local.bare_domain}-BootstrapReplication"
+  name               = "state.${local.bare_domain}-replication"
   assume_role_policy = data.aws_iam_policy_document.bootstrap_replication_assume_role.json
 }
 
