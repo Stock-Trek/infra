@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "replica_logs" {
 }
 
 locals {
-  replica_name = coalesce(var.replica_name, "${var.name}-replica")
+  replica_name = "${var.name}-replica"
 
   replica_buckets = {
     replica      = aws_s3_bucket.replica.id
