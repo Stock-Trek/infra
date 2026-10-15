@@ -19,3 +19,15 @@ data "aws_iam_policy_document" "bootstrap_assume_role" {
     }
   }
 }
+
+data "aws_iam_policy_document" "bootstrap_plan_lock" {
+  statement {
+    sid    = "TerraformStateLock"
+    effect = "Allow"
+    actions = [
+      "s3:DeleteObject",
+      "s3:PutObject"
+    ]
+    resources = ["${module.bucket_bootstrap.arn}/*.tflock"]
+  }
+}
