@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "replica_logs" {
 }
 
 locals {
-  replica_name = coalesce(var.replica_name, "${var.name}-replica")
+  replica_name = "${var.name}-replica"
 
   replica_buckets = {
     replica      = aws_s3_bucket.replica.id
@@ -64,10 +64,10 @@ resource "aws_s3_bucket_public_access_block" "replica" {
 
 resource "aws_s3_bucket_ownership_controls" "replica" {
   provider = aws.replica
-  for_each = var.object_ownership == null ? {} : local.replica_buckets
+  for_each = local.replica_buckets
   bucket   = each.value
   rule {
-    object_ownership = var.object_ownership
+    object_ownership = "BucketOwnerEnforced"
   }
   depends_on = [aws_s3_bucket_public_access_block.replica]
 }
@@ -81,7 +81,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "replica" {
       sse_algorithm = "aws:kms"
     }
     blocked_encryption_types = ["SSE-C"]
-    bucket_key_enabled       = var.bucket_key_enabled
+    bucket_key_enabled       = true
   }
 }
 
