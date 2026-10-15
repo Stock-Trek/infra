@@ -28,6 +28,11 @@ resource "aws_iam_role" "bootstrap_apply" {
   assume_role_policy = data.aws_iam_policy_document.bootstrap_assume_role_apply.json
 }
 
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_acm" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess"
+}
+
 resource "aws_iam_role_policy_attachment" "bootstrap_apply_api_gateway" {
   role       = aws_iam_role.bootstrap_apply.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonAPIGatewayAdministrator"
