@@ -48,7 +48,12 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v4
 
-      - name: Apply
+      - name: Apply bootstrap
+        run: |
+          terraform -chdir=bootstrap init
+          terraform -chdir=bootstrap apply -auto-approve
+
+      - name: Apply live
         run: |
           terraform -chdir=live init
           terraform -chdir=live apply -auto-approve
