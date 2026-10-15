@@ -58,6 +58,7 @@ resource "aws_s3_bucket_ownership_controls" "primary" {
   rule {
     object_ownership = "BucketOwnerEnforced"
   }
+  depends_on = [aws_s3_bucket_public_access_block.primary]
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "primary" {
