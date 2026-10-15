@@ -1,18 +1,8 @@
-resource "aws_iam_role" "bootstrap_admin" {
-  name               = "${local.bare_domain}-Terraform"
-  description        = "Full access via GitHub"
-  assume_role_policy = data.aws_iam_policy_document.bootstrap_assume_role.json
-}
-
-resource "aws_iam_role_policy_attachment" "bootstrap_admin" {
-  role       = aws_iam_role.bootstrap_admin.name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-}
-
+# plan
 resource "aws_iam_role" "bootstrap_plan" {
-  name               = "${local.bare_domain}-TerraformPlan"
+  name               = local.iam_role_plan
   description        = "Read-only access via GitHub for Terraform plan"
-  assume_role_policy = data.aws_iam_policy_document.bootstrap_assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.bootstrap_assume_role_plan.json
 }
 
 resource "aws_iam_role_policy_attachment" "bootstrap_plan" {
@@ -30,14 +20,75 @@ resource "aws_iam_role_policy_attachment" "bootstrap_plan_lock" {
   policy_arn = aws_iam_policy.bootstrap_plan_lock.arn
 }
 
+
+# apply
 resource "aws_iam_role" "bootstrap_apply" {
-  name               = "${local.bare_domain}-TerraformApply"
-  description        = "Full access via GitHub for Terraform apply"
-  assume_role_policy = data.aws_iam_policy_document.bootstrap_assume_role.json
+  name               = local.iam_role_apply
+  description        = "Apply access via GitHub for Terraform apply"
+  assume_role_policy = data.aws_iam_policy_document.bootstrap_assume_role_apply.json
 }
 
-resource "aws_iam_role_policy_attachment" "bootstrap_apply" {
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_api_gateway" {
   role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonAPIGatewayAdministrator"
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_cloudwatch" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccessV2"
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_dynamodb" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess_v2"
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_ecr" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_ecs" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_iam" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_lambda" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_s3" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_sqs" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_ssm" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+}
+
+
+
+# old
+resource "aws_iam_role" "bootstrap_admin" {
+  name               = "${local.bare_domain}-Terraform"
+  description        = "Full access via GitHub"
+  assume_role_policy = data.aws_iam_policy_document.bootstrap_assume_role_apply.json
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_admin" {
+  role       = aws_iam_role.bootstrap_admin.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
