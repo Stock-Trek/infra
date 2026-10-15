@@ -81,7 +81,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "replica" {
       sse_algorithm = "aws:kms"
     }
     blocked_encryption_types = ["SSE-C"]
-    bucket_key_enabled       = var.bucket_key_enabled
+    bucket_key_enabled       = true
   }
 }
 
@@ -133,7 +133,7 @@ data "aws_iam_policy_document" "replication_assume_role" {
 }
 
 resource "aws_iam_role" "replication" {
-  name               = coalesce(var.replication_role_name, "${var.name}-replication")
+  name               = "${var.name}-replication"
   assume_role_policy = data.aws_iam_policy_document.replication_assume_role.json
   tags               = var.tags
 }
@@ -184,7 +184,7 @@ data "aws_iam_policy_document" "replication" {
 }
 
 resource "aws_iam_role_policy" "replication" {
-  name   = coalesce(var.replication_role_name, "${var.name}-replication")
+  name   = "${var.name}-replication"
   role   = aws_iam_role.replication.id
   policy = data.aws_iam_policy_document.replication.json
 }
