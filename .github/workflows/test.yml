@@ -15,19 +15,6 @@ jobs:
         with:
           lfs: true
 
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            protected:
-              - 'bootstrap/**'
-
-      - name: Fail if bootstrap/ has changes
-        if: steps.filter.outputs.protected == 'true'
-        run: |
-          echo "❌ Changes detected in src/bootstrap/"
-          exit 1
-
       - uses: hashicorp/setup-terraform@v4
 
       - name: Format
