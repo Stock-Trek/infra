@@ -25,8 +25,8 @@ module "ecs_build_agent" {
     repository_url = module.ecr_build_agent.repository_url
     image_tag      = local.build_agent_rust_ecr_image_tag
   }
-  subnet_ids         = module.vpc_build_agent.subnet_ids
-  security_group_ids = [module.vpc_build_agent.task_security_group_id]
+  subnet_ids         = module.vpc.subnet_ids
+  security_group_ids = [module.vpc.task_security_group_id]
   tags               = local.tags
 }
 
@@ -35,12 +35,4 @@ module "s3_put_build_agent" {
   role       = module.ecs_build_agent.task_role_name
   bucket_arn = module.bucket_build_agent_artifacts.arn
   prefix     = local.build_agent_rust_artifact_prefix
-}
-
-module "vpc_build_agent" {
-  source             = "./vpc"
-  name               = local.build_agent_rust_vpc
-  availability_zones = local.build_agent_rust_availability_zones
-  nat_gateway_mode   = "per_az"
-  tags               = local.tags
 }

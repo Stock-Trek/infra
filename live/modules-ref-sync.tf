@@ -65,9 +65,9 @@ module "lambda_ref_sync_webhook" {
   timeout            = 30
   role_update        = local.ref_sync_webhook_update_role
   package_type       = "Zip"
-  subnet_ids         = module.vpc_build_agent.subnet_ids
-  security_group_ids = [module.vpc_build_agent.task_security_group_id]
-  vpc_id             = module.vpc_build_agent.id
+  subnet_ids         = module.vpc.subnet_ids
+  security_group_ids = [module.vpc.task_security_group_id]
+  vpc_id             = module.vpc.id
   env_vars = {
     INFISICAL_BASE_URL    = "https://us.infisical.com"
     INFISICAL_IDENTITY_ID = "7bbc17ad-dedb-4297-a89b-07f266374a38"
