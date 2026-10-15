@@ -69,6 +69,14 @@ data "aws_iam_policy_document" "write_logs" {
   }
 }
 
+data "aws_iam_policy_document" "dead_letter_write" {
+  statement {
+    effect    = "Allow"
+    actions   = ["sqs:SendMessage"]
+    resources = [aws_sqs_queue.dead_letter.arn]
+  }
+}
+
 data "aws_iam_policy_document" "xray_write" {
   statement {
     effect = "Allow"
