@@ -74,7 +74,12 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v4
 
-      - name: Apply
+      - name: Plan bootstrap
+        run: |
+          terraform -chdir=bootstrap init
+          terraform -chdir=bootstrap plan
+
+      - name: Plan live
         run: |
           terraform -chdir=live init
           terraform -chdir=live plan
