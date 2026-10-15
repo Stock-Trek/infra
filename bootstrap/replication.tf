@@ -62,6 +62,84 @@ resource "aws_s3_bucket_lifecycle_configuration" "bootstrap_replica" {
   }
 }
 
+resource "aws_s3_bucket" "bootstrap_replica_logs" {
+  provider = aws.replica
+  bucket   = "${aws_s3_bucket.bootstrap_replica.bucket}-logs"
+}
+
+resource "aws_s3_bucket_notification" "bootstrap_replica_logs" {
+  provider    = aws.replica
+  bucket      = aws_s3_bucket.bootstrap_replica_logs.id
+  eventbridge = true
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "bootstrap_replica_logs" {
+  provider = aws.replica
+  bucket   = aws_s3_bucket.bootstrap_replica_logs.id
+
+  rule {
+    id     = "abort-incomplete-multipart-uploads"
+    status = "Enabled"
+
+    filter {}
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 1
+    }
+  }
+}
+
+resource "aws_s3_bucket_versioning" "bootstrap_replica_logs" {
+  provider = aws.replica
+  bucket   = aws_s3_bucket.bootstrap_replica_logs.id
+  versioning_configuration {
+    mfa_delete = "Disabled"
+    status     = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_policy" "bootstrap_replica_logs" {
+  provider = aws.replica
+  bucket   = aws_s3_bucket.bootstrap_replica_logs.id
+  policy   = data.aws_iam_policy_document.bootstrap_replica_logs.json
+}
+
+resource "aws_s3_bucket_public_access_block" "bootstrap_replica_logs" {
+  provider                = aws.replica
+  bucket                  = aws_s3_bucket.bootstrap_replica_logs.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_ownership_controls" "bootstrap_replica_logs" {
+  provider = aws.replica
+  bucket   = aws_s3_bucket.bootstrap_replica_logs.id
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "bootstrap_replica_logs" {
+  provider = aws.replica
+  bucket   = aws_s3_bucket.bootstrap_replica_logs.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "aws:kms"
+    }
+    blocked_encryption_types = ["SSE-C"]
+    bucket_key_enabled       = true
+  }
+}
+
+resource "aws_s3_bucket_logging" "bootstrap_replica" {
+  provider      = aws.replica
+  bucket        = aws_s3_bucket.bootstrap_replica.id
+  target_bucket = aws_s3_bucket.bootstrap_replica_logs.id
+  target_prefix = "logs/"
+}
+
 data "aws_iam_policy_document" "bootstrap_replication_assume_role" {
   statement {
     effect = "Allow"
