@@ -5,6 +5,11 @@ on:
     branches: [master]
   workflow_dispatch:
 
+# Prevent multiple deploys at the same time
+concurrency:
+  group: ${{ github.event.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
   id-token: write
