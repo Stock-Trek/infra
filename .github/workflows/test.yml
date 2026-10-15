@@ -5,6 +5,10 @@ on:
     branches-ignore:
       - master
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   test:
     name: Test
