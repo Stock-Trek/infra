@@ -3,9 +3,6 @@ module "bucket_build_agent_artifacts" {
   name   = local.build_agent_rust_bucket
   tags   = local.tags
 
-  object_ownership   = "BucketOwnerEnforced"
-  bucket_key_enabled = true
-
   providers = {
     aws         = aws
     aws.replica = aws.us_east_1
