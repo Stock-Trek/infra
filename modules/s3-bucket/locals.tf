@@ -4,6 +4,6 @@ locals {
 
   replica_buckets = {
     replica      = aws_s3_bucket.replica.id
-    replica_logs = aws_s3_bucket.replica_logs.id
+    logs_replica = aws_s3_bucket.logs_replica.id
   }
 }

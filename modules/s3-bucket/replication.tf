@@ -1,12 +1,12 @@
 resource "aws_s3_bucket" "replica" {
   provider = aws.replica
-  bucket   = local.replica_name
+  bucket   = "${var.name}-replica"
   tags     = var.tags
 }
 
-resource "aws_s3_bucket" "replica_logs" {
+resource "aws_s3_bucket" "logs_replica" {
   provider = aws.replica
-  bucket   = "${local.replica_name}-logs"
+  bucket   = "${var.name}-logs-replica"
   tags     = var.tags
 }
 
@@ -76,7 +76,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "replica" {
   }
 }
 
-data "aws_iam_policy_document" "replica_logs" {
+data "aws_iam_policy_document" "logs_replica" {
   statement {
     sid    = "S3ServerAccessLogs"
     effect = "Allow"
@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "replica_logs" {
       identifiers = ["logging.s3.amazonaws.com"]
     }
     actions   = ["s3:PutObject"]
-    resources = ["${aws_s3_bucket.replica_logs.arn}/*"]
+    resources = ["${aws_s3_bucket.logs_replica.arn}/*"]
     condition {
       test     = "StringEquals"
       variable = "aws:SourceAccount"
@@ -99,16 +99,16 @@ data "aws_iam_policy_document" "replica_logs" {
   }
 }
 
-resource "aws_s3_bucket_policy" "replica_logs" {
+resource "aws_s3_bucket_policy" "logs_replica" {
   provider = aws.replica
-  bucket   = aws_s3_bucket.replica_logs.id
-  policy   = data.aws_iam_policy_document.replica_logs.json
+  bucket   = aws_s3_bucket.logs_replica.id
+  policy   = data.aws_iam_policy_document.logs_replica.json
 }
 
 resource "aws_s3_bucket_logging" "replica" {
   provider      = aws.replica
   bucket        = aws_s3_bucket.replica.id
-  target_bucket = aws_s3_bucket.replica_logs.id
+  target_bucket = aws_s3_bucket.logs_replica.id
   target_prefix = "logs/"
 }
 
@@ -169,7 +169,7 @@ data "aws_iam_policy_document" "replication" {
     ]
     resources = [
       "${aws_s3_bucket.replica.arn}/*",
-      "${aws_s3_bucket.replica_logs.arn}/*",
+      "${aws_s3_bucket.logs_replica.arn}/*",
     ]
   }
 }
@@ -209,13 +209,13 @@ resource "aws_s3_bucket_replication_configuration" "logs" {
     status = "Enabled"
 
     destination {
-      bucket = aws_s3_bucket.replica_logs.arn
+      bucket = aws_s3_bucket.logs_replica.arn
     }
   }
 
   depends_on = [
     aws_s3_bucket_versioning.primary["logs"],
-    aws_s3_bucket_versioning.replica["replica_logs"],
+    aws_s3_bucket_versioning.replica["logs_replica"],
     aws_iam_role_policy.replication,
   ]
 }
