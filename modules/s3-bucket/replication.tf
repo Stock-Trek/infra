@@ -10,16 +10,6 @@ resource "aws_s3_bucket" "replica_logs" {
   tags     = var.tags
 }
 
-locals {
-  replica_name     = "${var.name}-replica"
-  replication_name = "${var.name}-replication"
-
-  replica_buckets = {
-    replica      = aws_s3_bucket.replica.id
-    replica_logs = aws_s3_bucket.replica_logs.id
-  }
-}
-
 resource "aws_s3_bucket_notification" "replica" {
   provider    = aws.replica
   for_each    = local.replica_buckets
