@@ -201,7 +201,10 @@ data "aws_iam_policy_document" "replication" {
       "s3:ReplicateObject",
       "s3:ReplicateTags",
     ]
-    resources = ["${aws_s3_bucket.replica.arn}/*"]
+    resources = [
+      "${aws_s3_bucket.replica.arn}/*",
+      "${aws_s3_bucket.replica_logs.arn}/*",
+    ]
   }
 }
 
@@ -240,13 +243,13 @@ resource "aws_s3_bucket_replication_configuration" "logs" {
     status = "Enabled"
 
     destination {
-      bucket = aws_s3_bucket.replica.arn
+      bucket = aws_s3_bucket.replica_logs.arn
     }
   }
 
   depends_on = [
     aws_s3_bucket_versioning.logs,
-    aws_s3_bucket_versioning.replica,
+    aws_s3_bucket_versioning.replica_logs,
     aws_iam_role_policy.replication,
   ]
 }

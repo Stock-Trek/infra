@@ -165,7 +165,10 @@ data "aws_iam_policy_document" "bootstrap_replication" {
       "s3:GetReplicationConfiguration",
       "s3:ListBucket",
     ]
-    resources = [aws_s3_bucket.bootstrap.arn]
+    resources = [
+      aws_s3_bucket.bootstrap.arn,
+      aws_s3_bucket.bootstrap_logs.arn,
+    ]
   }
 
   statement {
@@ -176,7 +179,10 @@ data "aws_iam_policy_document" "bootstrap_replication" {
       "s3:GetObjectVersionForReplication",
       "s3:GetObjectVersionTagging",
     ]
-    resources = ["${aws_s3_bucket.bootstrap.arn}/*"]
+    resources = [
+      "${aws_s3_bucket.bootstrap.arn}/*",
+      "${aws_s3_bucket.bootstrap_logs.arn}/*",
+    ]
   }
 
   statement {
@@ -188,7 +194,10 @@ data "aws_iam_policy_document" "bootstrap_replication" {
       "s3:ReplicateObject",
       "s3:ReplicateTags",
     ]
-    resources = ["${aws_s3_bucket.bootstrap_replica.arn}/*"]
+    resources = [
+      "${aws_s3_bucket.bootstrap_replica.arn}/*",
+      "${aws_s3_bucket.bootstrap_replica_logs.arn}/*",
+    ]
   }
 }
 
@@ -214,6 +223,26 @@ resource "aws_s3_bucket_replication_configuration" "bootstrap" {
   depends_on = [
     aws_s3_bucket_versioning.bootstrap,
     aws_s3_bucket_versioning.bootstrap_replica,
+    aws_iam_role_policy.bootstrap_replication,
+  ]
+}
+
+resource "aws_s3_bucket_replication_configuration" "bootstrap_logs" {
+  bucket = aws_s3_bucket.bootstrap_logs.id
+  role   = aws_iam_role.bootstrap_replication.arn
+
+  rule {
+    id     = "replicate"
+    status = "Enabled"
+
+    destination {
+      bucket = aws_s3_bucket.bootstrap_replica_logs.arn
+    }
+  }
+
+  depends_on = [
+    aws_s3_bucket_versioning.bootstrap_logs,
+    aws_s3_bucket_versioning.bootstrap_replica_logs,
     aws_iam_role_policy.bootstrap_replication,
   ]
 }
