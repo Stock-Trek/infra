@@ -60,18 +60,6 @@ variable "reserved_concurrent_executions" {
   }
 }
 
-variable "subnet_ids" {
-  description = "Private subnet IDs to run the Lambda in. When empty, the Lambda runs outside a VPC."
-  type        = list(string)
-  default     = []
-}
-
-variable "security_group_ids" {
-  description = "Security group IDs applied to the Lambda when running inside a VPC"
-  type        = list(string)
-  default     = []
-}
-
 variable "zip" {
   description = "Zip lambdas, cannot be used with image"
   type = object({
