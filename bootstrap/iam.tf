@@ -38,6 +38,11 @@ resource "aws_iam_role_policy_attachment" "bootstrap_apply_cloudwatch" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccessV2"
 }
 
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_cloudfront" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudFrontFullAccess"
+}
+
 resource "aws_iam_role_policy_attachment" "bootstrap_apply_dynamodb" {
   role       = aws_iam_role.bootstrap_apply.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess_v2"
@@ -61,6 +66,11 @@ resource "aws_iam_role_policy_attachment" "bootstrap_apply_iam" {
 resource "aws_iam_role_policy_attachment" "bootstrap_apply_lambda" {
   role       = aws_iam_role.bootstrap_apply.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_apply_route53" {
+  role       = aws_iam_role.bootstrap_apply.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "bootstrap_apply_s3" {
