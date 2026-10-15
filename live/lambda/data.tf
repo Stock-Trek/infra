@@ -87,29 +87,3 @@ data "aws_iam_policy_document" "xray_write" {
     resources = ["*"]
   }
 }
-
-data "aws_iam_policy_document" "vpc_access" {
-  count = local.vpc_count
-
-  statement {
-    effect    = "Allow"
-    actions   = ["ec2:DescribeNetworkInterfaces"]
-    resources = ["*"]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "ec2:AssignPrivateIpAddresses",
-      "ec2:CreateNetworkInterface",
-      "ec2:DeleteNetworkInterface",
-      "ec2:UnassignPrivateIpAddresses",
-    ]
-    resources = ["*"]
-    condition {
-      test     = "StringEquals"
-      variable = "ec2:Vpc"
-      values   = ["arn:aws:ec2:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:vpc/${var.vpc_id}"]
-    }
-  }
-}

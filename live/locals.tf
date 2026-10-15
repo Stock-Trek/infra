@@ -7,7 +7,6 @@ locals {
   build_agent_rust_update_role     = "StockTrekUpdateBuildAgent"
 
   ref_sync_api_name                 = "stock-trek-ref-sync-webhook"
-  ref_sync_dynamodb_table_tombstone = "stock-trek-ref-sync-git-tombstone"
   ref_sync_lambda_orchestrator      = "stock-trek-ref-sync-orchestrator"
   ref_sync_lambda_webhook           = "stock-trek-ref-sync-webhook"
   ref_sync_orchestrator_update_role = "StockTrekUpdateRefSyncOrchestrator"
@@ -22,9 +21,6 @@ locals {
   # market_data_event_rule  = "stock-trek-market-data"
   market_data_lambda      = "stock-trek-market-data"
   market_data_update_role = "StockTrekUpdateMarketData"
-
-  vpc_availability_zones = ["eu-west-1a", "eu-west-1b"]
-  vpc_name               = "stock-trek-build-agent"
 
   website_bare_domain = "stock-trek.com"
 
