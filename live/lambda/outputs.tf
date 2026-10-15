@@ -14,6 +14,10 @@ output "role_update_name" {
   value = var.role_update
 }
 
+output "dead_letter_arn" {
+  value = aws_sqs_queue.dead_letter.arn
+}
+
 output "role_run_name" {
   value = aws_iam_role.run.name
 }

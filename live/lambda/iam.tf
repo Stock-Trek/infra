@@ -32,6 +32,16 @@ resource "aws_iam_role_policy_attachment" "write_logs" {
   policy_arn = aws_iam_policy.write_logs.arn
 }
 
+resource "aws_iam_policy" "dead_letter_write" {
+  name   = "${aws_iam_role.run.name}-dead-letter-write"
+  policy = data.aws_iam_policy_document.dead_letter_write.json
+}
+
+resource "aws_iam_role_policy_attachment" "dead_letter_write" {
+  role       = aws_iam_role.run.name
+  policy_arn = aws_iam_policy.dead_letter_write.arn
+}
+
 resource "aws_iam_policy" "xray_write" {
   name   = "${aws_iam_role.run.name}-xray-write"
   policy = data.aws_iam_policy_document.xray_write.json

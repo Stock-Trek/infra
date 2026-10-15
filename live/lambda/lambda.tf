@@ -24,6 +24,9 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = var.env_vars
   }
+  dead_letter_config {
+    target_arn = aws_sqs_queue.dead_letter.arn
+  }
   dynamic "vpc_config" {
     for_each = local.vpc_count == 1 ? [true] : []
     content {
@@ -35,6 +38,7 @@ resource "aws_lambda_function" "lambda" {
   depends_on = [
     aws_iam_role_policy_attachment.write_logs,
     aws_iam_role_policy_attachment.xray_write,
+    aws_iam_role_policy_attachment.dead_letter_write,
     aws_iam_role_policy_attachment.vpc_access,
     docker_registry_image.dummy[0],
     data.archive_file.dummy[0],
