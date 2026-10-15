@@ -30,4 +30,4 @@ jobs:
       - name: Apply
         run: |
           terraform -chdir=live init -backend=false
-          terraform -chdir=live apply -y
+          terraform -chdir=live apply -auto-approve
