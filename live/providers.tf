@@ -1,3 +1,5 @@
+data "aws_ecr_authorization_token" "dummy" {}
+
 provider "aws" {
   region = "eu-west-1"
 
@@ -14,8 +16,6 @@ provider "aws" {
     tags = local.tags
   }
 }
-
-data "aws_ecr_authorization_token" "dummy" {}
 
 provider "docker" {
   registry_auth {
