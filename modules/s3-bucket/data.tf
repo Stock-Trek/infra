@@ -4,6 +4,11 @@ data "aws_kms_alias" "s3" {
   name = "alias/aws/s3"
 }
 
+data "aws_kms_alias" "s3_replica" {
+  provider = aws.replica
+  name     = "alias/aws/s3"
+}
+
 data "aws_iam_policy_document" "logs" {
   statement {
     sid    = "S3ServerAccessLogs"
