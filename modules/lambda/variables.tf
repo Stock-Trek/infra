@@ -34,14 +34,13 @@ variable "github_account_id" {
 }
 
 variable "github_repo" {
-  description = "GitHub repository name, or * to allow any repository in the account"
+  description = "GitHub repository name"
   type        = string
 }
 
 variable "github_repo_id" {
-  description = "GitHub repository immutable ID, not required when github_repo is *"
+  description = "GitHub repository immutable ID"
   type        = string
-  default     = null
 }
 
 variable "tags" {

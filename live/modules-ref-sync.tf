@@ -33,7 +33,8 @@ module "lambda_ref_sync_webhook" {
   name              = local.ref_sync_lambda_webhook
   github_account    = local.github_account
   github_account_id = local.github_account_id
-  github_repo       = "*"
+  github_repo       = "ref-sync"
+  github_repo_id    = "1413785530"
   github_oidc_arn   = data.aws_iam_openid_connect_provider.github.arn
   memory            = 1024
   timeout           = 30
@@ -54,7 +55,8 @@ module "lambda_ref_sync_orchestrator" {
   name              = local.ref_sync_lambda_orchestrator
   github_account    = local.github_account
   github_account_id = local.github_account_id
-  github_repo       = "*"
+  github_repo       = "ref-sync"
+  github_repo_id    = "1413785530"
   github_oidc_arn   = data.aws_iam_openid_connect_provider.github.arn
   memory            = 1024
   timeout           = 30

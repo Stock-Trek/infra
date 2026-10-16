@@ -1,6 +1,5 @@
 locals {
-  github_repo_ref = var.github_repo_id == null ? var.github_repo : "${var.github_repo}@${var.github_repo_id}"
-  github_subject  = "repo:${var.github_account}@${var.github_account_id}/${local.github_repo_ref}"
+  github_subject = "repo:${var.github_account}@${var.github_account_id}/${var.github_repo}@${var.github_repo_id}"
 
   image_count  = (var.package_type == "Image" ? 1 : 0)
   zip_count    = (var.package_type == "Zip" ? 1 : 0)
