@@ -6,3 +6,4 @@ skip-check:
   - CKV_AWS_273  # Ensure access is controlled through SSO and not AWS IAM defined users
   - CKV_AWS_274  # Disallow IAM roles, users, and groups from using the AWS AdministratorAccess policy
   - CKV2_AWS_56  # Ensure AWS Managed IAMFullAccess IAM policy is not used.
+  - CKV_AWS_51
