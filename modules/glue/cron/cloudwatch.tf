@@ -2,6 +2,7 @@ resource "aws_cloudwatch_event_rule" "scheduled_rule" {
   name                = var.name
   description         = "Cron trigger for ${var.lambda_name} @ ${var.cron}"
   schedule_expression = var.cron
+  tags                = var.tags
 }
 
 resource "aws_cloudwatch_event_target" "lambda_target" {
