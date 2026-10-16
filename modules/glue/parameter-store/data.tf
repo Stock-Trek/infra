@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "github_assume_web_identity" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_account}/${var.repo_name}@${var.repo_id}:ref:refs/heads/${var.branch_name}"]
+      values   = ["${local.github_subject}:ref:refs/heads/${var.branch_name}"]
     }
   }
 }

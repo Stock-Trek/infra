@@ -13,7 +13,8 @@ locals {
   ref_sync_webhook_update_role      = "StockTrekUpdateRefSyncWebhook"
   ref_sync_sqs_name                 = "stock-trek-ref-sync"
 
-  github_account                 = "Stock-Trek@269482059"
+  github_account                 = "Stock-Trek"
+  github_account_id              = "269482059"
   github_repository_name_website = "website"
 
   market_data_bucket = "stock-trek-market-data"
