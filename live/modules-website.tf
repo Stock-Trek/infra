@@ -4,7 +4,7 @@ module "website_stock_trek" {
   error_file                  = null
   oidc_role_name              = "StockTrekUpdateWebsite"
   oidc_connector              = "GitHub"
-  oidc_github_account_name    = local.github_account
+  oidc_github_account_name    = "${local.github_account}@${local.github_account_id}"
   oidc_github_repository_name = local.github_repository_name_website
   tags                        = local.tags
   providers = {

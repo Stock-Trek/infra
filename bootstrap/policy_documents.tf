@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "bootstrap_assume_role_plan" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${local.github_account}/${local.github_repo}:*"]
+      values   = ["repo:${local.github_account}@${local.github_account_id}/${local.github_repo}@${local.github_repo_id}:*"]
     }
   }
 }
@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "bootstrap_assume_role_apply" {
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${local.github_account}/${local.github_repo}:ref:refs/heads/${local.github_branch}"]
+      values   = ["repo:${local.github_account}@${local.github_account_id}/${local.github_repo}@${local.github_repo_id}:ref:refs/heads/${local.github_branch}"]
     }
   }
 }

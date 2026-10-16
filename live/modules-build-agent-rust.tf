@@ -14,6 +14,9 @@ module "ecr_build_agent" {
   name                        = local.build_agent_rust_ecr_name
   mutability_exclusion_filter = local.build_agent_rust_ecr_image_tag
   github_account              = local.github_account
+  github_account_id           = local.github_account_id
+  github_repo                 = "build-agent"
+  github_repo_id              = "1395007534"
   github_oidc_arn             = data.aws_iam_openid_connect_provider.github.arn
   role_update                 = local.build_agent_rust_update_role
   tags                        = local.tags

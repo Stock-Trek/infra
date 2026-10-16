@@ -11,7 +11,22 @@ variable "mutability_exclusion_filter" {
 }
 
 variable "github_account" {
-  description = "GitHub account name"
+  description = "GitHub account (owner) name"
+  type        = string
+}
+
+variable "github_account_id" {
+  description = "GitHub account (owner) immutable ID"
+  type        = string
+}
+
+variable "github_repo" {
+  description = "GitHub repository name"
+  type        = string
+}
+
+variable "github_repo_id" {
+  description = "GitHub repository immutable ID"
   type        = string
 }
 
