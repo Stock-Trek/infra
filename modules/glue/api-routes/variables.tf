@@ -25,10 +25,10 @@ variable "authorization_type" {
 
   validation {
     condition = contains(
-      ["AWS_IAM", "CUSTOM", "JWT"],
+      ["AWS_IAM", "CUSTOM", "JWT", "NONE"],
       var.authorization_type
     )
-    error_message = "authorization_type must be one of AWS_IAM, CUSTOM or JWT."
+    error_message = "authorization_type must be one of AWS_IAM, CUSTOM, JWT or NONE."
   }
 }
 
