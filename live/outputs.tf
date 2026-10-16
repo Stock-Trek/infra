@@ -26,6 +26,10 @@ output "lambda_market_data_arn" {
   value = module.lambda_market_data.arn
 }
 
+output "monitoring_topic_arn" {
+  value = module.monitoring.topic_arn
+}
+
 output "lambda_market_data_update_role" {
   value = module.lambda_market_data.role_update_name
 }

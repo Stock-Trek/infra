@@ -1,7 +1,8 @@
 module "api_ref_sync" {
-  source = "../modules/api-gateway"
-  name   = local.ref_sync_api_name
-  tags   = local.tags
+  source        = "../modules/api-gateway"
+  name          = local.ref_sync_api_name
+  tags          = local.tags
+  alarm_actions = [module.monitoring.topic_arn]
 }
 
 module "api_ref_sync_route_github" {
@@ -43,7 +44,8 @@ module "lambda_ref_sync_webhook" {
     INFISICAL_ENVIRONMENT = "prod"
     SQS_URL               = module.sqs_ref_sync.url
   }
-  tags = local.tags
+  tags          = local.tags
+  alarm_actions = [module.monitoring.topic_arn]
 }
 
 module "lambda_ref_sync_orchestrator" {
@@ -60,7 +62,8 @@ module "lambda_ref_sync_orchestrator" {
     BUILD_AGENT_CONTAINER_NAME      = module.ecs_build_agent.container_name
     BUILD_AGENT_TASK_DEFINITION_ARN = module.ecs_build_agent.task_definition_arn
   }
-  tags = local.tags
+  tags          = local.tags
+  alarm_actions = [module.monitoring.topic_arn]
 }
 
 module "sqs_lambda_ref_sync" {
@@ -80,5 +83,6 @@ module "sqs_ref_sync" {
   dead_letter = {
     max_receive_count = 3
   }
-  tags = local.tags
+  tags          = local.tags
+  alarm_actions = [module.monitoring.topic_arn]
 }

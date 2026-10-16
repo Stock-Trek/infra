@@ -57,3 +57,39 @@ variable "visibility_timeout" {
   type        = number
   default     = 30
 }
+
+variable "alarm_actions" {
+  description = "List of ARNs (for example an SNS topic) notified when an alarm changes state"
+  type        = list(string)
+  default     = []
+}
+
+variable "alarm_period" {
+  description = "CloudWatch alarm evaluation period in seconds"
+  type        = number
+  default     = 300
+}
+
+variable "alarm_evaluation_periods" {
+  description = "Number of periods an alarm must breach before it triggers"
+  type        = number
+  default     = 1
+}
+
+variable "backlog_alarm_threshold" {
+  description = "Number of visible messages on the queue before alarming"
+  type        = number
+  default     = 100
+}
+
+variable "age_alarm_threshold" {
+  description = "Age in seconds of the oldest message before alarming"
+  type        = number
+  default     = 900
+}
+
+variable "dead_letter_alarm_threshold" {
+  description = "Number of visible messages on the dead letter queue before alarming"
+  type        = number
+  default     = 1
+}

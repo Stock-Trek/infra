@@ -24,6 +24,9 @@ locals {
 
   website_bare_domain = "stock-trek.com"
 
+  monitoring_topic_name          = "stock-trek-alarms"
+  monitoring_email_subscriptions = []
+
   tags = {
     Environment = "production"
   }

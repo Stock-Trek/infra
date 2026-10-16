@@ -19,6 +19,7 @@ module "lambda_market_data" {
   role_update     = local.market_data_update_role
   package_type    = "Zip"
   tags            = local.tags
+  alarm_actions   = [module.monitoring.topic_arn]
 }
 
 module "s3_access_market_data" {

@@ -92,3 +92,39 @@ variable "public_access_cors_bare_domain" {
   nullable    = true
   default     = null
 }
+
+variable "alarm_actions" {
+  description = "List of ARNs (for example an SNS topic) notified when an alarm changes state"
+  type        = list(string)
+  default     = []
+}
+
+variable "alarm_period" {
+  description = "CloudWatch alarm evaluation period in seconds"
+  type        = number
+  default     = 300
+}
+
+variable "alarm_evaluation_periods" {
+  description = "Number of periods an alarm must breach before it triggers"
+  type        = number
+  default     = 1
+}
+
+variable "error_alarm_threshold" {
+  description = "Number of Lambda errors in a period before alarming"
+  type        = number
+  default     = 1
+}
+
+variable "throttle_alarm_threshold" {
+  description = "Number of Lambda throttles in a period before alarming"
+  type        = number
+  default     = 1
+}
+
+variable "dead_letter_alarm_threshold" {
+  description = "Number of visible messages on the Lambda dead letter queue before alarming"
+  type        = number
+  default     = 1
+}
