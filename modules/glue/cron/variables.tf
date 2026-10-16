@@ -29,3 +29,10 @@ variable "retry_expiry_seconds" {
   type        = number
   default     = 60
 }
+
+variable "tags" {
+  description = "Tags"
+  type        = map(string)
+  nullable    = true
+  default     = {}
+}
