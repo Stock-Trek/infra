@@ -10,15 +10,18 @@ module "bucket_market_data" {
 }
 
 module "lambda_market_data" {
-  source          = "../modules/lambda"
-  name            = local.market_data_lambda
-  github_account  = local.github_account
-  github_oidc_arn = data.aws_iam_openid_connect_provider.github.arn
-  memory          = 2048
-  timeout         = 300
-  role_update     = local.market_data_update_role
-  package_type    = "Zip"
-  tags            = local.tags
+  source            = "../modules/lambda"
+  name              = local.market_data_lambda
+  github_account    = local.github_account
+  github_account_id = local.github_account_id
+  github_repo       = "market-data-updater"
+  github_repo_id    = "1215979880"
+  github_oidc_arn   = data.aws_iam_openid_connect_provider.github.arn
+  memory            = 2048
+  timeout           = 300
+  role_update       = local.market_data_update_role
+  package_type      = "Zip"
+  tags              = local.tags
 }
 
 module "s3_access_market_data" {

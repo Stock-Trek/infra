@@ -1,4 +1,7 @@
 locals {
+  github_repo_ref = var.github_repo_id == null ? var.github_repo : "${var.github_repo}@${var.github_repo_id}"
+  github_subject  = "repo:${var.github_account}@${var.github_account_id}/${local.github_repo_ref}"
+
   image_count  = (var.package_type == "Image" ? 1 : 0)
   zip_count    = (var.package_type == "Zip" ? 1 : 0)
   public_count = (var.public_access_cors_bare_domain == null ? 0 : 1)

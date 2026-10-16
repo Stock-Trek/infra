@@ -3,13 +3,23 @@ variable "prefix" {
   type        = string
 }
 
-variable "repo_name" {
-  description = "Repository name to grant write access to"
+variable "github_account" {
+  description = "GitHub account (owner) name"
   type        = string
 }
 
-variable "repo_id" {
-  description = "Immutable GitHub repository ID, used as the @id suffix in the OIDC subject"
+variable "github_account_id" {
+  description = "GitHub account (owner) immutable ID"
+  type        = string
+}
+
+variable "github_repo" {
+  description = "GitHub repository name"
+  type        = string
+}
+
+variable "github_repo_id" {
+  description = "GitHub repository immutable ID"
   type        = string
 }
 
@@ -26,11 +36,6 @@ variable "writer_role_name" {
 
 variable "lambda_role_name" {
   description = "Lambda role name to grant read access to"
-  type        = string
-}
-
-variable "github_account" {
-  description = "GitHub account name"
   type        = string
 }
 

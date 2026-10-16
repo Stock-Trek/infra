@@ -29,14 +29,16 @@ module "ecs_run_task_ref_sync" {
 }
 
 module "lambda_ref_sync_webhook" {
-  source          = "../modules/lambda"
-  name            = local.ref_sync_lambda_webhook
-  github_account  = local.github_account
-  github_oidc_arn = data.aws_iam_openid_connect_provider.github.arn
-  memory          = 1024
-  timeout         = 30
-  role_update     = local.ref_sync_webhook_update_role
-  package_type    = "Zip"
+  source            = "../modules/lambda"
+  name              = local.ref_sync_lambda_webhook
+  github_account    = local.github_account
+  github_account_id = local.github_account_id
+  github_repo       = "*"
+  github_oidc_arn   = data.aws_iam_openid_connect_provider.github.arn
+  memory            = 1024
+  timeout           = 30
+  role_update       = local.ref_sync_webhook_update_role
+  package_type      = "Zip"
   env_vars = {
     INFISICAL_BASE_URL    = "https://us.infisical.com"
     INFISICAL_IDENTITY_ID = "7bbc17ad-dedb-4297-a89b-07f266374a38"
@@ -48,14 +50,16 @@ module "lambda_ref_sync_webhook" {
 }
 
 module "lambda_ref_sync_orchestrator" {
-  source          = "../modules/lambda"
-  name            = local.ref_sync_lambda_orchestrator
-  github_account  = local.github_account
-  github_oidc_arn = data.aws_iam_openid_connect_provider.github.arn
-  memory          = 1024
-  timeout         = 30
-  role_update     = local.ref_sync_orchestrator_update_role
-  package_type    = "Zip"
+  source            = "../modules/lambda"
+  name              = local.ref_sync_lambda_orchestrator
+  github_account    = local.github_account
+  github_account_id = local.github_account_id
+  github_repo       = "*"
+  github_oidc_arn   = data.aws_iam_openid_connect_provider.github.arn
+  memory            = 1024
+  timeout           = 30
+  role_update       = local.ref_sync_orchestrator_update_role
+  package_type      = "Zip"
   env_vars = {
     BUILD_AGENT_CLUSTER_ARN         = module.ecs_build_agent.cluster_arn
     BUILD_AGENT_CONTAINER_NAME      = module.ecs_build_agent.container_name
