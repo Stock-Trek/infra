@@ -88,8 +88,3 @@ resource "aws_iam_role_policy_attachment" "bootstrap_apply_sqs" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
 }
 
-resource "aws_iam_role_policy_attachment" "bootstrap_apply_ssm" {
-  role       = aws_iam_role.bootstrap_apply.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
-}
-
