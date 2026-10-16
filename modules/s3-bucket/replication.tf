@@ -69,7 +69,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "replica" {
   bucket   = each.value
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "aws:kms"
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = data.aws_kms_alias.s3_replica.target_key_arn
     }
     blocked_encryption_types = ["SSE-C"]
     bucket_key_enabled       = true
@@ -97,12 +98,52 @@ data "aws_iam_policy_document" "logs_replica" {
       values   = [aws_s3_bucket.replica.arn]
     }
   }
+
+  statement {
+    sid    = "SecureTransport"
+    effect = "Deny"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions   = ["s3:*"]
+    resources = [aws_s3_bucket.logs_replica.arn, "${aws_s3_bucket.logs_replica.arn}/*"]
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "replica_secure_transport" {
+  statement {
+    sid    = "SecureTransport"
+    effect = "Deny"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions   = ["s3:*"]
+    resources = [aws_s3_bucket.replica.arn, "${aws_s3_bucket.replica.arn}/*"]
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "logs_replica" {
   provider = aws.replica
   bucket   = aws_s3_bucket.logs_replica.id
   policy   = data.aws_iam_policy_document.logs_replica.json
+}
+
+resource "aws_s3_bucket_policy" "replica_secure_transport" {
+  provider = aws.replica
+  bucket   = aws_s3_bucket.replica.id
+  policy   = data.aws_iam_policy_document.replica_secure_transport.json
 }
 
 resource "aws_s3_bucket_logging" "replica" {
