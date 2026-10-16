@@ -5,11 +5,12 @@ module "api_ref_sync" {
 }
 
 module "api_ref_sync_route_github" {
-  source            = "../modules/glue/api-routes"
-  api_id            = module.api_ref_sync.id
-  api_execution_arn = module.api_ref_sync.execution_arn
-  lambda_name       = local.ref_sync_lambda_webhook
-  lambda_invoke_arn = module.lambda_ref_sync_webhook.invoke_arn
+  source             = "../modules/glue/api-routes"
+  api_id             = module.api_ref_sync.id
+  api_execution_arn  = module.api_ref_sync.execution_arn
+  lambda_name        = local.ref_sync_lambda_webhook
+  lambda_invoke_arn  = module.lambda_ref_sync_webhook.invoke_arn
+  authorization_type = "NONE"
   routes = [{
     method = "POST"
     path   = "/github"
