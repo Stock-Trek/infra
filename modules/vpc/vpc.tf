@@ -45,12 +45,6 @@ resource "aws_route_table" "public" {
   tags   = var.tags
 }
 
-resource "aws_route" "public" {
-  route_table_id         = aws_route_table.public.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.internet.id
-}
-
 resource "aws_route_table_association" "public" {
   count = length(var.availability_zones)
 
@@ -58,41 +52,11 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_eip" "nat" {
-  count = local.nat_count
-
-  domain = "vpc"
-  tags   = var.tags
-}
-
-resource "aws_nat_gateway" "this" {
-  count = local.nat_count
-
-  allocation_id = aws_eip.nat[count.index].id
-  subnet_id     = aws_subnet.public[count.index].id
-  tags          = var.tags
-
-  depends_on = [aws_internet_gateway.internet]
-}
-
 resource "aws_route_table" "private" {
   count = length(var.availability_zones)
 
   vpc_id = aws_vpc.vpc.id
   tags   = var.tags
-}
-
-resource "aws_route" "private_nat" {
-  count = local.nat_count == 0 ? 0 : length(var.availability_zones)
-
-  route_table_id         = aws_route_table.private[count.index].id
-  destination_cidr_block = "0.0.0.0/0"
-
-  nat_gateway_id = (
-    var.nat_gateway_mode == "single"
-    ? aws_nat_gateway.this[0].id
-    : aws_nat_gateway.this[count.index].id
-  )
 }
 
 resource "aws_route_table_association" "private" {
