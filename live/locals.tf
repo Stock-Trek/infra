@@ -23,6 +23,9 @@ locals {
   market_data_lambda      = "stock-trek-market-data"
   market_data_update_role = "StockTrekUpdateMarketData"
 
+  vpc_availability_zones = ["eu-west-1a", "eu-west-1b"]
+  vpc_name               = "stock-trek-build-agent"
+
   website_bare_domain = "stock-trek.com"
 
   tags = {

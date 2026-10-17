@@ -65,6 +65,8 @@ module "lambda_ref_sync_orchestrator" {
   env_vars = {
     BUILD_AGENT_CLUSTER_ARN         = module.ecs_build_agent.cluster_arn
     BUILD_AGENT_CONTAINER_NAME      = module.ecs_build_agent.container_name
+    BUILD_AGENT_SECURITY_GROUP_IDS  = join(",", module.ecs_build_agent.security_group_ids)
+    BUILD_AGENT_SUBNET_IDS          = join(",", module.ecs_build_agent.subnet_ids)
     BUILD_AGENT_TASK_DEFINITION_ARN = module.ecs_build_agent.task_definition_arn
   }
   tags = local.tags
